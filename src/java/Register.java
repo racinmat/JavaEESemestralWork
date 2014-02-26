@@ -69,19 +69,19 @@ public class Register extends HttpServlet{
                 size++;
             }
             if (size==0) {
-                sql = "INSERT INTO ip adresa(ip, count) VALUES('"+ip+"','1')";
+                sql = "INSERT INTO ip_adresa(ip, count) VALUES('"+ip+"','1')";
                 rsIP = stmt.executeUpdate(sql);
             }
             else if(size>10){
                 count++;                                                        //přičte se jednička za tuto ip adresu
                 tabulka="uchazeci_ipspam";
-                sql = "UPDATE ip SET count = '"+count+"' WHERE ip = "+ip;
+                sql = "UPDATE ip_adresa SET count = '"+count+"' WHERE ip = '"+ip+"'";
                 rsIP = stmt.executeUpdate(sql);
             }
             else{
                 count++;                                                        //přičte se jednička za tuto ip adresu
                 tabulka="uchazeci";
-                sql = "UPDATE ip SET count = '"+count+"' WHERE ip = "+ip;
+                sql = "UPDATE ip_adresa SET count = '"+count+"' WHERE ip = '"+ip+"'";
                 rsIP = stmt.executeUpdate(sql);
             }
             
