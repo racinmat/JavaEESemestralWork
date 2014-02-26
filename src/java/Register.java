@@ -72,7 +72,7 @@ public class Register extends HttpServlet{
                 sql = "INSERT INTO ip_adresa(ip, count) VALUES('"+ip+"','1')";
                 rsIP = stmt.executeUpdate(sql);
             }
-            else if(size>10){
+            else if(size>1000){//změnit zpátky na 10, po odladění
                 count++;                                                        //přičte se jednička za tuto ip adresu
                 tabulka="uchazeci_ipspam";
                 sql = "UPDATE ip_adresa SET count = '"+count+"' WHERE ip = '"+ip+"'";
@@ -87,22 +87,51 @@ public class Register extends HttpServlet{
             
             sql = "INSERT INTO login(username, name, lastname, password, rights) VALUES('"+username+"','"+request.getParameter("jmeno")+"','"+request.getParameter("prijmeni")+"','"+password+"','4')";
             int rsLogin = stmt.executeUpdate(sql);
-            sql = "INSERT INTO "+tabulka+"(username, studijní program, studijní obor, pohlaví, státní příslušnost, rodinný stav, tituly, narození den, narození měsíc, "
-                    + "narození rok, číslo občanského průkazu, rodné číslo, číslo pasu, narození místo, narození okres, adresa ulice, adresa číslo domu, adresa část obce, "
-                    + "adresa obec, adresa okres, adresa PSČ, adresa stát, adresa telefon, adresa pošta, kontakt ulice, kontakt cislo domu, kontakt telefon, kontakt cast obce, "
-                    + "kontakt obec, kontakt okres, kontakt pcs, kontakt posta, kontakt stat, ss nazev, ss adresa, ss obor, ss jkov, ss kkov, ss izo, ss rok maturity, prijat) "
-                    + "VALUES ('"+username+"','"+
-                    request.getParameter("studijniprogram")+"','"+request.getParameter("studijniobor")+"','"+request.getParameter("pohlavi")+"','"+request.getParameter("statniprislusnost")+"','"+request.getParameter("rodinnystav")+"','"+
-                    request.getParameter("tituly")+"','"+request.getParameter("narden")+"','"+request.getParameter("narmesic")+"','"+request.getParameter("narrok")+"','"+request.getParameter("cisloOP")+"','"+
-                    request.getParameter("narmisto")+"','"+request.getParameter("narokres")+"','"+request.getParameter("ulice")+"','"+request.getParameter("cislodomu")+"','"+request.getParameter("castobce")+"','"+
-                    request.getParameter("obec")+"','"+request.getParameter("okres")+"','"+request.getParameter("psc")+"','"+request.getParameter("stat")+"','"+request.getParameter("telefon")+"','"+
-                    request.getParameter("posta")+"','"+request.getParameter("kulice")+"','"+request.getParameter("kcislodomu")+"','"+request.getParameter("ktelefon")+"','"+request.getParameter("kcastobce")+"','"+
-                    request.getParameter("kobec")+"','"+request.getParameter("kokres")+"','"+request.getParameter("kpsc")+"','"+request.getParameter("kposta")+"','"+request.getParameter("kstat")+"','"+
-                    request.getParameter("ssnazev")+"','"+request.getParameter("ssadresa")+"','"+request.getParameter("ssobor")+"','"+request.getParameter("jkov")+"','"+request.getParameter("kkov")+"','"+
-                    request.getParameter("izo")+"','"+request.getParameter("rokmaturity")+"','neprijat')";
+            sql = "INSERT INTO uchazeci_temp(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
+                    + "rodinnystav, tituly, narozeniden, narozenimesic, narozenirok, "
+                    + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
+                    + "adresaulice, adresacislodomu, adresacastobce, adresaobec, adresaokres, "
+                    + "adresapsc, adresastat, adresatelefon, adresaposta, kontaktulice, "
+                    + "kontaktcislodomu, kontakttelefon, kontaktcastobce, kontaktobec, kontaktokres, "
+                    + "kontaktpcs, kontaktposta, kontaktstat, ssnazev, ssadresa, "
+                    + "ssobor, ssjkov, sskkov, ssizo, ssrokmaturity, "
+                    + "prijat) "
+                    + "VALUES ('"+
+                    username+"','"+request.getParameter("studijniprogram")+"','"+request.getParameter("studijniobor")+"','"+request.getParameter("pohlavi")+"','"+request.getParameter("statniprislusnost")+"','"+
+                    request.getParameter("rodinnystav")+"','"+request.getParameter("tituly")+"','"+request.getParameter("narden")+"','"+request.getParameter("narmesic")+"','"+request.getParameter("narrok")+"','"+
+                    request.getParameter("cisloOP")+"','"+request.getParameter("rodnecislo")+"','"+request.getParameter("cislopasu")+"','"+request.getParameter("narmisto")+"','"+request.getParameter("narokres")+"','"+
+                    request.getParameter("ulice")+"','"+request.getParameter("cislodomu")+"','"+request.getParameter("castobce")+"','"+request.getParameter("obec")+"','"+request.getParameter("okres")+"','"+
+                    request.getParameter("psc")+"','"+request.getParameter("stat")+"','"+request.getParameter("telefon")+"','"+request.getParameter("posta")+"','"+request.getParameter("kulice")+"','"+
+                    request.getParameter("kcislodomu")+"','"+request.getParameter("ktelefon")+"','"+request.getParameter("kcastobce")+"','"+request.getParameter("kobec")+"','"+request.getParameter("kokres")+"','"+
+                    request.getParameter("kpsc")+"','"+request.getParameter("kposta")+"','"+request.getParameter("kstat")+"','"+request.getParameter("ssnazev")+"','"+request.getParameter("ssadresa")+"','"+
+                    "','"+"','"+"','"+"','"+"','"+
+                    //request.getParameter("ssobor")+"','"+request.getParameter("jkov")+"','"+request.getParameter("kkov")+"','"+request.getParameter("izo")+"','"+request.getParameter("rokmaturity")+"','"+
+                    "neprijat')";
             int rsUchazec = stmt.executeUpdate(sql);
+            /*sql = "UPDATE uchazeci_temp SET ssobor = '"+request.getParameter("ssobor")+"', ssjkov = '"+request.getParameter("jkov")+"', "
+                    + "sskkov = '"+request.getParameter("kkov")+"',ssizo = '"+request.getParameter("izo")+"',ssrokmaturity = '"+request.getParameter("rokmaturity")+"', WHERE username = '"+username+"'";
+            int rsUchazecCont = stmt.executeUpdate(sql);*/
+            /*sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
+                    + "rodinnystav, tituly, narozeniden, narozenimesic, narozenirok, "
+                    + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
+                    + "adresaulice, adresacislodomu, adresacastobce, adresaobec, adresaokres, "
+                    + "adresapsc, adresastat, adresatelefon, adresaposta, kontaktulice, "
+                    + "kontaktcislodomu, kontakttelefon, kontaktcastobce, kontaktobec, kontaktokres, "
+                    + "kontaktpcs, kontaktposta, kontaktstat, ssnazev, ssadresa, "
+                    + "ssobor, ssjkov, sskkov, ssizo, ssrokmaturity, "
+                    + "prijat) "
+                    + "VALUES ('"+username+"','"+request.getParameter("studijniprogram")+"','"+request.getParameter("studijniobor")+"','"+request.getParameter("pohlavi")+"','"+request.getParameter("statniprislusnost")+"','"+
+                    request.getParameter("rodinnystav")+"','"+request.getParameter("tituly")+"','"+request.getParameter("narden")+"','"+request.getParameter("narmesic")+"','"+request.getParameter("narrok")+"','"+
+                    request.getParameter("cisloOP")+"','"+request.getParameter("rodnecislo")+"','"+request.getParameter("cislopasu")+"','"+request.getParameter("narmisto")+"','"+request.getParameter("narokres")+"','"+
+                    request.getParameter("ulice")+"','"+request.getParameter("cislodomu")+"','"+request.getParameter("castobce")+"','"+request.getParameter("obec")+"','"+request.getParameter("okres")+"','"+
+                    request.getParameter("psc")+"','"+request.getParameter("stat")+"','"+request.getParameter("telefon")+"','"+request.getParameter("posta")+"','"+request.getParameter("kulice")+"','"+
+                    request.getParameter("kcislodomu")+"','"+request.getParameter("ktelefon")+"','"+request.getParameter("kcastobce")+"','"+request.getParameter("kobec")+"','"+request.getParameter("kokres")+"','"+
+                    request.getParameter("kpsc")+"','"+request.getParameter("kposta")+"','"+request.getParameter("kstat")+"','"+request.getParameter("ssnazev")+"','"+request.getParameter("ssadresa")+"','"+
+                    request.getParameter("ssobor")+"','"+request.getParameter("jkov")+"','"+request.getParameter("kkov")+"','"+request.getParameter("izo")+"','"+request.getParameter("rokmaturity")+"','"+
+                    "neprijat')";*/
             
-            if (rsIP==1&rsLogin==1&rsUchazec==1) {
+            
+            if (rsIP==1&rsLogin==1&rsUchazec==1/*&rsUchazecCont==1*/) {
                 session.setAttribute("registered", "success");
             }
             else {
