@@ -25,10 +25,12 @@ import java.util.logging.Logger;
 public class UsernameGen {
 
     private final char[] ALPHA_NUMERIC_ARRAY = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9'};
-    private int length = 0;
+    private int length = 1;
 
     public UsernameGen(int length) {
-        this.length=length;
+        if (length>0) {                     //ochrana proti záporným hodnotám
+            this.length=length;
+        }
     }
     
     public String getId() {
