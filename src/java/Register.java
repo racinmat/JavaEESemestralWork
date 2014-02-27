@@ -40,10 +40,7 @@ public class Register extends HttpServlet{
         }
         String ip=request.getRemoteAddr();//adresa kvůli spamům-10 přihlášek za den ze stejné adresy, reset o půlnoci, při zaslání 11. přihlášky žádost o verifikaci emailem a uložení do průběžné tabulky dokud nebude verifikováno
         
-        String tabulka="uchazeci";//určuje se, do jaké tabulky se data uloží
-        if (request.getParameter("stoletimaturity") != null) {//skryté tlačítko, formulář se uloží do průběžné tabulky a vytvoří se mu uživateslé jméno a heslo, ale ve finále kandidát na vymazání
-            tabulka="uchazeci_spam";
-        }
+        
         if(true){//podmínka, aby byla vyplněná všechna povinná políčka
         try
         {
@@ -55,6 +52,7 @@ public class Register extends HttpServlet{
             String dbName ="mysql"; 
             String uname = "root";
             String pwd = "";
+            String tabulka="uchazeci";//určuje se, do jaké tabulky se data uloží
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(url+dbName,uname,pwd);
             stmt = conn.createStatement();
@@ -64,9 +62,9 @@ public class Register extends HttpServlet{
             int size=0;                                                         //vyberu z tabulky stejnou ip adresu, pokud tam není, tak vytvořím nový řádek
             int count=0;
             int rsIP=0;
+            int spam=0;
             while(rs.next()){
-                count=rs.getInt("count");
-                size++;
+                count=rs.getInt("count");                                       
             }
             if (count==0) {
                 sql = "INSERT INTO ip_adresa(ip, count) VALUES('"+ip+"','1')";
@@ -74,6 +72,7 @@ public class Register extends HttpServlet{
             }
             else if(count>10){//změnit zpátky na 10, po odladění
                 count++;                                                        //přičte se jednička za tuto ip adresu
+                spam=1;                                                         //pro stejnou ip je spam=1
                 tabulka="uchazeci_ipspam";
                 sql = "UPDATE ip_adresa SET count = '"+count+"' WHERE ip = '"+ip+"'";
                 rsIP = stmt.executeUpdate(sql);
@@ -84,7 +83,10 @@ public class Register extends HttpServlet{
                 sql = "UPDATE ip_adresa SET count = '"+count+"' WHERE ip = '"+ip+"'";
                 rsIP = stmt.executeUpdate(sql);
             }
-            
+            if (request.getParameter("stoletimaturity") != null) {//skryté tlačítko, formulář se uloží do průběžné tabulky a vytvoří se mu uživateslé jméno a heslo, ale ve finále kandidát na vymazání
+                spam=2;//pro vyplněné skryté políčko je spam=2
+                tabulka="uchazeci_spam";//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
+            }
             sql = "INSERT INTO login(username, name, lastname, password, rights) VALUES('"+username+"','"+request.getParameter("jmeno")+"','"+request.getParameter("prijmeni")+"','"+password+"','4')";
             int rsLogin = stmt.executeUpdate(sql);
             sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
@@ -109,7 +111,14 @@ public class Register extends HttpServlet{
             int rsUchazec = stmt.executeUpdate(sql);
             
             if (rsIP==1&rsLogin==1&rsUchazec==1) {
-                session.setAttribute("registered", "success");
+                if (spam==0) {
+                    session.setAttribute("registered", "success");
+                } else if(spam==1) {
+                    session.setAttribute("registered", "ip");
+                } else {
+                    session.setAttribute("registered", "spam");
+                }
+                
             }
             else {
                 session.setAttribute("registered", "fail");

@@ -17,6 +17,10 @@
         message="<div>Přihláška byla úspěšně podána, zanedlouho by vám měl přijít email s přihlašovacími údaji, kde můžete sledovat stav vyřízení své elektronické přihlášky</div>";
     }else if(registered.equals("fail")){
         message="<div>Bohužel se vyplnění elektronické přihlášky nezdařilo, zkuste ji vyplnit znovu nebo kontaktujte administrátora.</div>";
+    }else if(registered.equals("ip")){
+        message="<div>Bohužel již bylo dnes z vaší IP adresy odesláno 10 přihlšek. Zkuste podat přihlášku zítra nebo kontaktujte administrátora.</div>";
+    }else if(registered.equals("spam")){
+        message="<div>Stránky vás vyhodnotily jako robota, zkuste znovu načíst stránku a znovu vyplnit formulář.</div>";
     }
 
 
