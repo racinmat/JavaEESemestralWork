@@ -1347,11 +1347,7 @@ p.pages {
 
 /* vlastní */
 #registerForm label {
-    width: 150px;
-    min-width: 150px;
+    width: 170px;
+    min-width: 170px;
     float: left;
 }
-
-
-
-    

@@ -51,7 +51,7 @@
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
     <div class="entry-summary"><p>Přihlašovací formulář</p></div>
     <div>
-        <form action="register" method="POST" id="registerForm">
+        <form action="registercheck" method="POST" id="registerForm">
             <fieldset>
                 <legend>nacionále</legend>
             <div>                

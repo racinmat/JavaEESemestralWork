@@ -82,7 +82,7 @@ public class RegisterCheck extends HttpServlet {
             int[] notFilled = new int[43];
             boolean error=false;
             for (int i = 2; i < notFilled.length; i++) {
-                if (input[i]==null) {
+                if (input[i].equals("")) {
                     notFilled[i]=1;
                     error=true;
                 }
@@ -92,9 +92,10 @@ public class RegisterCheck extends HttpServlet {
                 session.setAttribute("formCheck", notFilled);
                 response.sendRedirect("proUchazece.jsp");
             }
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/register");
-            dispatcher.forward(request, response);
+            else{
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/register");
+                dispatcher.forward(request, response);
+            }
         } catch (ServletException ex) {
             Logger.getLogger(RegisterCheck.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
