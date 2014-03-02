@@ -1,3 +1,5 @@
+package source;
+
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -28,10 +30,14 @@ public class Encrypt {
         return newSalt;
     }
     
-    public String encrypt(String password, String username) throws NoSuchAlgorithmException{
+    public String encrypt(String password, String username){
         for (int i = 0; i < 20; i++) {
+            try {
                 username=getMD5(username, password);
                 password=getSHA256(password, username);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Encrypt.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return password;
     }

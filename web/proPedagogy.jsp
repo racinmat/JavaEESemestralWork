@@ -16,7 +16,6 @@
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
     <h2><a href="index.jsp" title="Permanent Link to Úvodní příspěvek" rel="bookmark">Úvodní příspěvek</a></h2>
                 <p class="entry-meta">
-                  <a href="http://skola.bluefile.cz/?page_id=2/?p=1" title="Permanent Link to Úvodní příspěvek" rel="bookmark">18.2.2014 21:02</a> 
                   </p><!-- end .entry-meta -->
     <div class="entry-summary"><p>Pro pedagogy.</p></div>
 </div>

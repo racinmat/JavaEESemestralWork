@@ -10,15 +10,19 @@
     <h1 class="title-header">Pro Administrativu</h1>
         </div><!-- end .column-title -->
 
-       <%@ include file="/leftColumn.html"%>
+       <%@ include file="/leftColumn.jsp"%>
         <div id="column-content" class="column column-content posts">
 
 
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
-    <h2><a href="index.jsp" title="Permanent Link to Úvodní příspěvek" rel="bookmark">Úvodní příspěvek</a></h2>
+                <h2>Seznam uchazečů:</h2>
                 <p class="entry-meta">
                   </p><!-- end .entry-meta -->
-                <div class="entry-summary"><p>Sekce pro administrativu.</p></div>
+                <div class="entry-summary">
+                    <p>Vypsat seznam uchazečů.</p>
+                    <p>Vpsat seznam uchazečů, kteří vyplnili skryté pole</p>
+                    <p>Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</p>
+                </div>
 </div>
                 
 
