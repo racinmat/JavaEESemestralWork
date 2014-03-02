@@ -17,7 +17,7 @@
     <h2><a href="index.jsp" title="Permanent Link to Úvodní příspěvek" rel="bookmark">Úvodní příspěvek</a></h2>
                 <div class="entry-summary"><p>Vítejte na stránkách vysoké školy pedagogicko psychologické. Stránky jsou zatím ve vývoji.</p></div>
                 </div>
-
+            
 
     <%@ include file="/footer.jsp"%>
 

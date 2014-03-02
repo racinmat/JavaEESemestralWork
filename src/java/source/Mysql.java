@@ -226,7 +226,7 @@ public class Mysql {
                     + "kontaktpcs, kontaktposta, kontaktstat, ssnazev, ssadresa, "
                     + "ssobor, ssjkov, sskkov, ssizo, ssrokmaturity, "
                     + "prijat) "
-                    + "VALUES ("
+                    + "VALUES("
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"

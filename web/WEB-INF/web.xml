@@ -6,6 +6,14 @@
         </session-timeout>
     </session-config>
     <servlet>
+        <servlet-name>registercheck</servlet-name>
+        <servlet-class>source.RegisterCheck</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>registercheck</servlet-name>
+        <url-pattern>/registercheck</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>source.Login</servlet-class>
     </servlet>
@@ -14,14 +22,13 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>Uchazeci</servlet-name>
+        <servlet-name>uchazeci</servlet-name>
         <servlet-class>source.Uchazeci</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Uchazeci</servlet-name>
-        <url-pattern>/Uchazeci</url-pattern>
+        <servlet-name>uchazeci</servlet-name>
+        <url-pattern>/uchazeci</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>logout</servlet-name>
         <servlet-class>source.Logout</servlet-class>
