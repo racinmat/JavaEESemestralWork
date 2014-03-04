@@ -11,7 +11,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -198,7 +197,7 @@ public class Mysql {
             ps.setInt(5,4);
             int rsLogin = ps.executeUpdate(); 
             /*sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
-                    + "rodinnystav, tituly, narozeniden, narozenimesic, narozenirok, "
+                    + "rodinnystav, email, narozeniden, narozenimesic, narozenirok, "
                     + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
                     + "adresaulice, adresacislodomu, adresacastobce, adresaobec, adresaokres, "
                     + "adresapsc, adresastat, adresatelefon, adresaposta, kontaktulice, "
@@ -218,7 +217,7 @@ public class Mysql {
                     "neprijat')";
             int rsUchazec = stmt.executeUpdate(sql);*/
             sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
-                    + "rodinnystav, tituly, narozeniden, narozenimesic, narozenirok, "
+                    + "rodinnystav, email, narozeniden, narozenimesic, narozenirok, "
                     + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
                     + "adresaulice, adresacislodomu, adresacastobce, adresaobec, adresaokres, "
                     + "adresapsc, adresastat, adresatelefon, adresaposta, kontaktulice, "

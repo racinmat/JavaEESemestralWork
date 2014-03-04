@@ -7,7 +7,6 @@
 package source;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -35,6 +34,7 @@ public class RegisterCheck extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
+            request.setCharacterEncoding("UTF-8");          //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
             String[] input = new String[43];
             input[2]=request.getParameter("jmeno");
             input[3]=request.getParameter("prijmeni");
@@ -43,7 +43,7 @@ public class RegisterCheck extends HttpServlet {
             input[5]=request.getParameter("studijniobor");
             input[6]=request.getParameter("pohlavi");
             input[7]=request.getParameter("statniprislusnost");
-            input[8]=request.getParameter("tituly");
+            input[8]=request.getParameter("email");
             input[9]=request.getParameter("rodinnystav");
             input[10]=request.getParameter("narden");
             input[11]=request.getParameter("narmesic");
@@ -81,15 +81,19 @@ public class RegisterCheck extends HttpServlet {
             
             int[] notFilled = new int[43];
             boolean error=false;
-            for (int i = 2; i < notFilled.length; i++) {
+            for (int i = 2; i < notFilled.length; i++) {                        //testování prázdnosti vyplněných polí
                 if (input[i].equals("")) {
                     notFilled[i]=1;
                     error=true;
+                    
                 }
+                //response.getWriter().println(input[i]); //na debbug, zobrazení proměnných z formuláře
             }
+            HttpSession session = request.getSession();
+            session.setAttribute("formContent", input);
+            session.setAttribute("formCheck", notFilled);
+                        
             if (error) {
-                HttpSession session = request.getSession();
-                session.setAttribute("formCheck", notFilled);
                 response.sendRedirect("proUchazece.jsp");
             }
             else{

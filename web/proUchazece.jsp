@@ -35,6 +35,13 @@
             }
         }
     }
+    String[] content=new String[43];
+    for (int i = 0; i < content.length; i++) {
+            content[i]="";
+        }
+    if(session.getAttribute("formContent")!=null){
+        content=(String[]) session.getAttribute("formContent");
+    }
     
 
 
@@ -60,179 +67,179 @@
                 <input id="stoletizkousky"  style="z-index:-20;" type="text" name="stoletizkousky">
             </div>
                 <label for="jmeno"<%= empty[2] %>>jméno:</label>
-                <input id="jmeno" type="text" name="jmeno">
+                <input id="jmeno" type="text" name="jmeno" value="<%= content[2] %>">
             </div>
             <div>                
                 <label for="prijmeni"<%= empty[3] %>>příjmení:</label>
-                <input id="prijmeni" type="text" name="prijmeni">
+                <input id="prijmeni" type="text" name="prijmeni" value="<%= content[3] %>">
             </div>
             <div>
                 <label for="studijniprogram"<%= empty[4] %>>studijní program:</label>
-                <input id="studijniprogram" type="text" name="studijniprogram">
+                <input id="studijniprogram" type="text" name="studijniprogram" value="<%= content[4] %>">
             </div>
             <div>                
                 <label for="studijniobor"<%= empty[5] %>>studijní obor:</label>
-                <input id="studijniobor" type="text" name="studijniobor">
+                <input id="studijniobor" type="text" name="studijniobor" value="<%= content[5] %>">
             </div>
             <div>
                 <label for="pohlavi"<%= empty[6] %>>pohlaví:</label>
-                <input id="pohlavi" type="text" name="pohlavi">
+                <input id="pohlavi" type="text" name="pohlavi" value="<%= content[6] %>">
             </div>
             <div>                
                 <label for="statniprislusnost"<%= empty[7] %>>státní příslušnost:</label>
-                <input id="statniprislusnost" type="text" name="statniprislusnost">
+                <input id="statniprislusnost" type="text" name="statniprislusnost" value="<%= content[7] %>">
             </div>
             <div>
-                <label for="tituly"<%= empty[8] %>>tituly:</label>
-                <input id="tituly" type="text" name="tituly">
+                <label for="email"<%= empty[8] %>>email:</label>
+                <input id="email" type="text" name="email" value="<%= content[8] %>">
             </div>
             <div>                
                 <label for="rodinnystav"<%= empty[9] %>>rodinný stav:</label>
-                <input id="rodinnystav" type="text" name="rodinnystav">
+                <input id="rodinnystav" type="text" name="rodinnystav" value="<%= content[9] %>">
             </div>
             </fieldset>
             <fieldset>
                 <legend>narození</legend>
             <div>
                 <label for="narden"<%= empty[10] %>>den:</label>
-                <input id="narden" type="text" name="narden">
+                <input id="narden" type="text" name="narden" value="<%= content[10] %>">
             </div>
             <div>                
                 <label for="narmesic"<%= empty[11] %>>měsíc:</label>
-                <input id="narmesic" type="text" name="narmesic">
+                <input id="narmesic" type="text" name="narmesic" value="<%= content[11] %>">
             </div>
             <div> 
                 <label for="narrok"<%= empty[12] %>>rok:</label>
-                <input id="narrok" type="text" name="narrok">
+                <input id="narrok" type="text" name="narrok" value="<%= content[12] %>">
             </div>
             <div>                
                 <label for="narmisto"<%= empty[13] %>>místo:</label>
-                <input id="narmisto" type="text" name="narmisto">
+                <input id="narmisto" type="text" name="narmisto" value="<%= content[13] %>">
             </div>
             <div>                
                 <label for="narokres"<%= empty[14] %>>okres:</label>
-                <input id="narokres" type="text" name="narokres">
+                <input id="narokres" type="text" name="narokres" value="<%= content[14] %>">
             </div>
             <div>                
                 <label for="cisloOP"<%= empty[15] %>>číslo občanského průkazu:</label>
-                <input id="cisloOP" type="text" name="cisloOP">
+                <input id="cisloOP" type="text" name="cisloOP" value="<%= content[15] %>">
             </div>
             <div>
                 <label for="rodnecislo"<%= empty[16] %>>rodné číslo:</label>
-                <input id="rodnecislo" type="text" name="rodnecislo">
+                <input id="rodnecislo" type="text" name="rodnecislo" value="<%= content[16] %>">
             </div>
             <div>
                 <label for="cislopasu"<%= empty[17] %>>číslo pasu:</label>
-                <input id="cislopasu" type="text" name="cislopasu">
+                <input id="cislopasu" type="text" name="cislopasu" value="<%= content[17] %>">
             </div>
             </fieldset>
             <fieldset>
                 <legend>adresa trvalého bydliště</legend>
             <div>
                 <label for="ulice"<%= empty[18] %>>ulice:</label>
-                <input id="ulice" type="text" name="ulice">
+                <input id="ulice" type="text" name="ulice" value="<%= content[18] %>">
             </div>
             <div>
                 <label for="cislodomu"<%= empty[19] %>>číslo domu:</label>
-                <input id="cislodomu" type="text" name="cislodomu">
+                <input id="cislodomu" type="text" name="cislodomu" value="<%= content[19] %>">
             </div>
             <div>
                 <label for="telefon"<%= empty[20] %>>telefon:</label>
-                <input id="telefon" type="text" name="telefon">
+                <input id="telefon" type="text" name="telefon" value="<%= content[20] %>">
             </div>
             <div>
                 <label for="castobce"<%= empty[21] %>>část obce:</label>
-                <input id="castobce" type="text" name="castobce">
+                <input id="castobce" type="text" name="castobce" value="<%= content[21] %>">
             </div>
             <div>
                 <label for="obec"<%= empty[22] %>>obec:</label>
-                <input id="obec" type="text" name="obec">
+                <input id="obec" type="text" name="obec" value="<%= content[22] %>">
             </div>
             <div>
                 <label for="okres"<%= empty[23] %>>okres:</label>
-                <input id="okres" type="text" name="okres">
+                <input id="okres" type="text" name="okres" value="<%= content[23] %>">
             </div>
             <div>
                 <label for="psc"<%= empty[24] %>>PSČ:</label>
-                <input id="psc" type="text" name="psc">
+                <input id="psc" type="text" name="psc" value="<%= content[24] %>">
             </div>
             <div>
                 <label for="posta"<%= empty[25] %>>pošta:</label>
-                <input id="posta" type="text" name="posta">
+                <input id="posta" type="text" name="posta" value="<%= content[25] %>">
             </div>
             <div>
                 <label for="stat"<%= empty[26] %>>stát:</label>
-                <input id="stat" type="text" name="stat">
+                <input id="stat" type="text" name="stat" value="<%= content[26] %>">
             </div>
             </fieldset>
             <fieldset>
                 <legend>kontaktní adresa</legend>
             <div>
                 <label for="kulice"<%= empty[27] %>>ulice:</label>
-                <input id="kulice" type="text" name="kulice">
+                <input id="kulice" type="text" name="kulice" value="<%= content[27] %>">
             </div>
             <div>
                 <label for="kcislodomu"<%= empty[28] %>>číslo domu:</label>
-                <input id="kcislodomu" type="text" name="kcislodomu">
+                <input id="kcislodomu" type="text" name="kcislodomu" value="<%= content[28] %>">
             </div>
             <div>
                 <label for="ktelefon"<%= empty[29] %>>telefon:</label>
-                <input id="ktelefon" type="text" name="ktelefon">
+                <input id="ktelefon" type="text" name="ktelefon" value="<%= content[29] %>">
             </div>
             <div>
                 <label for="kcastobce"<%= empty[30] %>>část obce:</label>
-                <input id="kcastobce" type="text" name="kcastobce">
+                <input id="kcastobce" type="text" name="kcastobce" value="<%= content[30] %>">
             </div>
             <div>
                 <label for="kobec"<%= empty[31] %>>obec:</label>
-                <input id="kobec" type="text" name="kobec">
+                <input id="kobec" type="text" name="kobec" value="<%= content[31] %>">
             </div>
             <div>
                 <label for="kokres"<%= empty[32] %>>okres:</label>
-                <input id="kokres" type="text" name="kokres">
+                <input id="kokres" type="text" name="kokres" value="<%= content[32] %>">
             </div>
             <div>
                 <label for="kpsc"<%= empty[33] %>>PSČ:</label>
-                <input id="kpsc" type="text" name="kpsc">
+                <input id="kpsc" type="text" name="kpsc" value="<%= content[33] %>">
             </div>
             <div>
                 <label for="kposta"<%= empty[34] %>>pošta:</label>
-                <input id="kposta" type="text" name="kposta">
+                <input id="kposta" type="text" name="kposta" value="<%= content[34] %>">
             </div>
             <div>
                 <label for="kstat"<%= empty[35] %>>stát:</label>
-                <input id="kstat" type="text" name="kstat">
+                <input id="kstat" type="text" name="kstat" value="<%= content[35] %>">
             </div>
             </fieldset>
             <fieldset>
                 <legend>střední škola (absolvovaná nebo studovaná)</legend>
             <div>
                 <label for="ssnazev"<%= empty[36] %>>název:</label>
-                <input id="ssnazev" type="text" name="ssnazev">
+                <input id="ssnazev" type="text" name="ssnazev" value="<%= content[36] %>">
             </div>
             <div>
                 <label for="ssadresa"<%= empty[37] %>>adresa:</label>
-                <input id="ssadresa" type="text" name="ssadresa">
+                <input id="ssadresa" type="text" name="ssadresa" value="<%= content[37] %>">
             </div>
             <div>
                 <label for="ssobor"<%= empty[38] %>>obor-název:</label>
-                <input id="ssobor" type="text" name="ssobor">
+                <input id="ssobor" type="text" name="ssobor" value="<%= content[38] %>">
             </div>
             <div>
                 <label for="jkov"<%= empty[39] %>>JKOV:</label>
-                <input id="jkov" type="text" name="jkov">
+                <input id="jkov" type="text" name="jkov" value="<%= content[39] %>">
             </div>
             <div>
                 <label for="kkov"<%= empty[40] %>>KKOV:</label>
-                <input id="kkov" type="text" name="kkov">
+                <input id="kkov" type="text" name="kkov" value="<%= content[40] %>">
             </div>
             <div>
                 <label for="izo"<%= empty[41] %>>IZO:</label>
-                <input id="izo" type="text" name="izo">
+                <input id="izo" type="text" name="izo" value="<%= content[41] %>">
             </div>
             <div>
                 <label for="rokmaturity"<%= empty[42] %>>rok maturitní zkoušky:</label>
-                <input id="rokmaturity" type="text" name="rokmaturity">
+                <input id="rokmaturity" type="text" name="rokmaturity" value="<%= content[42] %>">
             </div>
             </fieldset>
             <input type="submit" name="odeslat" value="odeslat přihlášku">
