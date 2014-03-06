@@ -196,26 +196,7 @@ public class Mysql {
             ps.setString(4,input[3]);
             ps.setInt(5,4);
             int rsLogin = ps.executeUpdate(); 
-            /*sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
-                    + "rodinnystav, email, narozeniden, narozenimesic, narozenirok, "
-                    + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
-                    + "adresaulice, adresacislodomu, adresacastobce, adresaobec, adresaokres, "
-                    + "adresapsc, adresastat, adresatelefon, adresaposta, kontaktulice, "
-                    + "kontaktcislodomu, kontakttelefon, kontaktcastobce, kontaktobec, kontaktokres, "
-                    + "kontaktpcs, kontaktposta, kontaktstat, ssnazev, ssadresa, "
-                    + "ssobor, ssjkov, sskkov, ssizo, ssrokmaturity, "
-                    + "prijat) "
-                    + "VALUES ('"+
-                    input[0]+"','"+input[4]+"','"+input[5]+"','"+input[6]+"','"+input[7]+"','"+
-                    input[8]+"','"+input[9]+"','"+input[10]+"','"+input[11]+"','"+input[12]+"','"+
-                    input[13]+"','"+input[14]+"','"+input[15]+"','"+input[16]+"','"+input[17]+"','"+
-                    input[18]+"','"+input[19]+"','"+input[20]+"','"+input[21]+"','"+input[22]+"','"+
-                    input[23]+"','"+input[24]+"','"+input[25]+"','"+input[26]+"','"+input[27]+"','"+
-                    input[28]+"','"+input[29]+"','"+input[30]+"','"+input[31]+"','"+input[32]+"','"+
-                    input[33]+"','"+input[34]+"','"+input[35]+"','"+input[36]+"','"+input[37]+"','"+
-                    input[38]+"','"+input[39]+"','"+input[40]+"','"+input[41]+"','"+input[42]+"','"+
-                    "neprijat')";
-            int rsUchazec = stmt.executeUpdate(sql);*/
+            
             sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
                     + "rodinnystav, email, narozeniden, narozenimesic, narozenirok, "
                     + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
