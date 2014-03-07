@@ -22,12 +22,13 @@
     }else if(registered.equals("spam")){
         message="<div>Stránky vás vyhodnotily jako robota, zkuste znovu načíst stránku a znovu vyplnit formulář.</div>";
     }
-    int[] notFilled = new int[43];
+    
+    boolean[] notFilled = new boolean[43];
     String[] empty=new String[43];
     if(session.getAttribute("formCheck")!=null){
-        notFilled=(int[]) session.getAttribute("formCheck");                    //zjistí se, jak byl uživatel úspěšný při registraci
+        notFilled=(boolean[]) session.getAttribute("formCheck");                    //zjistí se, jak byl uživatel úspěšný při registraci
         for (int i = 2; i < notFilled.length; i++) {
-            if (notFilled[i]==1) {
+            if (notFilled[i]) {
                 empty[i]=" style=\"font-weight: bolder;color: red\"";
             }
             else{
@@ -43,7 +44,36 @@
         content=(String[]) session.getAttribute("formContent");
     }
     
-
+    String muz="";                                                                 //u selectu je třeba to ošetřit zvlášť pro každou možnost
+    String zena="";
+    if(content[6].equals("muž")){
+        muz="selected=\"selected\"";
+    } else if(content[6].equals("žena")){
+        zena="selected=\"selected\"";
+    }
+    
+    String[] mesic=new String[12];
+    for (int i = 0; i < mesic.length; i++) {
+        mesic[i]="";
+    }
+    if(!content[11].equals("")){
+        int mesicCislo=Integer.parseInt(content[11]);
+        switch(mesicCislo){
+            case 1:mesic[0]="selected=\"selected\"";break;
+            case 2:mesic[1]="selected=\"selected\"";break;
+            case 3:mesic[2]="selected=\"selected\"";break;
+            case 4:mesic[3]="selected=\"selected\"";break;
+            case 5:mesic[4]="selected=\"selected\"";break;
+            case 6:mesic[5]="selected=\"selected\"";break;
+            case 7:mesic[6]="selected=\"selected\"";break;
+            case 8:mesic[7]="selected=\"selected\"";break;
+            case 9:mesic[8]="selected=\"selected\"";break;
+            case 10:mesic[9]="selected=\"selected\"";break;
+            case 11:mesic[10]="selected=\"selected\"";break;
+            case 12:mesic[11]="selected=\"selected\"";break;
+        }
+    }
+    
 
 
 
@@ -83,7 +113,10 @@
             </div>
             <div>
                 <label for="pohlavi"<%= empty[6] %>>pohlaví:</label>
-                <input id="pohlavi" type="text" name="pohlavi" value="<%= content[6] %>">
+                <select id="pohlavi" name="pohlavi">
+                    <option value="muž" <%= muz %>>muž</option>
+                    <option value="žena" <%= zena %>>žena</option>
+                </select>
             </div>
             <div>                
                 <label for="statniprislusnost"<%= empty[7] %>>státní příslušnost:</label>
@@ -106,7 +139,20 @@
             </div>
             <div>                
                 <label for="narmesic"<%= empty[11] %>>měsíc:</label>
-                <input id="narmesic" type="text" name="narmesic" value="<%= content[11] %>">
+                <select id="narmesic" name="narmesic">
+                    <option value="1" <%= mesic[0] %>>leden</option>
+                    <option value="2" <%= mesic[1] %>>únor</option>
+                    <option value="3" <%= mesic[2] %>>březen</option>
+                    <option value="4" <%= mesic[3] %>>duben</option>
+                    <option value="5" <%= mesic[4] %>>květen</option>
+                    <option value="6" <%= mesic[5] %>>červen</option>
+                    <option value="7" <%= mesic[6] %>>červenec</option>
+                    <option value="8" <%= mesic[7] %>>srpen</option>
+                    <option value="9" <%= mesic[8] %>>září</option>
+                    <option value="10" <%= mesic[9] %>>říjen</option>
+                    <option value="11" <%= mesic[10] %>>listopad</option>
+                    <option value="12" <%= mesic[11] %>>prosinec</option>
+                </select>
             </div>
             <div> 
                 <label for="narrok"<%= empty[12] %>>rok:</label>

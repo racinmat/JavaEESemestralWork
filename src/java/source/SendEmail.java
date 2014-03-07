@@ -15,52 +15,81 @@ package source;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
 
 public class SendEmail
 {
-   public static void mail()
-   {    
-      // Recipient's email ID needs to be mentioned.
-      String to = "abcd@gmail.com";
+    private String username;
+    private String password;
+    private String name;
+    private String lastname;
+    private String sex;
 
-      // Sender's email ID needs to be mentioned
-      String from = "web@gmail.com";
+    /**
+     * Vytvoří instanci SendEmail
+     * @param username uživatelské jméno
+     * @param password heslo
+     * @param name jméno
+     * @param lastname příjmení
+     * @param sex pohlaví
+     */
+    public SendEmail(String username, String password, String name, String lastname, String sex) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.lastname = lastname;
+        this.sex = sex;
+    }
+    
+    private String osloveni(){
+        if (sex=="muž") {
+            return "pane ";
+        }
+        else {
+            return "slečno ";
+        }
+    }
 
-      // Assuming you are sending email from localhost
-      String host = "localhost";
-
-      // Get system properties
-      Properties properties = System.getProperties();
-
-      // Setup mail server
-      properties.setProperty("mail.smtp.host", host);
-
-      // Get the default Session object.
-      Session session = Session.getDefaultInstance(properties);
-
-      try{
-         // Create a default MimeMessage object.
-         MimeMessage message = new MimeMessage(session);
-
-         // Set From: header field of the header.
-         message.setFrom(new InternetAddress(from));
-
-         // Set To: header field of the header.
-         message.addRecipient(Message.RecipientType.TO,
-                                  new InternetAddress(to));
-
-         // Set Subject: header field
-         message.setSubject("This is the Subject Line!");
-
-         // Now set the actual message
-         message.setText("This is actual message");
-
-         // Send message
-         Transport.send(message);
-         System.out.println("Sent message successfully....");
-      }catch (MessagingException mex) {
-         mex.printStackTrace();
-      }
-   }
+    public void sendGmail(){
+        Properties props = new Properties();
+	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.socketFactory.port", "465");
+	props.put(
+            "mail.smtp.socketFactory.class",
+            "javax.net.ssl.SSLSocketFactory"
+        );
+	props.put("mail.smtp.auth", "true");
+	props.put("mail.smtp.port", "465");
+ 
+	Session session = Session.getDefaultInstance(props,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("testovaciemail666","testovani!!!");
+                }
+            }
+        );
+	try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("testovaciemail666@gmail.com"));
+            message.setRecipients(
+                Message.RecipientType.TO,
+                InternetAddress.parse("memnarch@seznam.cz")
+            );
+            message.setSubject("Testing Subject");
+            message.setText(
+                "Dubrý den"+osloveni()+lastname+",\r\n"
+                + "vaše elektronická přihláška byla úspěšně podána,\r\n"
+                + "vaše přihlašovací jméno je "+username
+                + "a vaše heslo je "+password
+                + ".\r\n"
+                + "Pomocí techto přihlašovacích údajů můžete na stránkách školy pozorovat stav vyřízení své přihlášky.\r\n"
+                + "Po přihlášení si můžete změnit své heslo.\r\n"
+                + "S pozdravem, automatizovaný systém."
+            );
+            Transport.send(message);
+            System.out.println("Done");
+	} catch (MessagingException e) {
+            throw new RuntimeException(e);
+	}
+    }
+   
 }

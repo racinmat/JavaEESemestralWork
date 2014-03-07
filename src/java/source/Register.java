@@ -26,6 +26,8 @@ public class Register extends HttpServlet{
         UsernameGen generator=new UsernameGen(10);
         String username=generator.getValidatedId();
         String password=generator.getId();
+        SendEmail mail=new SendEmail(username, password, request.getParameter("jmeno"), request.getParameter("prijmeni"), request.getParameter("pohlavi"));
+        mail.sendGmail();
         Encrypt crypt=new Encrypt();
         password=crypt.encrypt(password, username);
         String ip=request.getRemoteAddr();//adresa kvůli spamům-10 přihlášek za den ze stejné adresy, reset o půlnoci, při zaslání 11. přihlášky žádost o verifikaci emailem a uložení do průběžné tabulky dokud nebude verifikováno

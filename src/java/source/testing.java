@@ -48,18 +48,9 @@ public class testing extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-  //      try {
-            //SendHTMLEmail mail=new SendHTMLEmail();
-            //mail.mail();
-            //mail();
-            //sendOneMoreMail(response);
-            //sendAnotherMail();
-            //sendMail("memnarch@seznam.cz", "memnarch108@gmail.com", "This is the Subject Line!", "<h1>This is actual message</h1>", headers);
-            //sendSMTPMail();
+  
             sendGmail();
-    //    } catch (IOException ex) {
-    //        Logger.getLogger(testing.class.getName()).log(Level.SEVERE, null, ex);
-    //    }
+    
     }
 
     public void sendOneMoreMail(HttpServletResponse response){
