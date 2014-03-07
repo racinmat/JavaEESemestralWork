@@ -19,11 +19,11 @@
                 <p class="entry-meta">
                   </p><!-- end .entry-meta -->
                 <div class="entry-summary">
-                    <p>Vypsat seznam uchazečů.</p>
+                    <p><a href="uchazeci">Vypsat seznam uchazečů.</a></p>
                     <p>Vpsat seznam uchazečů, kteří vyplnili skryté pole</p>
                     <p>Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</p>
                 </div>
-</div>
+            </div>
                 
 
 

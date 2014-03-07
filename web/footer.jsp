@@ -53,8 +53,9 @@
     <div id="footer" class="clearfix">
 
         <p class="copy">
-        Inspired by <a href="http://wordpress.org/">WordPress template Academica</a><span class="sep"></span>
-        © 2014 Všechna práva vyhrazena. autor: Matěj Račinský.				</p>
+            <span class="sep">Inspired by <a href="http://wordpress.org/">WordPress</a> template <a href="http://www.wpzoom.com/">Academica by WPZOOM</a></span>
+            © 2014 Všechna práva vyhrazena. autor: Matěj Račinský.
+        </p>
     </div><!-- end #footer -->
 </div><!-- end #wrap -->
 

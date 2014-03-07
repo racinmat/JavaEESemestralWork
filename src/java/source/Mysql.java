@@ -268,8 +268,9 @@ public class Mysql {
      * @param tabulka tabulka, do které se mají informace vložit, možné hodnoty: uchazeci, uchazeci_spam a uchazeci_ipspam
      * @return vrátí pole polí stringů, první udává řádek se všemi údaji, druhý udává údaj v konkrétním sloupečku, číslování pole je stejné jako u vkládání údajů o uchazeči do tabulky
      */
-    public ArrayList<String[]> showApplicants(String tabulka){
+    public String[][] showApplicants(String tabulka){
         ArrayList<String[]> output = new ArrayList<String[]>();
+        String[][] outputString = null;
         try {
             String sql = "SELECT * FROM "+tabulka+" where 1";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
@@ -282,7 +283,7 @@ public class Mysql {
                 temp[6]=rs.getString("pohlavi");
                 temp[7]=rs.getString("statniprislusnost");
                 temp[8]=rs.getString("rodinnystav");
-                temp[9]=rs.getString("tituly");
+                temp[9]=rs.getString("email");
                 temp[10]=rs.getString("narozeniden");
                 temp[11]=rs.getString("narozenimesic");
                 temp[12]=rs.getString("narozenirok");
@@ -319,9 +320,28 @@ public class Mysql {
                 temp[43]=rs.getString("prijat");
                 output.add(temp);
             }
+            outputString=new String[output.size()][44];
+            for (int i = 0; i < output.size(); i++) {
+                outputString[i]=output.get(i);                                  //převedení arraylistu pole stringů na pole polí stringů
+            }
+            
+            for (int i = 0; i < outputString.length; i++) {
+                sql = "SELECT * FROM login where username = ?";
+                ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+                ps.setString(1,outputString[i][0]);
+                ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
+                while(rsLogin.next()){
+                    outputString[i][1]=rsLogin.getString("name");                                       
+                    outputString[i][2]=rsLogin.getString("lastname");
+                    outputString[i][3]=rsLogin.getString("password");
+                    outputString[i][3]=outputString[i][3].substring(0, 5);
+                }
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        
+        return outputString;
     }
 }
