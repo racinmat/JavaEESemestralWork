@@ -7,6 +7,19 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
 
+    <%
+        session = request.getSession(true);
+        String loggedIn="";
+        String temp="";
+        int rights=Integer.MAX_VALUE;
+        if(session.getAttribute("rights")!=null&&session.getAttribute("logged")!=null){
+        temp=(String) session.getAttribute("rights").toString();
+        loggedIn=(String) session.getAttribute("logged");
+            if(temp!=null){
+                rights=Integer.parseInt(temp);
+            }
+        }
+    %>
     <h1 class="title-header">Pro Administrativu</h1>
         </div><!-- end .column-title -->
 
@@ -19,9 +32,11 @@
                 <p class="entry-meta">
                   </p><!-- end .entry-meta -->
                 <div class="entry-summary">
+                    <% if(loggedIn.equals("success")&&rights<=1){ %>
                     <p><a href="uchazeci">Vypsat seznam uchazečů.</a></p>
                     <p>Vpsat seznam uchazečů, kteří vyplnili skryté pole</p>
                     <p>Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</p>
+                    <% } %>
                 </div>
             </div>
                 
