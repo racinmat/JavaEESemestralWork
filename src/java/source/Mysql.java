@@ -45,7 +45,7 @@ public class Mysql {
         catch(ClassNotFoundException e)
         {
         } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
             Throwable t = ex.getCause();
         }
     }
