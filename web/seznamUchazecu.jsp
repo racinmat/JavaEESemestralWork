@@ -104,10 +104,21 @@
                     </div>
                 </form>
                     <%  
+                        for(int j = 0; j < uchazec[0].length; j++){
+                            if(show[j]!=null&&show[j].equals("show")){
+                        %>
+                                    <span id="listOfApplicants">
+                                        <%= label[j] %>
+                                    </span>
+                        <%
+                            }
+                        }
+                        
                         for(int i = 0; i < uchazec.length; i++){
                     %>
-                    <div id="listOfApplicants">
+                    <div>
                         <%  
+                            
                             for(int j = 0; j < uchazec[0].length; j++){
                                 if(show[j]!=null&&show[j].equals("show")){
                         %>
