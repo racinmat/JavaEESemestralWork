@@ -1351,3 +1351,27 @@ p.pages {
     min-width: 170px;
     float: left;
 }
+
+#showPeopleForm label {
+    width: 200px;
+    min-width: 200px;
+    float: left;
+}
+
+.checkBoxForm {
+    width: 600px;
+    min-width: 600px;
+    float: left;
+}
+
+#listOfApplicants {
+    width: 150px;
+    min-width: 150px;
+    float: left;
+}
+
+#listOfApplicants label{
+    width: 150px;
+    min-width: 150px;
+    float: left;
+}

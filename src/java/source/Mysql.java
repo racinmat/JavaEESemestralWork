@@ -32,8 +32,12 @@ public class Mysql {
      * Zadefinuje proměnné a pokusí se vytvořit spojení s databází.
      */
     public Mysql() {
-        url = "jdbc:mysql://localhost:3306/";
-        dbName ="mysql"; 
+        url = "jdbc:mysql://localhost:3306/";                                   //pro localhost
+        //url = "jdbc:mysql://localhost/azathoth?autoReconnect=true";             //pro eatj
+        
+        dbName ="mysql";                                                        //pro localhost
+        //dbName ="azathoth";                                                     //pro eatj
+        
         uname = "root";
         pwd = "";
         conn=null;

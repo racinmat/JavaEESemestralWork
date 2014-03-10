@@ -7,6 +7,8 @@ package source;
  */
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,12 +30,35 @@ public class Uchazeci extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-        Mysql sql=new Mysql();
-        String[][] output = sql.showApplicants("uchazeci");
-        session.setAttribute("allApplicants", output);
-        response.sendRedirect("seznamUchazecu.jsp");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            HttpSession session = request.getSession(true);
+            Mysql sql=new Mysql();
+            String[][] output = sql.showApplicants("uchazeci");
+            session.setAttribute("allApplicants", output);
+            response.sendRedirect("seznamUchazecu.jsp");
+        } catch (IOException ex) {
+            Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            HttpSession session = request.getSession(true);
+            String[] show=new String[44];
+            for (int i = 0; i < 44; i++) {
+                if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
+                    show[i]="show";
+                }
+                else {
+                    show[i]="";
+                }
+            }
+            session.setAttribute("show", show);
+            response.sendRedirect("seznamUchazecu.jsp");
+        } catch (IOException ex) {
+            Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
 
