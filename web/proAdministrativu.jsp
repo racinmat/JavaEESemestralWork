@@ -33,9 +33,9 @@
                   </p><!-- end .entry-meta -->
                 <div class="entry-summary">
                     <% if(loggedIn.equals("success")&&rights<=1){ %>
-                    <p><a href="uchazeci">Vypsat seznam uchazečů.</a></p>
-                    <p>Vpsat seznam uchazečů, kteří vyplnili skryté pole</p>
-                    <p>Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</p>
+                    <p><a href="uchazeci?table=uchazeci">Vypsat seznam uchazečů.</a></p>
+                    <p><a href="uchazeci?table=uchazeci_spam">Vypsat seznam uchazečů, kteří vyplnili skryté pole</a></p>
+                    <p><a href="uchazeci?table=uchazeci_ipspam">Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</a></p>
                     <% } %>
                 </div>
             </div>

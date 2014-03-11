@@ -34,7 +34,8 @@ public class Uchazeci extends HttpServlet {
         try {
             HttpSession session = request.getSession(true);
             Mysql sql=new Mysql();
-            String[][] output = sql.showApplicants("uchazeci");
+            String table=request.getParameter("table");
+            String[][] output = sql.showApplicants(table);
             session.setAttribute("allApplicants", output);
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
@@ -45,8 +46,8 @@ public class Uchazeci extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession(true);
-            String[] show=new String[44];
-            for (int i = 0; i < 44; i++) {
+            String[] show=new String[45];
+            for (int i = 0; i < show.length; i++) {
                 if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
                     show[i]="show";
                 }

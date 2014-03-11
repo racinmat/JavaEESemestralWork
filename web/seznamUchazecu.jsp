@@ -74,7 +74,8 @@
                         label[40]="kkov";
                         label[31]="izo";
                         label[42]="rok maturity";
-                        label[43]="přijat";
+                        label[43]="stav přihlášky";
+                        label[44]="školné";
                         
                         String[] checked = new String [uchazec[0].length];
                         for (int i = 0; i < checked.length; i++) {
@@ -103,6 +104,7 @@
                         <input type="submit" name="odeslat" value="zobrazit výsledky">
                     </div>
                 </form>
+                    <div>
                     <%  
                         for(int j = 0; j < uchazec[0].length; j++){
                             if(show[j]!=null&&show[j].equals("show")){
@@ -113,7 +115,10 @@
                         <%
                             }
                         }
-                        
+                    %>
+                        <br/>
+                    </div>
+                    <%
                         for(int i = 0; i < uchazec.length; i++){
                     %>
                     <div>

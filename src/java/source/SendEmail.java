@@ -43,11 +43,14 @@ public class SendEmail
     }
     
     private String osloveni(){
-        if (sex=="muž") {
+        if ("muž".equals(sex)) {
             return "pane ";
         }
-        else {
+        else if ("žena".equals(sex)){
             return "slečno ";
+        }
+        else {
+            return " ";
         }
     }
 

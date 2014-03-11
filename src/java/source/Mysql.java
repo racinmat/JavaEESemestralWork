@@ -209,13 +209,13 @@ public class Mysql {
                     + "kontaktcislodomu, kontakttelefon, kontaktcastobce, kontaktobec, kontaktokres, "
                     + "kontaktpcs, kontaktposta, kontaktstat, ssnazev, ssadresa, "
                     + "ssobor, ssjkov, sskkov, ssizo, ssrokmaturity, "
-                    + "prijat) "
+                    + "stavprijeti, skolne) "
                     + "VALUES("
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?)";
+                    + "?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
             ps.setString(2,input[4]);
@@ -257,7 +257,9 @@ public class Mysql {
             ps.setString(38,input[40]);
             ps.setString(39,input[41]);
             ps.setString(40,input[42]);
-            ps.setString(41,"neprijat");
+            ps.setString(41,"nezaplacen registrační poplatek");
+            ps.setString(42,"nezaplaceno");
+            
             int rsUchazec = ps.executeUpdate(); 
             
             rs=Math.min(rsLogin, rsUchazec);
@@ -280,7 +282,7 @@ public class Mysql {
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                String[] temp=new String[44];                                   //navíc na konci políčko přijat
+                String[] temp=new String[45];                                   //navíc na konci políčko přijat
                 temp[0]=rs.getString("username");
                 temp[4]=rs.getString("studijniprogram");
                 temp[5]=rs.getString("studijniobor");
@@ -321,10 +323,11 @@ public class Mysql {
                 temp[40]=rs.getString("sskkov");
                 temp[41]=rs.getString("ssizo");
                 temp[42]=rs.getString("ssrokmaturity");
-                temp[43]=rs.getString("prijat");
+                temp[43]=rs.getString("stavprijeti");
+                temp[44]=rs.getString("skolne");
                 output.add(temp);
             }
-            outputString=new String[output.size()][44];
+            outputString=new String[output.size()][45];
             for (int i = 0; i < output.size(); i++) {
                 outputString[i]=output.get(i);                                  //převedení arraylistu pole stringů na pole polí stringů
             }
