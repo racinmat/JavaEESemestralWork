@@ -23,6 +23,7 @@ public class SendEmail
     private String name;
     private String lastname;
     private String sex;
+    private String email;
 
     /**
      * Vytvoří instanci SendEmail
@@ -32,12 +33,13 @@ public class SendEmail
      * @param lastname příjmení
      * @param sex pohlaví
      */
-    public SendEmail(String username, String password, String name, String lastname, String sex) {
+    public SendEmail(String username, String password, String name, String lastname, String sex, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.lastname = lastname;
         this.sex = sex;
+        this.email = email;
     }
     
     private String osloveni(){
@@ -59,6 +61,7 @@ public class SendEmail
         );
 	props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.port", "465");
+        props.put("mail.imaps.ssl.trust", "*");
  
 	Session session = Session.getDefaultInstance(props,
             new javax.mail.Authenticator() {
@@ -72,15 +75,15 @@ public class SendEmail
             message.setFrom(new InternetAddress("testovaciemail666@gmail.com"));
             message.setRecipients(
                 Message.RecipientType.TO,
-                InternetAddress.parse("memnarch@seznam.cz")
+                InternetAddress.parse(email)
             );
-            message.setSubject("Testing Subject");
+            message.setSubject("Úspěšné podání elektronické přihlášky");
             message.setText(
-                "Dubrý den"+osloveni()+lastname+",\r\n"
+                "Dubrý den, "+osloveni()+lastname+",\r\n"
                 + "vaše elektronická přihláška byla úspěšně podána,\r\n"
                 + "vaše přihlašovací jméno je "+username
-                + "a vaše heslo je "+password
-                + ".\r\n"
+                + " a vaše heslo je "+password
+                + " .\r\n"
                 + "Pomocí techto přihlašovacích údajů můžete na stránkách školy pozorovat stav vyřízení své přihlášky.\r\n"
                 + "Po přihlášení si můžete změnit své heslo.\r\n"
                 + "S pozdravem, automatizovaný systém."

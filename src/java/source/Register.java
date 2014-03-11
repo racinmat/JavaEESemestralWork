@@ -26,7 +26,7 @@ public class Register extends HttpServlet{
         UsernameGen generator=new UsernameGen(10);
         String username=generator.getValidatedId();
         String password=generator.getId();
-        SendEmail mail=new SendEmail(username, password, request.getParameter("jmeno"), request.getParameter("prijmeni"), request.getParameter("pohlavi"));
+        SendEmail mail=new SendEmail(username, password, request.getParameter("jmeno"), request.getParameter("prijmeni"), request.getParameter("pohlavi"), request.getParameter("email"));
         mail.sendGmail();
         Encrypt crypt=new Encrypt();
         password=crypt.encrypt(password, username);
