@@ -10,7 +10,7 @@
     <h1 class="title-header">Úřední deska</h1>
         </div><!-- end .column-title -->
 
-       <%@ include file="/leftColumn.html"%>
+       <%@ include file="/leftColumn.jsp"%>
         <div id="column-content" class="column column-content posts">
 
 

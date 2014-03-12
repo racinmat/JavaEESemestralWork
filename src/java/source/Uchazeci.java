@@ -43,19 +43,43 @@ public class Uchazeci extends HttpServlet {
         }
     }
     
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
-            HttpSession session = request.getSession(true);
-            String[] show=new String[45];
-            for (int i = 0; i < show.length; i++) {
-                if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
-                    show[i]="show";
+            if (request.getParameter("zobrazitvysledky")!=null) {
+                HttpSession session = request.getSession(true);
+                Label lab=new Label();
+                String[] label=lab.getLabel();
+                String[] show=new String[lab.getLength()];
+                for (int i = 0; i < show.length; i++) {
+                    if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
+                        show[i]="show";
+                    }
+                    else {
+                        show[i]="";
+                    }
                 }
-                else {
-                    show[i]="";
-                }
+                session.setAttribute("show", show);
             }
-            session.setAttribute("show", show);
+            if (request.getParameter("zmenitudaje")!=null) {
+                HttpSession session = request.getSession(true);
+                Mysql sql=new Mysql();
+                Label lab=new Label();
+                String[] labelRaw=lab.getLabelRaw();
+                String table=request.getParameter("table");
+                int count=0;
+                while(request.getParameter(labelRaw[0]+"+"+count)!=null){
+                    count++;
+                }
+                String[][] uchazec=new String[count][lab.getLength()];
+                for (int i = 0; i < uchazec.length; i++) {
+                    for (int j = 0; j < lab.getLength(); j++) {
+                        uchazec[i][j]=request.getParameter(labelRaw[j]+"+"+i);
+                    }
+                }
+                String[] show=(String[]) session.getAttribute("show");
+                boolean output = sql.updateApplicants(table, uchazec, show);
+            }
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
             Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);

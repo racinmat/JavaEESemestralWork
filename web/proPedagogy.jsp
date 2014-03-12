@@ -9,7 +9,7 @@
 <h1 class="title-header">Pro Pedagogy</h1>
         </div><!-- end .column-title -->
 
-       <%@ include file="/leftColumn.html"%>
+       <%@ include file="/leftColumn.jsp"%>
         <div id="column-content" class="column column-content posts">
 
 

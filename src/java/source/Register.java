@@ -26,7 +26,10 @@ public class Register extends HttpServlet{
         UsernameGen generator=new UsernameGen(10);
         String username=generator.getValidatedId();
         String password=generator.getId();
-        SendEmail mail=new SendEmail(username, password, request.getParameter("jmeno"), request.getParameter("prijmeni"), request.getParameter("pohlavi"), request.getParameter("email"));
+        Label lab=new Label();
+        String[] label=lab.getLabel();
+        String[] labelRaw=lab.getLabelRaw();
+        SendEmail mail=new SendEmail(username, password, request.getParameter(labelRaw[1]), request.getParameter(labelRaw[2]), request.getParameter(labelRaw[6]), request.getParameter(labelRaw[9]));
         mail.sendGmail();
         Encrypt crypt=new Encrypt();
         password=crypt.encrypt(password, username);
@@ -35,7 +38,7 @@ public class Register extends HttpServlet{
             String tabulka="uchazeci";//určuje se, do jaké tabulky se data uloží
                 
             int size=0;                                                         //vyberu z tabulky stejnou ip adresu, pokud tam není, tak vytvořím nový řádek
-            int rsIP=0;
+            boolean rsIP=false;
             int spam=0;
             Mysql sql=new Mysql();
             int count=sql.findIP(ip);
@@ -57,57 +60,21 @@ public class Register extends HttpServlet{
             }
             String[] input = new String[43];
             input[0]=username;
-            input[1]=request.getParameter("jmeno");
-            input[2]=request.getParameter("prijmeni");
-            input[3]=password;
+            for (int i = 1; i < label.length-2; i++) {
+                if (i==3) {
+                    input[i]=password;
+                } else {
+                    input[i]=request.getParameter(labelRaw[i]);
+                }
+            }
             
-            input[4]=request.getParameter("studijniprogram");
-            input[5]=request.getParameter("studijniobor");
-            input[6]=request.getParameter("pohlavi");
-            input[7]=request.getParameter("statniprislusnost");
-            input[8]=request.getParameter("rodinnystav");
-            input[9]=request.getParameter("email");
-            input[10]=request.getParameter("narden");
-            input[11]=request.getParameter("narmesic");
-            input[12]=request.getParameter("narrok");
-            input[13]=request.getParameter("cisloOP");
-            input[14]=request.getParameter("rodnecislo");
-            input[15]=request.getParameter("cislopasu");
-            input[16]=request.getParameter("narmisto");
-            input[17]=request.getParameter("narokres");
-            input[18]=request.getParameter("ulice");
-            input[19]=request.getParameter("cislodomu");
-            input[20]=request.getParameter("castobce");
-            input[21]=request.getParameter("obec");
-            input[22]=request.getParameter("okres");
-            input[23]=request.getParameter("psc");
-            input[24]=request.getParameter("stat");
-            input[25]=request.getParameter("telefon");
-            input[26]=request.getParameter("posta");
-            input[27]=request.getParameter("kulice");
-            input[28]=request.getParameter("kcislodomu");
-            input[29]=request.getParameter("ktelefon");
-            input[30]=request.getParameter("kcastobce");
-            input[31]=request.getParameter("kobec");
-            input[32]=request.getParameter("kokres");
-            input[33]=request.getParameter("kpsc");
-            input[34]=request.getParameter("kposta");
-            input[35]=request.getParameter("kstat");
-            input[36]=request.getParameter("ssnazev");
-            input[37]=request.getParameter("ssadresa");
-            input[38]=request.getParameter("ssobor");
-            input[39]=request.getParameter("jkov");
-            input[40]=request.getParameter("kkov");
-            input[41]=request.getParameter("izo");
-            input[42]=request.getParameter("rokmaturity");
-            
-            int rsWrite=sql.insertNewApplicant(tabulka, input);
-            if (rsIP==1&rsWrite==1) {
+            boolean rsWrite=sql.insertNewApplicant(tabulka, input);
+            if (rsIP&rsWrite) {
                 if (spam==0) {
                     session.setAttribute("registered", "success");
                 } else if(spam==1) {
                     session.setAttribute("registered", "ip");
-                } else {
+                } else if(spam==2) {
                     session.setAttribute("registered", "spam");
                 }
             }

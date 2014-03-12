@@ -5,7 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-    <%@ include file="/header.jsp"%>
+    <%@ page import="source.Label" %>
+    <%--@ include file="/header.jsp"--%>
+    <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
     session = request.getSession(true);                                         //zpřístupní se session
     String[][] uchazec=(String[][]) session.getAttribute("allApplicants");
@@ -21,61 +23,19 @@
     <h1 class="title-header">Pro Administrativu</h1>
         </div>
 
-       <%@ include file="/leftColumn.jsp"%>
-       <div id="column-content" class="column column-content posts">
+       <%--@ include file="/leftColumn.jsp"--%>
+  <%--     <div id="column-content" class="column column-content posts">
 
 
-            <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
+            <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">--%>
                 <h2>Seznam uchazečů:</h2>
                 
                 <form id="showPeopleForm" action="uchazeci" method="POST">
                     <%  
-                        String[] label = new String [uchazec[0].length];
-                        label[0]="uživatelské jméno";
-                        label[1]="jméno";
-                        label[2]="příjmení";
-                        label[3]="hash hesla";
-                        label[4]="studijní program";
-                        label[5]="studijní obor";
-                        label[6]="pohlaví";
-                        label[7]="státní příslušnost";
-                        label[8]="rodinný stav";
-                        label[9]="email";
-                        label[10]="den narození";
-                        label[11]="měsíc narození";
-                        label[12]="rok narození";
-                        label[13]="číslo OP";
-                        label[14]="rodné číslo";
-                        label[15]="číslo pasu";
-                        label[16]="místo narození";
-                        label[17]="okres narození";
-                        label[18]="ulice";
-                        label[19]="číslo domu";
-                        label[20]="část obce";
-                        label[21]="obec";
-                        label[22]="okres";
-                        label[23]="psč";
-                        label[24]="stát";
-                        label[25]="telefon";
-                        label[26]="pošta";
-                        label[27]="kontaktní adresa: ulice";
-                        label[28]="kontaktní adresa: číslo domu";
-                        label[29]="kontaktní adresa: část obce";
-                        label[30]="kontaktní adresa: obec";
-                        label[31]="kontaktní adresa: okres";
-                        label[32]="kontaktní adresa: psč";
-                        label[33]="kontaktní adresa: stát";
-                        label[34]="kontaktní adresa: telefon";
-                        label[35]="kontaktní adresa: pošta";
-                        label[36]="název střední školy";
-                        label[37]="adresa střední školy";
-                        label[38]="obor střední školy";
-                        label[39]="jkov";
-                        label[40]="kkov";
-                        label[31]="izo";
-                        label[42]="rok maturity";
-                        label[43]="stav přihlášky";
-                        label[44]="školné";
+                        Label lab=new Label();
+                        String[] label=lab.getLabel();
+                        String[] labelRaw=lab.getLabelRaw();
+                        
                         
                         String[] checked = new String [uchazec[0].length];
                         for (int i = 0; i < checked.length; i++) {
@@ -101,7 +61,7 @@
                         }
                     %>
                     <div>
-                        <input type="submit" name="odeslat" value="zobrazit výsledky">
+                        <input type="submit" name="zobrazitvysledky" value="zobrazit výsledky">
                     </div>
                 </form>
                     <div>
@@ -118,6 +78,7 @@
                     %>
                         <br/>
                     </div>
+                    <form action="uchazeci" method="POST">
                     <%
                         for(int i = 0; i < uchazec.length; i++){
                     %>
@@ -127,8 +88,8 @@
                             for(int j = 0; j < uchazec[0].length; j++){
                                 if(show[j]!=null&&show[j].equals("show")){
                         %>
-                                    <span id="listOfApplicants">
-                                        <%= uchazec[i][j] %>
+                                    <span >
+                                        <input type="text" name="<%= labelRaw[j]+"+"+i %>" value="<%= uchazec[i][j] %>">
                                     </span>
                         <%
                                 }
@@ -139,7 +100,9 @@
                     <%
                         }
                     %>
+                    <input type="submit" name="zmenitudaje" value="změnit údaje">
+                    </form>
                 
-            </div>
+       <%--     </div>--%>
 
-    <%@ include file="/footer.jsp"%>
+    <%--@ include file="/footer.jsp"--%>

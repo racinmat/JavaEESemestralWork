@@ -68,8 +68,10 @@ public class Mysql {
      */
     public String[] login(String username, String password){
         String[] output=new String[5];
+        Label lab=new Label();
+        String[] label=lab.getLabelRaw();
         try {
-            String sql = "SELECT * FROM login where username=? and password=?";
+            String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ps.setString(2,password);
@@ -82,8 +84,8 @@ public class Mysql {
             String nameTemp="";
             String lastnameTemp="";
             while(rs.next()){
-                nameTemp=rs.getString("name");
-                lastnameTemp=rs.getString("lastname");
+                nameTemp=rs.getString(label[1]);
+                lastnameTemp=rs.getString(label[2]);
                 rightsTemp=rs.getInt("rights");
                 size++;
             }
@@ -125,20 +127,23 @@ public class Mysql {
     /**
      * Vloží do tabulky ip adres novou ip adresu s počtem registrací 1
      * @param IP IP adresa, která má být vložena
-     * @return vrátí 1, pokud bylo vložení úspěšné, jinak vrátí 0
+     * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
      */
-    public int insertNewIP(String IP){
-        int rs=0;
+    public boolean insertNewIP(String IP){
+        boolean output=false;
         try {
             String sql = "INSERT INTO ip_adresa(ip, count) VALUES(?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,IP);
             ps.setInt(2,1);
-            rs = ps.executeUpdate();                                            //pro parametrizovaný dotaz
+            int rs = ps.executeUpdate();                                            //pro parametrizovaný dotaz
+            if (rs==1) {
+                output=true;
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return rs;
+        return output;
     }
     
     /**
@@ -166,33 +171,36 @@ public class Mysql {
     /**
      * Zvýší počet registrací z dané IP adresy o 1
      * @param IP IP adresa, u které má být zvýšen počet registrací
-     * @return vrátí 1, pokud bylo vložení úspěšné, jinak vrátí 0
+     * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
      */
-    public int increaseIPcount(String IP){
-        int rs=0;
+    public boolean increaseIPcount(String IP){
+        boolean output=false;
         try {
             String sql = "UPDATE ip_adresa SET count = count+1 WHERE ip = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,IP);
-            rs = ps.executeUpdate(); 
+            int rs = ps.executeUpdate();                                        //pro parametrizovaný dotaz
+            if (rs==1) {
+                output=true;
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return rs;
+        return output;
     }
     
     /**
      * Vloží do tabulky loginu i do tabulky uchazečů záznam o novém uchazeči o studium
      * @param tabulka tabulka, do které se mají informace vložit, možné hodnoty: uchazeci, uchazeci_spam a uchazeci_ipspam
      * @param input pole, kde jsou všechny údaje o studentovi
-     * @return vrátí 1, pokud bylo vložení úspěšné, jinak vrátí 0
+     * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
      */
-    public int insertNewApplicant(String tabulka, String[] input){
-        int rs=0;
+    public boolean insertNewApplicant(String tabulka, String[] input){
+        boolean output=false;
+        Label lab=new Label();
+        String[] label=lab.getLabelRaw();
         try {
-            //String sql = "INSERT INTO login(username, name, lastname, password, rights) VALUES('"+input[0]+"','"+input[1]+"','"+input[2]+"','"+input[3]+"','4')";
-            //int rsLogin = stmt.executeUpdate(sql);
-            String sql = "INSERT INTO login(username, name, lastname, password, rights) VALUES(?,?,?,?,?)";
+            String sql = "INSERT INTO login("+label[0]+", "+label[1]+", "+label[2]+", "+label[3]+", rights) VALUES(?,?,?,?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
             ps.setString(2,input[1]);
@@ -201,16 +209,11 @@ public class Mysql {
             ps.setInt(5,4);
             int rsLogin = ps.executeUpdate(); 
             
-            sql = "INSERT INTO "+tabulka+"(username, studijniprogram, studijniobor, pohlavi, statniprislusnost, "
-                    + "rodinnystav, email, narozeniden, narozenimesic, narozenirok, "
-                    + "cisloobcanskehoprukazu, rodnecislo, cislopasu, narozenimisto, narozeniokres, "
-                    + "adresaulice, adresacislodomu, adresacastobce, adresaobec, adresaokres, "
-                    + "adresapsc, adresastat, adresatelefon, adresaposta, kontaktulice, "
-                    + "kontaktcislodomu, kontakttelefon, kontaktcastobce, kontaktobec, kontaktokres, "
-                    + "kontaktpcs, kontaktposta, kontaktstat, ssnazev, ssadresa, "
-                    + "ssobor, ssjkov, sskkov, ssizo, ssrokmaturity, "
-                    + "stavprijeti, skolne) "
-                    + "VALUES("
+            sql = "INSERT INTO "+tabulka+"("+ label[0]+", ";
+            for (int i = 4; i < label.length; i++) {
+                sql+=label[i]+", ";
+            }
+            sql+=") VALUES("
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
@@ -218,55 +221,22 @@ public class Mysql {
                     + "?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
-            ps.setString(2,input[4]);
-            ps.setString(3,input[5]);
-            ps.setString(4,input[6]);
-            ps.setString(5,input[7]);
-            ps.setString(6,input[8]);
-            ps.setString(7,input[9]);
-            ps.setString(8,input[10]);
-            ps.setString(9,input[11]);
-            ps.setString(10,input[12]);
-            ps.setString(11,input[13]);
-            ps.setString(12,input[14]);
-            ps.setString(13,input[15]);
-            ps.setString(14,input[16]);
-            ps.setString(15,input[17]);
-            ps.setString(16,input[18]);
-            ps.setString(17,input[19]);
-            ps.setString(18,input[20]);
-            ps.setString(19,input[21]);
-            ps.setString(20,input[22]);
-            ps.setString(21,input[23]);
-            ps.setString(22,input[24]);
-            ps.setString(23,input[25]);
-            ps.setString(24,input[26]);
-            ps.setString(25,input[27]);
-            ps.setString(26,input[28]);
-            ps.setString(27,input[29]);
-            ps.setString(28,input[30]);
-            ps.setString(29,input[31]);
-            ps.setString(30,input[32]);
-            ps.setString(31,input[33]);
-            ps.setString(32,input[34]);
-            ps.setString(33,input[35]);
-            ps.setString(34,input[36]);
-            ps.setString(35,input[37]);
-            ps.setString(36,input[38]);
-            ps.setString(37,input[39]);
-            ps.setString(38,input[40]);
-            ps.setString(39,input[41]);
-            ps.setString(40,input[42]);
+            for (int i = 2; i < 40; i++) {
+                ps.setString(i,input[i+2]);
+            }
             ps.setString(41,"nezaplacen registrační poplatek");
             ps.setString(42,"nezaplaceno");
             
             int rsUchazec = ps.executeUpdate(); 
             
-            rs=Math.min(rsLogin, rsUchazec);
+            int rs=Math.min(rsLogin, rsUchazec);
+            if (rs==1) {
+                output=true;
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return rs;
+        return output;
     }
     
     /**
@@ -277,54 +247,18 @@ public class Mysql {
     public String[][] showApplicants(String tabulka){
         ArrayList<String[]> output = new ArrayList<String[]>();
         String[][] outputString = null;
+        Label lab=new Label();
+        String[] label=lab.getLabelRaw();
         try {
             String sql = "SELECT * FROM "+tabulka+" where 1";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String[] temp=new String[45];                                   //navíc na konci políčko přijat
-                temp[0]=rs.getString("username");
-                temp[4]=rs.getString("studijniprogram");
-                temp[5]=rs.getString("studijniobor");
-                temp[6]=rs.getString("pohlavi");
-                temp[7]=rs.getString("statniprislusnost");
-                temp[8]=rs.getString("rodinnystav");
-                temp[9]=rs.getString("email");
-                temp[10]=rs.getString("narozeniden");
-                temp[11]=rs.getString("narozenimesic");
-                temp[12]=rs.getString("narozenirok");
-                temp[13]=rs.getString("cisloobcanskehoprukazu");
-                temp[14]=rs.getString("rodnecislo");
-                temp[15]=rs.getString("cislopasu");
-                temp[16]=rs.getString("narozenimisto");
-                temp[17]=rs.getString("narozeniokres");
-                temp[18]=rs.getString("adresaulice");
-                temp[19]=rs.getString("adresacislodomu");
-                temp[20]=rs.getString("adresacastobce");
-                temp[21]=rs.getString("adresaobec");
-                temp[22]=rs.getString("adresaokres");
-                temp[23]=rs.getString("adresapsc");
-                temp[24]=rs.getString("adresastat");
-                temp[25]=rs.getString("adresatelefon");
-                temp[26]=rs.getString("adresaposta");
-                temp[27]=rs.getString("kontaktulice");
-                temp[28]=rs.getString("kontaktcislodomu");
-                temp[29]=rs.getString("kontakttelefon");
-                temp[30]=rs.getString("kontaktcastobce");
-                temp[31]=rs.getString("kontaktobec");
-                temp[32]=rs.getString("kontaktokres");
-                temp[33]=rs.getString("kontaktpcs");
-                temp[34]=rs.getString("kontaktposta");
-                temp[35]=rs.getString("kontaktstat");
-                temp[36]=rs.getString("ssnazev");
-                temp[37]=rs.getString("ssadresa");
-                temp[38]=rs.getString("ssobor");
-                temp[39]=rs.getString("ssjkov");
-                temp[40]=rs.getString("sskkov");
-                temp[41]=rs.getString("ssizo");
-                temp[42]=rs.getString("ssrokmaturity");
-                temp[43]=rs.getString("stavprijeti");
-                temp[44]=rs.getString("skolne");
+                temp[0]=rs.getString(label[0]);
+                for (int i = 4; i < label.length; i++) {
+                    temp[i]=rs.getString(label[i]);
+                }
                 output.add(temp);
             }
             outputString=new String[output.size()][45];
@@ -333,15 +267,15 @@ public class Mysql {
             }
             
             for (int i = 0; i < outputString.length; i++) {
-                sql = "SELECT * FROM login where username = ?";
+                sql = "SELECT * FROM login where "+label[0]+" = ?";
                 ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
                 ps.setString(1,outputString[i][0]);
                 ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
                 while(rsLogin.next()){
-                    outputString[i][1]=rsLogin.getString("name");                                       
-                    outputString[i][2]=rsLogin.getString("lastname");
-                    outputString[i][3]=rsLogin.getString("password");
-                    outputString[i][3]=outputString[i][3].substring(0, 5);
+                    outputString[i][1]=rsLogin.getString(label[0]);                                       
+                    outputString[i][2]=rsLogin.getString(label[1]);
+                    outputString[i][3]=rsLogin.getString(label[2]);
+                    //outputString[i][3]=outputString[i][3].substring(0, 5);
                 }
             }
             
@@ -350,5 +284,93 @@ public class Mysql {
         }
         
         return outputString;
+    }
+    
+    private String createUpdateStatement(String tabulka, String[] column){
+        Label lab=new Label();
+        String[] label=lab.getLabelRaw();
+        String sql = "UPDATE "+tabulka+" SET ";
+        for (int i = 4; i < column.length; i++) {
+            if (column[i]!="") {
+                sql+=label[i]+" = ?";
+                if(!(i==column.length-1)){                                      //pro poslední iteraci cyklu nebude na konci čárka
+                    sql+= ", ";
+                }
+            }
+        }
+        sql+="WHERE "+label[0]+"= ?";
+        return sql;
+    }
+    
+    public boolean updateApplicants(String tabulka, String[][] uchazec, String[] column){
+        int[] rs=new int[uchazec.length*2];
+        for (int i = 0; i < uchazec.length; i++) {                              //update se provede pro každého uchazeče
+            try {
+            String sql=createUpdateStatement(tabulka, column);
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,uchazec[i][4]);
+            ps.setString(2,uchazec[i][5]);
+            ps.setString(3,uchazec[i][6]);
+            ps.setString(4,uchazec[i][7]);
+            ps.setString(5,uchazec[i][8]);
+            ps.setString(6,uchazec[i][9]);
+            ps.setString(7,uchazec[i][10]);
+            ps.setString(8,uchazec[i][11]);
+            ps.setString(9,uchazec[i][12]);
+            ps.setString(10,uchazec[i][13]);
+            ps.setString(11,uchazec[i][14]);
+            ps.setString(12,uchazec[i][15]);
+            ps.setString(13,uchazec[i][16]);
+            ps.setString(14,uchazec[i][17]);
+            ps.setString(15,uchazec[i][18]);
+            ps.setString(16,uchazec[i][19]);
+            ps.setString(17,uchazec[i][20]);
+            ps.setString(18,uchazec[i][21]);
+            ps.setString(19,uchazec[i][22]);
+            ps.setString(20,uchazec[i][23]);
+            ps.setString(21,uchazec[i][24]);
+            ps.setString(22,uchazec[i][25]);
+            ps.setString(23,uchazec[i][26]);
+            ps.setString(24,uchazec[i][27]);
+            ps.setString(25,uchazec[i][28]);
+            ps.setString(26,uchazec[i][29]);
+            ps.setString(27,uchazec[i][30]);
+            ps.setString(28,uchazec[i][31]);
+            ps.setString(29,uchazec[i][32]);
+            ps.setString(30,uchazec[i][33]);
+            ps.setString(31,uchazec[i][34]);
+            ps.setString(32,uchazec[i][35]);
+            ps.setString(33,uchazec[i][36]);
+            ps.setString(34,uchazec[i][37]);
+            ps.setString(35,uchazec[i][38]);
+            ps.setString(36,uchazec[i][39]);
+            ps.setString(37,uchazec[i][40]);
+            ps.setString(38,uchazec[i][41]);
+            ps.setString(39,uchazec[i][42]);
+            ps.setString(40,uchazec[i][43]);
+            ps.setString(41,uchazec[i][44]);
+            ps.setString(42,uchazec[i][0]);
+            
+            rs[2*i] = ps.executeUpdate(); 
+            
+            sql = "UPDATE login SET name = ?, lastname = ?, password = ? WHERE username = ?";
+            ps.setString(1,uchazec[i][1]);
+            ps.setString(2,uchazec[i][2]);
+            ps.setString(3,uchazec[i][3]);
+            ps.setString(4,uchazec[i][0]);
+            
+            rs[2*i+1] = ps.executeUpdate(); 
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        boolean output=true;
+        for (int i = 0; i < rs.length; i++) {
+            if (rs[i]!=1) {
+                output=false;
+            }
+        }
+        return output;
     }
 }
