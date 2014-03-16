@@ -46,6 +46,7 @@ public class Uchazeci extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
+            request.setCharacterEncoding("UTF-8");
             if (request.getParameter("zobrazitvysledky")!=null) {
                 getApplicants(request);
                 HttpSession session = request.getSession(true);

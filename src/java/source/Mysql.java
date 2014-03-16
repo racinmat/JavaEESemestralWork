@@ -44,7 +44,7 @@ public class Mysql {
         id=null;
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url+dbName,uname,pwd);
+            conn = DriverManager.getConnection(url+dbName+"?useUnicode=true&characterEncoding=utf-8",uname,pwd);    //kvůli UTF-8 kódování při komunikaci s mysql databází
         }
         catch(ClassNotFoundException e)
         {
