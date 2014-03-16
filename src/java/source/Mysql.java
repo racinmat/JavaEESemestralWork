@@ -314,6 +314,7 @@ public class Mysql {
             rs[2*i] = ps.executeUpdate(); 
             
             sql = "UPDATE login SET name = ?, lastname = ?, password = ? WHERE username = ?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,uchazec[i][1]);
             ps.setString(2,uchazec[i][2]);
             ps.setString(3,uchazec[i][3]);
