@@ -302,6 +302,8 @@ public class Mysql {
     
     public boolean updateApplicants(String tabulka, String[][] uchazec){
         int[] rs=new int[uchazec.length*2];
+        Label lab=new Label();
+        String[] label=lab.getLabelRaw();
         for (int i = 0; i < uchazec.length; i++) {                              //update se provede pro každého uchazeče
             try {
             String sql=createUpdateStatement(tabulka);
@@ -313,7 +315,7 @@ public class Mysql {
             
             rs[2*i] = ps.executeUpdate(); 
             
-            sql = "UPDATE login SET name = ?, lastname = ?, password = ? WHERE username = ?";
+            sql = "UPDATE login SET "+label[1]+" = ?, "+label[2]+" = ?, "+label[3]+" = ? WHERE "+label[0]+" = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,uchazec[i][1]);
             ps.setString(2,uchazec[i][2]);
