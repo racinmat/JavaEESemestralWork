@@ -28,7 +28,7 @@
 
 
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
-                <% if(loggedIn.equals("success")&&rights<=1){ %>
+            <% if(loggedIn.equals("success")&&rights<=1){ %>
                     
                 <h2>Seznam uchazečů:</h2>
                 <p class="entry-meta">
@@ -37,7 +37,17 @@
                     <p><a href="uchazeci?table=uchazeci">Vypsat seznam uchazečů.</a></p>
                     <p><a href="uchazeci?table=uchazeci_spam">Vypsat seznam uchazečů, kteří vyplnili skryté pole</a></p>
                     <p><a href="uchazeci?table=uchazeci_ipspam">Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</a></p>
-                    <% } %>
+            <% 
+            } 
+            else {
+            %>
+                <p class="entry-meta">
+                  </p><!-- end .entry-meta -->
+                <div class="entry-summary">
+            
+            <%
+            }
+            %>
                 </div>
             </div>
                 

@@ -11,7 +11,10 @@
 <%  
     session = request.getSession(true);                                         //zpřístupní se session
     String[][] uchazec=(String[][]) session.getAttribute("allApplicants");
-    String[] show=new String[uchazec[0].length];
+    Label lab=new Label();
+    String[] label=lab.getLabel();
+    String[] labelRaw=lab.getLabelRaw();
+    String[] show=new String[label.length];
     for (int i = 0; i < show.length; i++) {
         show[i]="";
     }
@@ -32,12 +35,7 @@
                 
                 <form id="showPeopleForm" action="uchazeci" method="POST">
                     <%  
-                        Label lab=new Label();
-                        String[] label=lab.getLabel();
-                        String[] labelRaw=lab.getLabelRaw();
-                        
-                        
-                        String[] checked = new String [uchazec[0].length];
+                        String[] checked = new String [label.length];
                         for (int i = 0; i < checked.length; i++) {
                             if(show[i].equals("show")){
                                 checked[i]="checked";
@@ -46,7 +44,7 @@
                                 checked[i]="";
                             }
                         }
-                        String[] input = new String [uchazec[0].length];
+                        String[] input = new String [label.length];
                         for (int i = 0; i < input.length; i++) {
                             input[i]="sloupec"+i;
                         }
@@ -66,7 +64,7 @@
                 </form>
                     <div>
                     <%  
-                        for(int j = 0; j < uchazec[0].length; j++){
+                        for(int j = 0; j < label.length; j++){
                             if(show[j]!=null&&show[j].equals("show")){
                         %>
                                     <span id="listOfApplicants">
@@ -81,11 +79,15 @@
                     <form action="uchazeci" method="POST">
                     <%
                         for(int i = 0; i < uchazec.length; i++){
+                            if(show[0]!=null&&show[0].equals("show")){
                     %>
                     <div>
+                        <span id="listOfApplicants">
+                            <%= uchazec[i][0] %>
+                        </span>
                         <%  
-                            
-                            for(int j = 0; j < uchazec[0].length; j++){
+                            }
+                            for(int j = 1; j < label.length; j++){
                                 if(show[j]!=null&&show[j].equals("show")){
                         %>
                                     <span >

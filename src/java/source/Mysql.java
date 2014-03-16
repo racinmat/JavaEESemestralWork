@@ -272,9 +272,9 @@ public class Mysql {
                 ps.setString(1,outputString[i][0]);
                 ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
                 while(rsLogin.next()){
-                    outputString[i][1]=rsLogin.getString(label[0]);                                       
-                    outputString[i][2]=rsLogin.getString(label[1]);
-                    outputString[i][3]=rsLogin.getString(label[2]);
+                    outputString[i][1]=rsLogin.getString(label[1]);
+                    outputString[i][2]=rsLogin.getString(label[2]);
+                    outputString[i][3]=rsLogin.getString(label[3]);
                     //outputString[i][3]=outputString[i][3].substring(0, 5);
                 }
             }
@@ -286,69 +286,29 @@ public class Mysql {
         return outputString;
     }
     
-    private String createUpdateStatement(String tabulka, String[] column){
+    private String createUpdateStatement(String tabulka){
         Label lab=new Label();
         String[] label=lab.getLabelRaw();
         String sql = "UPDATE "+tabulka+" SET ";
-        for (int i = 4; i < column.length; i++) {
-            if (column[i]!="") {
-                sql+=label[i]+" = ?";
-                if(!(i==column.length-1)){                                      //pro poslední iteraci cyklu nebude na konci čárka
-                    sql+= ", ";
-                }
+        for (int i = 4; i < label.length; i++) {                                //protože jméno a příjmení nepatří do tabulky
+            sql+=label[i]+" = ?";
+            if(!(i==label.length-1)){                                      //pro poslední iteraci cyklu nebude na konci čárka
+                sql+= ", ";
             }
         }
-        sql+="WHERE "+label[0]+"= ?";
+        sql+=" WHERE "+label[0]+"= ?";
         return sql;
     }
     
-    public boolean updateApplicants(String tabulka, String[][] uchazec, String[] column){
+    public boolean updateApplicants(String tabulka, String[][] uchazec){
         int[] rs=new int[uchazec.length*2];
         for (int i = 0; i < uchazec.length; i++) {                              //update se provede pro každého uchazeče
             try {
-            String sql=createUpdateStatement(tabulka, column);
+            String sql=createUpdateStatement(tabulka);
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,uchazec[i][4]);
-            ps.setString(2,uchazec[i][5]);
-            ps.setString(3,uchazec[i][6]);
-            ps.setString(4,uchazec[i][7]);
-            ps.setString(5,uchazec[i][8]);
-            ps.setString(6,uchazec[i][9]);
-            ps.setString(7,uchazec[i][10]);
-            ps.setString(8,uchazec[i][11]);
-            ps.setString(9,uchazec[i][12]);
-            ps.setString(10,uchazec[i][13]);
-            ps.setString(11,uchazec[i][14]);
-            ps.setString(12,uchazec[i][15]);
-            ps.setString(13,uchazec[i][16]);
-            ps.setString(14,uchazec[i][17]);
-            ps.setString(15,uchazec[i][18]);
-            ps.setString(16,uchazec[i][19]);
-            ps.setString(17,uchazec[i][20]);
-            ps.setString(18,uchazec[i][21]);
-            ps.setString(19,uchazec[i][22]);
-            ps.setString(20,uchazec[i][23]);
-            ps.setString(21,uchazec[i][24]);
-            ps.setString(22,uchazec[i][25]);
-            ps.setString(23,uchazec[i][26]);
-            ps.setString(24,uchazec[i][27]);
-            ps.setString(25,uchazec[i][28]);
-            ps.setString(26,uchazec[i][29]);
-            ps.setString(27,uchazec[i][30]);
-            ps.setString(28,uchazec[i][31]);
-            ps.setString(29,uchazec[i][32]);
-            ps.setString(30,uchazec[i][33]);
-            ps.setString(31,uchazec[i][34]);
-            ps.setString(32,uchazec[i][35]);
-            ps.setString(33,uchazec[i][36]);
-            ps.setString(34,uchazec[i][37]);
-            ps.setString(35,uchazec[i][38]);
-            ps.setString(36,uchazec[i][39]);
-            ps.setString(37,uchazec[i][40]);
-            ps.setString(38,uchazec[i][41]);
-            ps.setString(39,uchazec[i][42]);
-            ps.setString(40,uchazec[i][43]);
-            ps.setString(41,uchazec[i][44]);
+                for (int j = 1; j < 42; j++) {
+                    ps.setString(j,uchazec[i][j+3]);
+                }
             ps.setString(42,uchazec[i][0]);
             
             rs[2*i] = ps.executeUpdate(); 

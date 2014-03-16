@@ -30,13 +30,13 @@ public class Uchazeci extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private String table;
+    private String[][] udajeouzivatelich;                                       //proměnná, která uloží všechna data o uživatelích a potom se při čtení z tablky do ní ukládají nové ne-null hodnoty   
+    
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            HttpSession session = request.getSession(true);
-            Mysql sql=new Mysql();
-            String table=request.getParameter("table");
-            String[][] output = sql.showApplicants(table);
-            session.setAttribute("allApplicants", output);
+            this.table=request.getParameter("table");
+            getApplicants(request);
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
             Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);
@@ -47,6 +47,7 @@ public class Uchazeci extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getParameter("zobrazitvysledky")!=null) {
+                getApplicants(request);
                 HttpSession session = request.getSession(true);
                 Label lab=new Label();
                 String[] label=lab.getLabel();
@@ -66,24 +67,27 @@ public class Uchazeci extends HttpServlet {
                 Mysql sql=new Mysql();
                 Label lab=new Label();
                 String[] labelRaw=lab.getLabelRaw();
-                String table=request.getParameter("table");
-                int count=0;
-                while(request.getParameter(labelRaw[0]+"+"+count)!=null){
-                    count++;
-                }
-                String[][] uchazec=new String[count][lab.getLength()];
-                for (int i = 0; i < uchazec.length; i++) {
+                for (int i = 0; i < udajeouzivatelich.length; i++) {
                     for (int j = 0; j < lab.getLength(); j++) {
-                        uchazec[i][j]=request.getParameter(labelRaw[j]+"+"+i);
+                        if (request.getParameter(labelRaw[j]+"+"+i)!=null) {
+                            udajeouzivatelich[i][j]=request.getParameter(labelRaw[j]+"+"+i);
+                        }
                     }
                 }
-                String[] show=(String[]) session.getAttribute("show");
-                boolean output = sql.updateApplicants(table, uchazec, show);
+                boolean output = sql.updateApplicants(table, udajeouzivatelich);
             }
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
             Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void getApplicants(HttpServletRequest request){
+        HttpSession session = request.getSession(true);
+        Mysql sql=new Mysql();
+        udajeouzivatelich = sql.showApplicants(table);
+        session.setAttribute("allApplicants", udajeouzivatelich);
+            
     }
 }
 
