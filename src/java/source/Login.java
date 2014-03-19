@@ -45,6 +45,8 @@ public class Login extends HttpServlet{
             int rights=Integer.parseInt(login[1]);
             session.setAttribute("rights", rights);
             session.setAttribute("rightsString",login[2]);
+            session.setAttribute("username",login[5]);
+            
             switch(rights){ 
             case 0:
                 response.sendRedirect(URL);

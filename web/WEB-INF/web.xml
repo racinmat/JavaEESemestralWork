@@ -7,6 +7,14 @@
         </session-timeout>
     </session-config>
     <servlet>
+        <servlet-name>changeData</servlet-name>
+        <servlet-class>source.ChangeData</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>changeData</servlet-name>
+        <url-pattern>/ChangeData</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>testing</servlet-name>
         <servlet-class>source.testing</servlet-class>
     </servlet>

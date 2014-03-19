@@ -22,12 +22,14 @@
     if(logged!=null&&logged.equals("fail")){                                    //ošetřena inicializace proměnné
         form="<form action=\"login\" method=\"POST\">uživatelské jméno:<input type=\"text\" name=\"username\">heslo:<input type=\"password\" name=\"password\"><input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\"></form>";
         failMessage="<div>Přihlášení se nezdařilo, bylo nesprávně zadáno uživatelské jméno nebo heslo</div>";
+        if(logged.equals("fail")){
+            session.setAttribute("logged", null);
+        }
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
     if(logged!=null&&logged.equals("success")){                                    //ošetřena inicializace proměnné
         form="<form action=\"logout\" method=\"POST\"><input type=\"submit\" name=\"odhlásit se\" value=\"odhlásit se\"></form>";
         userInfo="<div id=\"footer\" class=\"clearfix\">Jste přihlášen jako "+name+" "+lastname+", váš status je "+pravaString+"</div>";
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
-    
     
 %>
             

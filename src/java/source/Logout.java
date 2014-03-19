@@ -22,6 +22,7 @@ public class Logout extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
     HttpSession session = request.getSession(true);
     session.setAttribute("logged", null); 
+    session.setAttribute("username", null); 
     session.setAttribute("name", null); 
     session.setAttribute("lastname", null); 
     session.setAttribute("rightsString", null);  

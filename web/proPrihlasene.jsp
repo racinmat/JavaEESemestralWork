@@ -9,7 +9,24 @@
     <%
         String[] label=Label.getLabel();
         String[] labelRaw=Label.getLabelRaw();
-        SecurityCheck security=new SecurityCheck(request);
+        String[] empty=new String[30];
+        if(session.getAttribute("formCheck")!=null){
+            empty=(String[]) session.getAttribute("formCheck");                 //zjistí se, jak byl uživatel úspěšný při registraci
+        }
+        String registered="";
+        if(session.getAttribute("registered")!=null){
+            registered=(String) session.getAttribute("registered");                 //zjistí se, jak byl uživatel úspěšný při registraci
+        }
+        
+        String message="";
+        if(registered.equals("success")){
+            message="<div>Heslo bylo úspěšně změněno.</div>";
+        }else if(registered.equals("fail")){
+            message="<div>Bohužel se změna hesla nezdařila, zkuste změnit heslo znovu nebo kontaktujte administrátora.</div>";
+        }
+        
+        session.setAttribute("registered", null);
+        session.setAttribute("formCheck", null);
     
     %>
 <h1 class="title-header">Pro Pedagogy</h1>
@@ -27,17 +44,25 @@
                     if(security.isUchazec()){ 
                 %>
                   <div class="entry-summary"><p>Pro přihlášené uživatele.</p>
+                    <%= message %>
                     <div>
                         Změna osobních údajů:
                     </div>
                     <div>
-                        <form action="registercheck" method="POST" id="registerForm">
-                            <label for="<%= labelRaw[4] %>">Zdejte své heslo:</label>
-                            <input id="<%= labelRaw[4] %>" type="text" name="<%= labelRaw[4] %>">
-                            <label for="noveheslo">Zadejte své nové heslo:</label>
+                        <form action="ChangeDataCheck" method="POST" id="registerForm">
+                            <div>
+                            <label for="<%= labelRaw[4] %>"<%= empty[0] %>>Zdejte své heslo:</label>
+                            <input id="<%= labelRaw[4] %>" type="password" name="<%= labelRaw[4] %>">
+                            </div>
+                            <div>
+                            <label for="noveheslo"<%= empty[1] %>>Zadejte své nové heslo:</label>
                             <input id="noveheslo" type="password" name="noveheslo">
-                            <label for="kontrola">Zadejte pro kontrolu znovu své nové heslo:</label>
+                            </div>
+                            <div>
+                            <label for="kontrola"<%= empty[2] %>>Zadejte pro kontrolu znovu své nové heslo:</label>
                             <input id="kontrola" type="password" name="kontrola">
+                            </div>
+                            <input type="submit" name="odeslat" value="změnit heslo">
                         </form>
                     </div>
                 </div>

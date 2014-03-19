@@ -28,6 +28,7 @@ public class MenuColoring {
     String proStudenty="";
     String proPedagogy="";
     String uredniDeska="";
+    String proPrihlasene="";
 
     public MenuColoring(String uri) {
         this.uri=uri;
@@ -83,5 +84,12 @@ public class MenuColoring {
             uredniDeska="current-menu-item page_item page-item-2 current_page_item current_page_parent";
         }
         return uredniDeska;
+    }
+    
+    public String getProPrihlasene() {
+        if("proPrihlasene.jsp".equals(pageName)){
+            proPrihlasene="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        }
+        return proPrihlasene;
     }
 }

@@ -67,7 +67,7 @@ public class Mysql {
      * rightsString, což je název přiřazený každé hodnotě rights
      */
     public String[] login(String username, String password){
-        String[] output=new String[5];
+        String[] output=new String[6];
         String[] label=Label.getLabelRaw();
         try {
             String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
@@ -83,15 +83,14 @@ public class Mysql {
             String nameTemp="";
             String lastnameTemp="";
             while(rs.next()){
-                nameTemp=rs.getString(label[1]);
-                lastnameTemp=rs.getString(label[2]);
-                rightsTemp=rs.getInt("rights");
+                username=rs.getString(label[0]);
+                name=rs.getString(label[1]);
+                lastname=rs.getString(label[2]);
+                rights=rs.getInt("rights");
                 size++;
             }
             if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
-                name=nameTemp;
-                lastname=lastnameTemp;
-                rights=rightsTemp;
+                output[5]=username;
                 output[3]=name;
                 output[4]=lastname;
                 output[0]="success";
@@ -329,6 +328,26 @@ public class Mysql {
             if (rs[i]!=1) {
                 output=false;
             }
+        }
+        return output;
+    }
+    
+    public boolean updatePassword(String username, String password){
+        String[] label=Label.getLabelRaw();
+        int rs = 0;
+        try {
+            String sql = "UPDATE login SET "+label[3]+"=? where "+label[0]+"=?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,password);
+            ps.setString(2,username);
+            rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        boolean output=true;
+        if (rs!=1) {
+            output=false;
         }
         return output;
     }

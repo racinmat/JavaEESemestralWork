@@ -24,11 +24,12 @@ public class SecurityCheck {
         if (session.getAttribute("logged")!=null) {
             loggedString=(String) session.getAttribute("logged"); 
             if (session.getAttribute("rights")!=null) {
-                rights=Integer.parseInt((String) session.getAttribute("rights"));  
+                Integer temp=(Integer) session.getAttribute("rights");
+                rights=temp;  
             }
-        }
-        if (loggedString.equals("success")) {
-            logged=true;
+            if (loggedString.equals("success")) {
+                logged=true;
+            }
         }
         
     }

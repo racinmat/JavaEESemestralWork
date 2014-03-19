@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="source.MenuColoring" %>
-<%@ page import="source.SecurityCheck"%>
+<%@ page import="source.SecurityCheck" %>
 <%@ page import="source.Label" %>
 
 
@@ -15,7 +15,8 @@
     session = request.getSession(true);                                         //zpřístupní se session
     String loggingURL=menu.getPageName();                                       //získá se název současné stránky
     session.setAttribute("loggingURL", loggingURL);                             //nastaví se session proměnná loggingURL, abych věděl, odkud se uživatel přihlašovat a tedy, kam jej po přihlášení "vrátit"
-    
+    SecurityCheck security=new SecurityCheck(request);
+        
 %>
 <!DOCTYPE html>
 <html lang="cs-CZ">
@@ -63,7 +64,15 @@
                 <li id="menu-item-23" class="menu-item menu-item-type-post_type menu-item-object-page 
                     <%= menu.getUredniDeska() %>
                     menu-item-23"><a href="uredniDeska.jsp">Úřední deska</a></li>
-                
+                <%
+                    if(security.isUchazec()){ 
+                %>
+                <li id="menu-item-23" class="menu-item menu-item-type-post_type menu-item-object-page 
+                    <%= menu.getProPrihlasene()%>
+                    menu-item-23"><a href="proPrihlasene.jsp">Můj profil</a></li>
+                <%
+                    }
+                %>
             </ul>			</div><!-- end #main-nav -->
 
         <div id="logo">

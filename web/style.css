@@ -1366,6 +1366,10 @@ p.pages {
 
 #listOfApplicants {
     width: 142px;
-    //min-width: 100px;
     float: left;
+}
+
+.notFilled {
+    font-weight: bolder;
+    color: red;
 }

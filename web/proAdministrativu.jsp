@@ -8,7 +8,7 @@
     <%@ include file="/header.jsp"%>
 
     <%
-        SecurityCheck security=new SecurityCheck(request);
+
     %>
     <h1 class="title-header">Pro Administrativu</h1>
         </div><!-- end .column-title -->

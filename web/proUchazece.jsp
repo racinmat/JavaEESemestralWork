@@ -15,28 +15,11 @@
         registered=(String) session.getAttribute("registered");                 //zjistí se, jak byl uživatel úspěšný při registraci
     }
     String message="";
-    if(registered.equals("success")){
-        message="<div>Přihláška byla úspěšně podána, zanedlouho by vám měl přijít email s přihlašovacími údaji, kde můžete sledovat stav vyřízení své elektronické přihlášky</div>";
-    }else if(registered.equals("fail")){
-        message="<div>Bohužel se vyplnění elektronické přihlášky nezdařilo, zkuste ji vyplnit znovu nebo kontaktujte administrátora.</div>";
-    }else if(registered.equals("ip")){
-        message="<div>Bohužel již bylo dnes z vaší IP adresy odesláno 10 přihlšek. Zkuste podat přihlášku zítra nebo kontaktujte administrátora.</div>";
-    }else if(registered.equals("spam")){
-        message="<div>Stránky vás vyhodnotily jako robota, zkuste znovu načíst stránku a znovu vyplnit formulář.</div>";
-    }
     
     boolean[] notFilled = new boolean[label.length];
     String[] empty=new String[label.length];
     if(session.getAttribute("formCheck")!=null){
-        notFilled=(boolean[]) session.getAttribute("formCheck");                    //zjistí se, jak byl uživatel úspěšný při registraci
-        for (int i = 2; i < notFilled.length; i++) {
-            if (notFilled[i]) {
-                empty[i]=" style=\"font-weight: bolder;color: red\"";
-            }
-            else{
-                empty[i]="";
-            }
-        }
+        empty=(String[]) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
     String[] content=new String[43];
     for (int i = 0; i < content.length; i++) {
@@ -44,6 +27,16 @@
     }
     if(session.getAttribute("formContent")!=null){
         content=(String[]) session.getAttribute("formContent");
+    }
+    
+    if(registered.equals("success")){
+        message="<div>Přihláška byla úspěšně podána, zanedlouho by vám měl přijít email s přihlašovacími údaji, kde můžete sledovat stav vyřízení své elektronické přihlášky.</div>";
+    }else if(registered.equals("fail")){
+        message="<div>Bohužel se vyplnění elektronické přihlášky nezdařilo, zkuste ji vyplnit znovu nebo kontaktujte administrátora.</div>";
+    }else if(registered.equals("ip")){
+        message="<div>Bohužel již bylo dnes z vaší IP adresy odesláno 10 přihlšek. Zkuste podat přihlášku zítra nebo kontaktujte administrátora.</div>";
+    }else if(registered.equals("spam")){
+        message="<div>Stránky vás vyhodnotily jako robota, zkuste znovu načíst stránku a znovu vyplnit formulář.</div>";
     }
     
     String muz="";                                                                 //u selectu je třeba to ošetřit zvlášť pro každou možnost
@@ -66,6 +59,10 @@
             }
         }
     }
+    
+    session.setAttribute("registered", null);
+    session.setAttribute("formCheck", null);
+    session.setAttribute("formContent", null);
     
 %>
     <h1 class="title-header">Pro uchazeče</h1>

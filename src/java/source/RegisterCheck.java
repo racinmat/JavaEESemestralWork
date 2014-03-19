@@ -47,11 +47,12 @@ public class RegisterCheck extends HttpServlet {
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
             String[] labelRaw=Label.getLabelRaw();
-            boolean[] notFilled = new boolean[labelRaw.length-2];
+            String[] notFilled = new String[labelRaw.length-2];
             for (int i = 0; i < notFilled.length; i++) {
-                notFilled[i]=false;
+                notFilled[i]="";//empty[i]=" class=\"notFilled\"";
             }
             boolean error=false;
+            String notFilledStyle=" class=\"notFilled\"";
             
             String[] input = new String[labelRaw.length-2];
             for (int i = 1; i < labelRaw.length-2; i++) {
@@ -64,41 +65,41 @@ public class RegisterCheck extends HttpServlet {
             
             for (int i = 10; i <= 15; i++) {
                 if (notNumeric(input[i])) {
-                    notFilled[i]=true;                                          //pokud je notFilled true, pak je v daném políčku chyba
+                    notFilled[i]=notFilledStyle;                                          //pokud je notFilled true, pak je v daném políčku chyba
                     error=true;
                 }
             }
             if (notNumeric(input[19])) {
-                notFilled[19]=true;                                             //pokud je notFilled true, pak je v daném políčku chyba
+                notFilled[19]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
                 error=true;
             }
             if (notNumeric(input[23])) {
-                notFilled[23]=true;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                notFilled[23]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
             if (notNumeric(input[25])) {
-                notFilled[25]=true;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                notFilled[25]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
             if (notNumeric(input[28])) {
-                notFilled[28]=true;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                notFilled[28]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
             if (notNumeric(input[32])) {
-                notFilled[32]=true;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                notFilled[32]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
             if (notNumeric(input[34])) {
-                notFilled[34]=true;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                notFilled[34]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
             if (notNumeric(input[42])) {
-                notFilled[42]=true;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                notFilled[42]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
             for (int i = 1; i < notFilled.length; i++) {                        //testování prázdnosti vyplněných polí
                 if (i!=3&&input[i].equals("")) {                                //3 je pro heslo, to se nezadává
-                    notFilled[i]=true;                                          //pokud je notFilled 1, pak je v daném políčku chyba
+                    notFilled[i]=notFilledStyle;                                          //pokud je notFilled 1, pak je v daném políčku chyba
                     error=true;
                 }
             }
@@ -106,7 +107,7 @@ public class RegisterCheck extends HttpServlet {
             int atposition=email.indexOf("@");                                  //pozice zavináče
             int dotposition=email.lastIndexOf(".");                             //pozice tečky
             if (atposition<1 || dotposition<atposition+2 || dotposition+2>=email.length()){
-                notFilled[9]=true;
+                notFilled[9]=notFilledStyle;
                 error=true;                                                     //pokud neprojde validace, nastaví se error na false
             }
             HttpSession session = request.getSession();
