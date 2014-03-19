@@ -11,7 +11,7 @@ package source;
  * @author Azathoth
  */
 public class Label {
-    private final String[] label={
+    private static final String[] label={
         "uživatelské jméno",
         "jméno",
         "příjmení",
@@ -59,7 +59,7 @@ public class Label {
         "školné",
     };
     
-    private final String[] labelRaw={
+    private static final String[] labelRaw={
         "uzivatelskejmeno",                                                     //0
         "jmeno",                                                                //1
         "prijmeni",                                                             //2
@@ -107,27 +107,23 @@ public class Label {
         "skolne",                                                               //44
     };
 
-    public Label() {
-
-    }
-
-    public String[] getLabel() {
+    public static String[] getLabel() {
         return label;
     }
 
-    public String[] getLabelRaw() {
+    public static String[] getLabelRaw() {
         return labelRaw;
     }
     
-    public int getLength() {
+    public static int getLength() {
         return label.length;
     }
     
-    public String getLabelOnPosition(int i){
+    public static String getLabelOnPosition(int i){
         return label[i];
     }
     
-    public String getLabelRawOnPosition(int i){
+    public static String getLabelRawOnPosition(int i){
         return labelRaw[i];
     }
 }

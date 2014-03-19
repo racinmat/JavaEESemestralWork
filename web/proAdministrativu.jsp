@@ -8,17 +8,7 @@
     <%@ include file="/header.jsp"%>
 
     <%
-        session = request.getSession(true);
-        String loggedIn="";
-        String temp="";
-        int rights=Integer.MAX_VALUE;
-        if(session.getAttribute("rights")!=null&&session.getAttribute("logged")!=null){
-        temp=(String) session.getAttribute("rights").toString();
-        loggedIn=(String) session.getAttribute("logged");
-            if(temp!=null){
-                rights=Integer.parseInt(temp);
-            }
-        }
+        SecurityCheck security=new SecurityCheck(request);
     %>
     <h1 class="title-header">Pro Administrativu</h1>
         </div><!-- end .column-title -->
@@ -28,7 +18,7 @@
 
 
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
-            <% if(loggedIn.equals("success")&&rights<=1){ %>
+            <% if(security.isAdministrativa()){ %>
                     
                 <h2>Seznam uchazečů:</h2>
                 <p class="entry-meta">

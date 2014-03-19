@@ -4,23 +4,17 @@
     Author     : Azathoth
 --%>
 
+<%@page import="source.SecurityCheck"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ page import="source.Label" %>
     <%--@ include file="/header.jsp"--%>
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
-    session = request.getSession(true);                                         //zpřístupní se session
     String[][] uchazec=(String[][]) session.getAttribute("allApplicants");
-    Label lab=new Label();
-    String[] label=lab.getLabel();
-    String[] labelRaw=lab.getLabelRaw();
+    String[] label=Label.getLabel();
+    String[] labelRaw=Label.getLabelRaw();
     String[] show=new String[label.length];
-    for (int i = 0; i < show.length; i++) {
-        show[i]="";
-    }
-    if(session.getAttribute("show")!=null){
-        show=(String[]) session.getAttribute("show");
-    }
+    SecurityCheck security=new SecurityCheck(request);
     
 %>
     <h1 class="title-header">Pro Administrativu</h1>
@@ -31,6 +25,9 @@
 
 
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">--%>
+            <%
+                if(security.isAdministrativa()){
+            %>
                 <h2>Seznam uchazečů:</h2>
                 
                 <form id="showPeopleForm" action="uchazeci" method="POST">
@@ -104,7 +101,12 @@
                     %>
                     <input type="submit" name="zmenitudaje" value="změnit údaje">
                     </form>
-                
+            <%
+                }
+                else {
+                    response.sendRedirect("notLogged.jsp");
+                }
+            %>
        <%--     </div>--%>
 
     <%--@ include file="/footer.jsp"--%>

@@ -6,13 +6,11 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
-    <%@ page import="source.Label" %>
 <%
     session = request.getSession(true);                                         //zpřístupní se session
     String registered="";
-    Label lab=new Label();
-    String[] label=lab.getLabel();
-    String[] labelRaw=lab.getLabelRaw();
+    String[] label=Label.getLabel();
+    String[] labelRaw=Label.getLabelRaw();
     if(session.getAttribute("registered")!=null){
         registered=(String) session.getAttribute("registered");                 //zjistí se, jak byl uživatel úspěšný při registraci
     }

@@ -6,6 +6,10 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="source.MenuColoring" %>
+<%@ page import="source.SecurityCheck"%>
+<%@ page import="source.Label" %>
+
+
 <% 
     MenuColoring menu=new MenuColoring(request.getRequestURI());                //vytvoří se insrtance objektu barvícího horní menu, u všech položek menu jsou jeho gettery
     session = request.getSession(true);                                         //zpřístupní se session

@@ -50,9 +50,8 @@ public class Uchazeci extends HttpServlet {
             if (request.getParameter("zobrazitvysledky")!=null) {
                 getApplicants(request);
                 HttpSession session = request.getSession(true);
-                Label lab=new Label();
-                String[] label=lab.getLabel();
-                String[] show=new String[lab.getLength()];
+                String[] label=Label.getLabel();
+                String[] show=new String[Label.getLength()];
                 for (int i = 0; i < show.length; i++) {
                     if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
                         show[i]="show";
@@ -66,10 +65,9 @@ public class Uchazeci extends HttpServlet {
             if (request.getParameter("zmenitudaje")!=null) {
                 HttpSession session = request.getSession(true);
                 Mysql sql=new Mysql();
-                Label lab=new Label();
-                String[] labelRaw=lab.getLabelRaw();
+                String[] labelRaw=Label.getLabelRaw();
                 for (int i = 0; i < udajeouzivatelich.length; i++) {
-                    for (int j = 0; j < lab.getLength(); j++) {
+                    for (int j = 0; j < Label.getLength(); j++) {
                         if (request.getParameter(labelRaw[j]+"+"+i)!=null) {
                             udajeouzivatelich[i][j]=request.getParameter(labelRaw[j]+"+"+i);
                         }

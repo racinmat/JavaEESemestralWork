@@ -68,8 +68,7 @@ public class Mysql {
      */
     public String[] login(String username, String password){
         String[] output=new String[5];
-        Label lab=new Label();
-        String[] label=lab.getLabelRaw();
+        String[] label=Label.getLabelRaw();
         try {
             String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
@@ -197,8 +196,7 @@ public class Mysql {
      */
     public boolean insertNewApplicant(String tabulka, String[] input){
         boolean output=false;
-        Label lab=new Label();
-        String[] label=lab.getLabelRaw();
+        String[] label=Label.getLabelRaw();
         try {
             String sql = "INSERT INTO login("+label[0]+", "+label[1]+", "+label[2]+", "+label[3]+", rights) VALUES(?,?,?,?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
@@ -247,8 +245,7 @@ public class Mysql {
     public String[][] showApplicants(String tabulka){
         ArrayList<String[]> output = new ArrayList<String[]>();
         String[][] outputString = null;
-        Label lab=new Label();
-        String[] label=lab.getLabelRaw();
+        String[] label=Label.getLabelRaw();
         try {
             String sql = "SELECT * FROM "+tabulka+" where 1";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
@@ -302,8 +299,7 @@ public class Mysql {
     
     public boolean updateApplicants(String tabulka, String[][] uchazec){
         int[] rs=new int[uchazec.length*2];
-        Label lab=new Label();
-        String[] label=lab.getLabelRaw();
+        String[] label=Label.getLabelRaw();
         for (int i = 0; i < uchazec.length; i++) {                              //update se provede pro každého uchazeče
             try {
             String sql=createUpdateStatement(tabulka);

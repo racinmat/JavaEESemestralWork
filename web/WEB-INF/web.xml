@@ -18,6 +18,14 @@
         <servlet-name>registercheck</servlet-name>
         <servlet-class>source.RegisterCheck</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>changeDataCheck</servlet-name>
+        <servlet-class>source.ChangeDataCheck</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>changeDataCheck</servlet-name>
+        <url-pattern>/ChangeDataCheck</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>registercheck</servlet-name>
         <url-pattern>/registercheck</url-pattern>
