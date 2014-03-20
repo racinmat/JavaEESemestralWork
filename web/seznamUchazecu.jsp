@@ -10,17 +10,8 @@
     <%--@ include file="/header.jsp"--%>
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
-    String[][] uchazec=(String[][]) session.getAttribute("allApplicants");
-    String[] label=Label.getLabel();
-    String[] labelRaw=Label.getLabelRaw();
-    String[] show=new String[label.length];
     SecurityCheck security=new SecurityCheck(request);
-    for (int i = 0; i < show.length; i++) {
-        show[i]="";
-    }
-    if(session.getAttribute("show")!=null){
-        show=(String[]) session.getAttribute("show");
-    }
+    
 %>
     <h1 class="title-header">Pro Administrativu</h1>
         </div>
@@ -37,7 +28,19 @@
                 
                 <form id="showPeopleForm" action="uchazeci" method="POST">
                     <%  
-                        String[] checked = new String [label.length];
+                        String[][] uchazec=(String[][]) session.getAttribute("allApplicants");
+                        String[] label=Label.getLabel();
+                        String[] labelRaw=Label.getLabelRaw();
+                        String[] show=new String[label.length+1];
+                        String[] checked = new String [label.length+1];
+                        String[] input = new String [label.length+1];           //kvůli políčko zaškrtnout všechno je tam o 1 víc než labelů
+                        
+                        for (int i = 0; i < show.length; i++) {
+                            show[i]="";
+                        }
+                        if(session.getAttribute("show")!=null){
+                            show=(String[]) session.getAttribute("show");
+                        }    
                         for (int i = 0; i < checked.length; i++) {
                             if(show[i].equals("show")){
                                 checked[i]="checked";
@@ -46,20 +49,24 @@
                                 checked[i]="";
                             }
                         }
-                        String[] input = new String [label.length];
                         for (int i = 0; i < input.length; i++) {
                             input[i]="sloupec"+i;
                         }
-                        for(int i = 0; i < input.length; i++){
-                    %>
-                    <span style="checkBoxForm">
-                        <label for="<%= input[i] %>"><%= label[i] %></label>
-                        <input type="checkbox" id="<%= input[i] %>" name="<%= input[i] %>" value="checked" <%= checked[i] %>>
-                    <br/>
-                    </span>
-                    <%
+                        for(int i = 0; i < input.length-1; i++){
+                            %>
+                            <span style="checkBoxForm">
+                                <label for="<%= input[i] %>"><%= label[i] %></label>
+                                <input type="checkbox" id="<%= input[i] %>" name="<%= input[i] %>" value="checked" <%= checked[i] %>>
+                            <br/>
+                            </span>
+                            <%
                         }
                     %>
+                    <span style="checkBoxForm">
+                        <label for="<%= input[input.length-1] %>">Všechny sloupce</label>
+                        <input type="checkbox" id="<%= input[input.length-1] %>" name="<%= input[input.length-1] %>" value="checked" <%= checked[input.length-1] %>>
+                    <br/>
+                    </span>
                     <div>
                         <input type="submit" name="zobrazitvysledky" value="zobrazit výsledky">
                     </div>

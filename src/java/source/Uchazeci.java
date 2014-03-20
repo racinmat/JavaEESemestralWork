@@ -51,7 +51,7 @@ public class Uchazeci extends HttpServlet {
                 getApplicants(request);
                 HttpSession session = request.getSession(true);
                 String[] label=Label.getLabel();
-                String[] show=new String[Label.getLength()];
+                String[] show=new String[label.length+1];                       //kvůli políčku zaškrtnout vše
                 for (int i = 0; i < show.length; i++) {
                     if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
                         show[i]="show";
@@ -59,6 +59,15 @@ public class Uchazeci extends HttpServlet {
                     else {
                         show[i]="";
                     }
+                }
+                int last=show.length-1;
+                if (request.getParameter("sloupec"+last)!=null&&request.getParameter("sloupec"+last).equals("checked")) {
+                    for (int i = 0; i < show.length; i++) {                    //zobrazení všech sloupců
+                        show[i]="show";
+                    }
+                }
+                else {
+                    show[show.length-1]="";
                 }
                 session.setAttribute("show", show);
             }
