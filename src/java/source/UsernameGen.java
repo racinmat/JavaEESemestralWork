@@ -50,50 +50,10 @@ public class UsernameGen {
         return alphaNumeric;
     }
     
-    public boolean validateId(String id){
-        try
-        {
-            Connection conn = null;
-            Statement stmt;
-            String url = "jdbc:mysql://localhost:3306/";
-            String dbName ="mysql"; 
-            String uname = "root";
-            String pwd = "";
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url+dbName,uname,pwd);
-            String sql = "SELECT * FROM login where username='"+id+"'";
-            stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-    
-            int size=0;
-            int rights=Integer.MAX_VALUE;                                       //číselná práva jsou od nuly výš, max value tedy nepřidělí platná práva
-            int rightsTemp=Integer.MAX_VALUE;
-            String name="";
-            String lastname="";
-            String nameTemp="";
-            String lastnameTemp="";
-            while(rs.next()){
-                size++;
-            }
-            if (size>0) {
-                return false;
-            }
-            return true;
-        }
-        catch(ClassNotFoundException e)
-        {
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            Throwable t = ex.getCause();
-            
-        }
-        return false;
-    }
-    
     public String getValidatedId(){
+        Mysql sql=new Mysql();
         String id=getId();
-        boolean unique=validateId(id);
+        boolean unique=sql.validateId(id);
         if (unique) {
             return id;
         }

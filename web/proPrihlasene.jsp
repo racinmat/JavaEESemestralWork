@@ -29,7 +29,7 @@
         session.setAttribute("formCheck", null);
     
     %>
-<h1 class="title-header">Pro Pedagogy</h1>
+<h1 class="title-header">Pro přihlášené uživatele</h1>
         </div><!-- end .column-title -->
 
        <%@ include file="/leftColumn.jsp"%>

@@ -66,7 +66,18 @@ public class Register extends HttpServlet{
             }
         }
         
+        for (int i = 27; i <= 35; i++) {                                        //kontaktní údaje, nepovinné, pokud nevyplněny, předají se údaje z trvalého bydliště
+            if (input[i].equals("")) {
+                input[i]=input[i-9];
+            }
+        }
+        
         boolean rsWrite=sql.insertNewApplicant(tabulka, input);
+        
+        System.out.println("rsWrite:"+rsWrite);
+        System.out.println("rsIP:"+rsIP);
+        System.out.println("spam:"+spam);
+        
         if (rsIP&rsWrite) {
             if (spam==0) {
                 session.setAttribute("registered", "success");

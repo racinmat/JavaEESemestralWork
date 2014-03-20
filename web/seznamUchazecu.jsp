@@ -15,7 +15,12 @@
     String[] labelRaw=Label.getLabelRaw();
     String[] show=new String[label.length];
     SecurityCheck security=new SecurityCheck(request);
-    
+    for (int i = 0; i < show.length; i++) {
+        show[i]="";
+    }
+    if(session.getAttribute("show")!=null){
+        show=(String[]) session.getAttribute("show");
+    }
 %>
     <h1 class="title-header">Pro Administrativu</h1>
         </div>

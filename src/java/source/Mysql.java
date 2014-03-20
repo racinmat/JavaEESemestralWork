@@ -208,7 +208,10 @@ public class Mysql {
             
             sql = "INSERT INTO "+tabulka+"("+ label[0]+", ";
             for (int i = 4; i < label.length; i++) {
-                sql+=label[i]+", ";
+                sql+=label[i];
+                if (i<label.length-1) {
+                    sql+=", ";
+                }
             }
             sql+=") VALUES("
                     + "?,?,?,?,?,?,?,?,?,?,"
@@ -218,7 +221,7 @@ public class Mysql {
                     + "?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
-            for (int i = 2; i < 40; i++) {
+            for (int i = 2; i <= 40; i++) {
                 ps.setString(i,input[i+2]);
             }
             ps.setString(41,"nezaplacen registrační poplatek");
@@ -350,5 +353,35 @@ public class Mysql {
             output=false;
         }
         return output;
+    }
+    
+    /**
+     * 
+     * @param id
+     * @return returns true in case of unique id
+     */
+    public boolean validateId(String id){
+        String[] label=Label.getLabelRaw();
+        try
+        {
+            String sql = "SELECT * FROM login where "+label[0]+"=?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
+            int size=0;
+            while(rs.next()){
+                size++;
+            }
+            if (size>0) {
+                return false;
+            }
+            return true;
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            Throwable t = ex.getCause();
+            
+        }
+        return false;
     }
 }
