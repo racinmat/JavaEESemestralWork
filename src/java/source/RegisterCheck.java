@@ -33,6 +33,15 @@ public class RegisterCheck extends HttpServlet {
         }  
         return false;  
     }
+    
+    public static boolean notValidEmail(String str){
+        int atposition=str.indexOf("@");                                  //pozice zavináče
+        int dotposition=str.lastIndexOf(".");                             //pozice tečky
+        if (atposition<1 || dotposition<atposition+2 || dotposition+2>=str.length()){
+            return true;                                                     //pokud neprojde validace, nastaví se error na false
+        }
+        return false;
+    }
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.

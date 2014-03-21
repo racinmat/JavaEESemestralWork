@@ -35,22 +35,43 @@ public class SecurityCheck {
     }
     
     public boolean isMainAdmin(){
-        return logged&&rights<=0;
+        return logged&&rights==0;
     }
     
     public boolean isAdministrativa(){
-        return logged&&rights<=1;
+        return logged&&rights==1;
     }
     
     public boolean isPedagog(){
-        return logged&&rights<=2;
+        return logged&&rights==2;
     }
     
     public boolean isStudent(){
-        return logged&&rights<=3;
+        return logged&&rights==3;
     }
     
     public boolean isUchazec(){
+        return logged&&rights==4;
+    }
+    
+    public boolean hasMainAdminRights(){
+        return logged&&rights<=0;
+    }
+    
+    public boolean hasAdministrativaRights(){
+        return logged&&rights<=1;
+    }
+    
+    public boolean hasPedagogRights(){
+        return logged&&rights<=2;
+    }
+    
+    public boolean hasStudentRights(){
+        return logged&&rights<=3;
+    }
+    
+    public boolean hasUchazecRights(){
         return logged&&rights<=4;
     }
+    
 }

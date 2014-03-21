@@ -65,7 +65,7 @@
                     <%= menu.getUredniDeska() %>
                     menu-item-23"><a href="uredniDeska.jsp">Úřední deska</a></li>
                 <%
-                    if(security.isUchazec()){ 
+                    if(security.hasUchazecRights()){ 
                 %>
                 <li id="menu-item-23" class="menu-item menu-item-type-post_type menu-item-object-page 
                     <%= menu.getProPrihlasene()%>

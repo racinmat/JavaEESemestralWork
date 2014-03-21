@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
-<h1 class="title-header">Pro Pedagogy</h1>
+<h1 class="title-header">Nejste přihlášen</h1>
         </div><!-- end .column-title -->
 
        <%@ include file="/leftColumn.jsp"%>

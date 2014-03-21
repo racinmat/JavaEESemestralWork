@@ -384,4 +384,83 @@ public class Mysql {
         }
         return false;
     }
+    
+    /**
+     * Returns all data about chosen applicant from chosen table, except of name and last name.
+     * @param username username of user whose data will be returned
+     * @param tabulka table where is chosen user
+     * @return returns all data in chosen table, table is indexed by label, 
+     */
+    public String[] showApplicant(String username, String tabulka){
+        String[] output = new String[45];
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "SELECT * FROM "+tabulka+" where "+label[0]+" = ?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                output[0]=rs.getString(label[0]);
+                for (int i = 4; i < label.length; i++) {
+                    output[i]=rs.getString(label[i]);
+                }
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return output;
+    }
+    
+    public boolean updateApplicant(String[] uchazec, String tabulka){
+        int rs=0;
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql=createUpdateStatement(tabulka);
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            for (int j = 1; j < 42; j++) {
+                ps.setString(j,uchazec[j+3]);
+            }
+            ps.setString(42,uchazec[0]);
+            
+            rs = ps.executeUpdate(); 
+            } catch (SQLException ex) {
+                Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        boolean output=true;
+        if (rs!=1) {
+            output=false;
+        }
+        return output;
+    }
+    
+    /**
+     * Returns name of table where is applicant with username from input
+     * @param username
+     * @return returns uchazeci, uchazeci_spam or uchazeci_ipspam, depending on where username from id is stored
+     */
+    public String findTableWithApplicant(String username){
+        String output="";
+        String[] tabulky={"uchazeci", "uchazeci_spam", "uchazeci_ipspam"};
+        String[] label=Label.getLabelRaw();
+        try {
+            for (int i = 0; i < tabulky.length; i++) {
+                String sql = "SELECT * FROM "+tabulky[i]+" where "+label[0]+" = ?";
+                ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+                ps.setString(1,username);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    output=tabulky[i];
+                    return output;
+                }
+            }
+            throw new IllegalArgumentException("Username "+username+" was not found.");
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return output;
+    }
+    
 }

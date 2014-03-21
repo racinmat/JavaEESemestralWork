@@ -27,7 +27,7 @@
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">--%>
             <div class="wideList">
             <%
-                if(security.isAdministrativa()){
+                if(security.hasAdministrativaRights()){
             %>
                 <h2>Seznam uchazečů:</h2>
                 
