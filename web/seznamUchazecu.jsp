@@ -121,9 +121,9 @@
                         %>
                                     <span id="listOfApplicants">
                                         <select name="<%= labelRaw[j]+"+"+i %>">
-                                            <option value="<%= stavPrihlaskyRaw[0] %>" <%= stavPrihlaskySelected[i][0] %>><%= stavPrihlasky[0] %></option>
-                                            <option value="<%= stavPrihlaskyRaw[1] %>" <%= stavPrihlaskySelected[i][1] %>><%= stavPrihlasky[1] %></option>
-                                            <option value="<%= stavPrihlaskyRaw[2] %>" <%= stavPrihlaskySelected[i][2] %>><%= stavPrihlasky[2] %></option>
+                                            <option value="<%= stavPrihlasky[0] %>" <%= stavPrihlaskySelected[i][0] %>><%= stavPrihlasky[0] %></option>
+                                            <option value="<%= stavPrihlasky[1] %>" <%= stavPrihlaskySelected[i][1] %>><%= stavPrihlasky[1] %></option>
+                                            <option value="<%= stavPrihlasky[2] %>" <%= stavPrihlaskySelected[i][2] %>><%= stavPrihlasky[2] %></option>
                                         </select>
                                     </span>
                         <%

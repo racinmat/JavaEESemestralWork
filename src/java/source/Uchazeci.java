@@ -35,6 +35,7 @@ public class Uchazeci extends HttpServlet {
     private String criterium;
     private String criteriumColumn;
     
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             this.table=request.getParameter("table");                           //tabulka, která bude vypisována

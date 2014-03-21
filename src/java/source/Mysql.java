@@ -23,10 +23,10 @@ public class Mysql {
     private Connection conn = null;
     private String id=null;
     private PreparedStatement ps;
-    private String url;
-    private String dbName; 
-    private String uname;
-    private String pwd;
+    private final String url;
+    private final String dbName; 
+    private final String uname;
+    private final String pwd;
 
     /**
      * Zadefinuje proměnné a pokusí se vytvořit spojení s databází.
