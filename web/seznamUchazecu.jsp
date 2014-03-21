@@ -39,7 +39,21 @@
                         String[] show=new String[label.length+1];
                         String[] checked = new String [label.length+1];
                         String[] input = new String [label.length+1];           //kvůli políčko zaškrtnout všechno je tam o 1 víc než labelů
+                        String[] stavPrihlasky={"zaplacen registrační poplatek", "nezaplacen registrační poplatek", "nezevidován administrativou"};
+                        String[] stavPrihlaskyRaw={"zaplacenregistracnipoplatek", "nezaplacenregistracnipoplatek", "nezevidovanadministrativou"};
+                        String[][] stavPrihlaskySelected=new String[uchazec.length][stavPrihlasky.length];              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
                         
+                        for (int i = 0; i < stavPrihlaskySelected.length; i++) {//naplnení pole polí hodnotami podle toho, co je u uživatele v mysql tabulce
+                            if(stavPrihlaskySelected[0]!=null){
+                                for (int j = 0; j < stavPrihlaskySelected[0].length; j++) {
+                                    if (stavPrihlasky[j].equals(uchazec[i][43])) {
+                                        stavPrihlaskySelected[i][j]="selected=\"selected\"";
+                                    } else {
+                                        stavPrihlaskySelected[i][j]="";
+                                    }
+                                }
+                            }
+                        }
                         for (int i = 0; i < show.length; i++) {
                             show[i]="";
                         }
@@ -103,11 +117,24 @@
                             }
                             for(int j = 1; j < label.length; j++){
                                 if(show[j]!=null&&show[j].equals("show")){
+                                    if(j==43) {                                 //stav přihlášky se vypisuje jako select
+                        %>
+                                    <span id="listOfApplicants">
+                                        <select name="<%= labelRaw[j]+"+"+i %>">
+                                            <option value="<%= stavPrihlaskyRaw[0] %>" <%= stavPrihlaskySelected[i][0] %>><%= stavPrihlasky[0] %></option>
+                                            <option value="<%= stavPrihlaskyRaw[1] %>" <%= stavPrihlaskySelected[i][1] %>><%= stavPrihlasky[1] %></option>
+                                            <option value="<%= stavPrihlaskyRaw[2] %>" <%= stavPrihlaskySelected[i][2] %>><%= stavPrihlasky[2] %></option>
+                                        </select>
+                                    </span>
+                        <%
+                                    } 
+                                    else {
                         %>
                                     <span id="listOfApplicants">
                                         <input type="text" name="<%= labelRaw[j]+"+"+i %>" value="<%= uchazec[i][j] %>">
                                     </span>
                         <%
+                                    }
                                 }
                             }
                         %>
