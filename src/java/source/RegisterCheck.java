@@ -114,10 +114,7 @@ public class RegisterCheck extends HttpServlet {
                     }
                 }
             }
-            String email=input[9];
-            int atposition=email.indexOf("@");                                  //pozice zavináče
-            int dotposition=email.lastIndexOf(".");                             //pozice tečky
-            if (atposition<1 || dotposition<atposition+2 || dotposition+2>=email.length()){
+            if (notValidEmail(input[9])){
                 notFilled[9]=notFilledStyle;
                 error=true;                                                     //pokud neprojde validace, nastaví se error na false
             }

@@ -46,11 +46,12 @@ public class Mysql {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(url+dbName+"?useUnicode=true&characterEncoding=utf-8",uname,pwd);    //kvůli UTF-8 kódování při komunikaci s mysql databází
         }
-        catch(ClassNotFoundException e)
-        {
+        catch(ClassNotFoundException e){
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, e);
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
             Throwable t = ex.getCause();
+            System.out.println(t);
         }
     }
           
@@ -70,6 +71,7 @@ public class Mysql {
         String[] output=new String[6];
         String[] label=Label.getLabelRaw();
         try {
+            System.out.println("Mysql commection isClosed = " + conn.isClosed());
             String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
@@ -224,7 +226,7 @@ public class Mysql {
             for (int i = 2; i <= 40; i++) {
                 ps.setString(i,input[i+2]);
             }
-            ps.setString(41,"nezaplacen registrační poplatek");
+            ps.setString(41,"nezevidován administrativou");
             ps.setString(42,"nezaplaceno");
             
             int rsUchazec = ps.executeUpdate(); 
@@ -251,6 +253,48 @@ public class Mysql {
         try {
             String sql = "SELECT * FROM "+tabulka+" where 1";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String[] temp=new String[45];                                   //navíc na konci políčko přijat
+                temp[0]=rs.getString(label[0]);
+                for (int i = 4; i < label.length; i++) {
+                    temp[i]=rs.getString(label[i]);
+                }
+                output.add(temp);
+            }
+            outputString=new String[output.size()][45];
+            for (int i = 0; i < output.size(); i++) {
+                outputString[i]=output.get(i);                                  //převedení arraylistu pole stringů na pole polí stringů
+            }
+            
+            for (int i = 0; i < outputString.length; i++) {
+                sql = "SELECT * FROM login where "+label[0]+" = ?";
+                ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+                ps.setString(1,outputString[i][0]);
+                ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
+                while(rsLogin.next()){
+                    outputString[i][1]=rsLogin.getString(label[1]);
+                    outputString[i][2]=rsLogin.getString(label[2]);
+                    outputString[i][3]=rsLogin.getString(label[3]);
+                    //outputString[i][3]=outputString[i][3].substring(0, 5);
+                }
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return outputString;
+    }
+    
+    public String[][] showApplicants(String tabulka, String criterium, String criteriumColumn){
+        ArrayList<String[]> output = new ArrayList<String[]>();
+        String[][] outputString = null;
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "SELECT * FROM "+tabulka+" where "+criteriumColumn+"=?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,criterium);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String[] temp=new String[45];                                   //navíc na konci políčko přijat

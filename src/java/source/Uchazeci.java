@@ -32,10 +32,14 @@ public class Uchazeci extends HttpServlet {
      */
     private String table;
     private String[][] udajeouzivatelich;                                       //proměnná, která uloží všechna data o uživatelích a potom se při čtení z tablky do ní ukládají nové ne-null hodnoty   
+    private String criterium;
+    private String criteriumColumn;
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            this.table=request.getParameter("table");
+            this.table=request.getParameter("table");                           //tabulka, která bude vypisována
+            this.criterium=request.getParameter("criterium");                   //obsah, který má být ve sloupci criteriumColumn, aby byl řádek vypsán
+            this.criteriumColumn=request.getParameter("criteriumColumn");       //sloupec, podle kterého se bude řídit výpis
             getApplicants(request);
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
@@ -93,7 +97,11 @@ public class Uchazeci extends HttpServlet {
     private void getApplicants(HttpServletRequest request){
         HttpSession session = request.getSession(true);
         Mysql sql=new Mysql();
-        udajeouzivatelich = sql.showApplicants(table);
+        if (criterium==null||criteriumColumn==null) {
+            udajeouzivatelich = sql.showApplicants(table);
+        } else {
+            udajeouzivatelich = sql.showApplicants(table, criterium, criteriumColumn);
+        }
         session.setAttribute("allApplicants", udajeouzivatelich);
             
     }

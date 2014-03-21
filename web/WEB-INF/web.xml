@@ -7,6 +7,22 @@
         </session-timeout>
     </session-config>
     <servlet>
+        <servlet-name>addpedagogcheck</servlet-name>
+        <servlet-class>source.AddPedagogCheck</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addpedagogcheck</servlet-name>
+        <url-pattern>/AddPedagogCheck</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>addPedagog</servlet-name>
+        <servlet-class>source.AddPedagog</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addPedagog</servlet-name>
+        <url-pattern>/AddPedagog</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>changeData</servlet-name>
         <servlet-class>source.ChangeData</servlet-class>
     </servlet>
