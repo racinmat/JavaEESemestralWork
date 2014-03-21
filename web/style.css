@@ -1345,7 +1345,7 @@ p.pages {
 	}
 }
 
-/* vlastní */
+/* vlastni */
 #registerForm label {
     width: 170px;
     min-width: 170px;
@@ -1364,12 +1364,23 @@ p.pages {
     float: left;
 }
 
-#listOfApplicants {
-    width: 142px;
-    float: left;
+#listOfApplicantsLabel {
+    min-width: 160px;
+    width: 160px;
+    text-align: left;
+    display:inline-block;
+}
+
+#listOfApplicants input{
+    min-width: 160px;
+    width: 160px;
 }
 
 .notFilled {
     font-weight: bolder;
     color: red;
+}
+
+.wideList{
+    white-space: nowrap;
 }

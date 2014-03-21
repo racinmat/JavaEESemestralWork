@@ -8,19 +8,24 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ page import="source.Label" %>
     <%--@ include file="/header.jsp"--%>
+
+<html>
+    <body>
+
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
     SecurityCheck security=new SecurityCheck(request);
     
 %>
     <h1 class="title-header">Pro Administrativu</h1>
-        </div>
+        <!--</div>-->
 
        <%--@ include file="/leftColumn.jsp"--%>
   <%--     <div id="column-content" class="column column-content posts">
 
 
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">--%>
+            <div class="wideList">
             <%
                 if(security.isAdministrativa()){
             %>
@@ -76,9 +81,9 @@
                         for(int j = 0; j < label.length; j++){
                             if(show[j]!=null&&show[j].equals("show")){
                         %>
-                                    <span id="listOfApplicants">
-                                        <%= label[j] %>
-                                    </span>
+                                <span id="listOfApplicantsLabel">
+                                    <%= label[j] %>
+                                </span>
                         <%
                             }
                         }
@@ -91,7 +96,7 @@
                             if(show[0]!=null&&show[0].equals("show")){
                     %>
                     <div>
-                        <span id="listOfApplicants">
+                        <span id="listOfApplicantsLabel">
                             <%= uchazec[i][0] %>
                         </span>
                         <%  
@@ -99,7 +104,7 @@
                             for(int j = 1; j < label.length; j++){
                                 if(show[j]!=null&&show[j].equals("show")){
                         %>
-                                    <span >
+                                    <span id="listOfApplicants">
                                         <input type="text" name="<%= labelRaw[j]+"+"+i %>" value="<%= uchazec[i][j] %>">
                                     </span>
                         <%
@@ -119,6 +124,11 @@
                     response.sendRedirect("notLogged.jsp");
                 }
             %>
-       <%--     </div>--%>
+            </div>
+
+    </body>
+</html>
+            
+            <%--     </div>--%>
 
     <%--@ include file="/footer.jsp"--%>
