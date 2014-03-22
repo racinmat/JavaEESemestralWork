@@ -7,6 +7,7 @@ package source;
  */
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -37,8 +38,14 @@ public class Uchazeci extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(true);
         try {
             this.table=request.getParameter("table");                           //tabulka, která bude vypisována
+            if (table.equals("uchazeci_spam")||table.equals("uchazeci_ipspam")) {
+                session.setAttribute("spam", true);                             //určuje, zda je spam true či false kvůli přesunu do tabulky uchazeci ve výpisu uchazečů
+            } else {
+                session.setAttribute("spam", false);
+            }
             this.criterium=request.getParameter("criterium");                   //obsah, který má být ve sloupci criteriumColumn, aby byl řádek vypsán
             this.criteriumColumn=request.getParameter("criteriumColumn");       //sloupec, podle kterého se bude řídit výpis
             getApplicants(request);
@@ -50,12 +57,13 @@ public class Uchazeci extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(true);
+        String[] labelRaw=Label.getLabelRaw();
+        String[] label=Label.getLabel();
         try {
             request.setCharacterEncoding("UTF-8");
             if (request.getParameter("zobrazitvysledky")!=null) {
                 getApplicants(request);
-                HttpSession session = request.getSession(true);
-                String[] label=Label.getLabel();
                 String[] show=new String[label.length+1];                       //kvůli políčku zaškrtnout vše
                 for (int i = 0; i < show.length; i++) {
                     if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
@@ -77,17 +85,28 @@ public class Uchazeci extends HttpServlet {
                 session.setAttribute("show", show);
             }
             if (request.getParameter("zmenitudaje")!=null) {
-                HttpSession session = request.getSession(true);
+                ArrayList<String> transfer=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql=new Mysql();
-                String[] labelRaw=Label.getLabelRaw();
                 for (int i = 0; i < udajeouzivatelich.length; i++) {
                     for (int j = 0; j < Label.getLength(); j++) {
                         if (request.getParameter(labelRaw[j]+"+"+i)!=null) {
                             udajeouzivatelich[i][j]=request.getParameter(labelRaw[j]+"+"+i);
                         }
                     }
+                    if (request.getParameter("transfer"+"+"+i)!=null&&request.getParameter("transfer"+"+"+i).equals("checked")) {
+                        transfer.add(udajeouzivatelich[i][0]);
+                    }
                 }
                 boolean output = sql.updateApplicants(table, udajeouzivatelich);
+                boolean success=true;                                           //používá se jako vyhodnocovací proměnná pro přenos mezi tabulkami
+                int i=0;
+                while (!transfer.isEmpty()&&success) {                          //while cyklus se zastaví pokud je arraylist prázdný nebo pokud se nezdaří přenos
+                    i++;
+                    success=sql.transferApplicant(table, transfer.get(i), "uchazeci");
+                    if (!success) {
+                        System.out.println("Transfer failed at number: "+i);
+                    }
+                }
             }
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
@@ -96,8 +115,8 @@ public class Uchazeci extends HttpServlet {
     }
     
     private void getApplicants(HttpServletRequest request){
-        HttpSession session = request.getSession(true);
         Mysql sql=new Mysql();
+        HttpSession session = request.getSession(true);
         if (criterium==null||criteriumColumn==null) {
             udajeouzivatelich = sql.showApplicants(table);
         } else {

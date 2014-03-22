@@ -34,6 +34,7 @@
                 <form id="showPeopleForm" action="uchazeci" method="POST">
                     <%  
                         String[][] uchazec=(String[][]) session.getAttribute("allApplicants");
+                        boolean spam=(Boolean) session.getAttribute("spam");
                         String[] label=Label.getLabel();
                         String[] labelRaw=Label.getLabelRaw();
                         String[] show=new String[label.length+1];
@@ -104,6 +105,16 @@
                     %>
                         <br/>
                     </div>
+                    <%
+                        if(spam){
+                    %>
+                        <span id="listOfApplicantsLabel">
+                            přesunout ze spamu mezi běžné uchazeče
+                        </span>
+                    <%
+                        }
+                    %>
+                        
                     <form action="uchazeci" method="POST">
                     <%
                         for(int i = 0; i < uchazec.length; i++){
@@ -135,6 +146,13 @@
                                     </span>
                         <%
                                     }
+                                }
+                                if(spam){
+                            %>
+                                <span id="listOfApplicantsLabel">
+                                    <input type="checkbox" name="<%= "transfer"+"+"+i %>">
+                                </span>
+                            <%
                                 }
                             }
                         %>

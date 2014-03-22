@@ -71,7 +71,7 @@ public class Mysql {
         String[] output=new String[6];
         String[] label=Label.getLabelRaw();
         try {
-            System.out.println("Mysql commection isClosed = " + conn.isClosed());
+            System.out.println("Check if mysql connection is closed or not: Mysql commection isClosed = " + conn.isClosed());
             String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
@@ -505,6 +505,12 @@ public class Mysql {
         }
         
         return output;
+    }
+    
+    public boolean transferApplicant(String tableFrom, String applicantUsername, String tableTo){
+        
+        return false;
+        
     }
     
 }

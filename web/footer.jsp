@@ -57,6 +57,7 @@
         <p class="copy">
             <span class="sep">Inspired by <a href="http://wordpress.org/">WordPress</a> template <a href="http://www.wpzoom.com/">Academica by WPZOOM</a></span>
             © 2014 Všechna práva vyhrazena. autor: Matěj Račinský.
+            <a href="changelog.jsp">Verze: 1.2.0</a>
         </p>
     </div><!-- end #footer -->
 </div><!-- end #wrap -->
