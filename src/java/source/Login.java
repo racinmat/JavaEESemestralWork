@@ -58,10 +58,10 @@ public class Login extends HttpServlet{
                 response.sendRedirect("proPedagogy.jsp");
                 break;                    //pedagog
             case 3:
-                response.sendRedirect("proStudenty.jsp");
+                response.sendRedirect("proPrihlasene.jsp");
                 break;                    //student
             case 4:
-                response.sendRedirect("proUchazece.jsp");
+                response.sendRedirect("proPrihlasene.jsp");
                 break;                    //uchazeč
             }
         }

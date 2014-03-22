@@ -82,7 +82,7 @@ public class SendEmail
             );
             message.setSubject("Úspěšné podání elektronické přihlášky");
             message.setText(
-                "Dubrý den, "+osloveni()+lastname+",\r\n"
+                "Dobrý den, "+osloveni()+lastname+",\r\n"
                 + "vaše elektronická přihláška byla úspěšně podána,\r\n"
                 + "vaše přihlašovací jméno je "+username
                 + " a vaše heslo je "+password

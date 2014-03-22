@@ -20,23 +20,35 @@ package source;
  * @author Azathoth
  */
 public class MenuColoring {
-    String uri;
-    String pageName="";
-    String index="";
-    String proUchazece="";
-    String proAdministrativu="";
-    String proStudenty="";
-    String proPedagogy="";
-    String uredniDeska="";
-    String proPrihlasene="";
-
+    private String uri;
+    private String pageName="";
+    private String pageNameStripped="";
+    private String index="";
+    private String proUchazece="";
+    private String proAdministrativu="";
+    private String proStudenty="";
+    private String proPedagogy="";
+    private String uredniDeska="";
+    private String proPrihlasene="";
+    private String oSkole="";
+    private String colored="current-menu-item";
+    
     public MenuColoring(String uri) {
         this.uri=uri;
         if (!"".equals(uri)) {
-            pageName=uri.substring(uri.lastIndexOf("/")+1);
+            pageName=uri.substring(uri.lastIndexOf("/")+1);                     //získá poslední úroveň stránky
         }
         else{
             pageName="";
+        }
+        
+        pageNameStripped=pageName;
+        
+        if (pageNameStripped.contains(".")) {
+            pageNameStripped=pageNameStripped.substring(0, pageNameStripped.lastIndexOf("."));        //odtrhne .jsp
+            if (pageNameStripped.contains("_")) {
+                pageNameStripped=pageNameStripped.substring(0, pageNameStripped.lastIndexOf("_"));        //odtrhne název podstránky
+            }
         }
     }
 
@@ -45,51 +57,58 @@ public class MenuColoring {
     }
     
     public String getIndex() {
-        if("index.jsp".equals(pageName)){
-            index="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("index".equals(pageNameStripped)){
+            index=colored;
         }
         return index;
     }
 
     public String getProUchazece() {
-        if("proUchazece.jsp".equals(pageName)){
-            proUchazece="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("proUchazece".equals(pageNameStripped)){
+            proUchazece=colored;
         }
         return proUchazece;
     }
 
     public String getProAdministrativu() {
-        if("proAdministrativu.jsp".equals(pageName)){
-            proAdministrativu="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("proAdministrativu".equals(pageNameStripped)){
+            proAdministrativu=colored;
         }
         return proAdministrativu;
     }
 
     public String getProStudenty() {
-        if("proStudenty.jsp".equals(pageName)){
-            proStudenty="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("proStudenty".equals(pageNameStripped)){
+            proStudenty=colored;
         }
         return proStudenty;
     }
 
     public String getProPedagogy() {
-        if("proPedagogy.jsp".equals(pageName)){
-            proPedagogy="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("proPedagogy".equals(pageNameStripped)){
+            proPedagogy=colored;
         }
         return proPedagogy;
     }
 
     public String getUredniDeska() {
-        if("uredniDeska.jsp".equals(pageName)){
-            uredniDeska="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("uredniDeska".equals(pageNameStripped)){
+            uredniDeska=colored;
         }
         return uredniDeska;
     }
     
     public String getProPrihlasene() {
-        if("proPrihlasene.jsp".equals(pageName)){
-            proPrihlasene="current-menu-item page_item page-item-2 current_page_item current_page_parent";
+        if("proPrihlasene".equals(pageNameStripped)){
+            proPrihlasene=colored;
         }
         return proPrihlasene;
+    }
+
+    public String getoSkole() {
+        if("oSkole".equals(pageNameStripped)){
+            oSkole=colored;
+        }
+        return oSkole;
     }
 }

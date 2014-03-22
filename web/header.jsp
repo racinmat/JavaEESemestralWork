@@ -46,30 +46,83 @@
             
         <div id="main-nav">
             <ul id="menuhead" class="menu">
-                <li id="menu-item-20" class="menu-item menu-item-type-post_type menu-item-object-page 
-                    <%= menu.getIndex() %>
-                    menu-item-20"><a href="index.jsp">Úvodní stránka</a></li>
-                <li id="menu-item-17" class="menu-item menu-item-type-post_type menu-item-object-page 
+                <li id="menu-item" class="menu-item  
+                    <%= menu.getoSkole()%>
+                    ">
+                    <div onmouseover="javascript: show( 'submenu1' );" onmouseout="javascript: hide( 'submenu1' );">
+                            <a>O škole</a>
+                        <div id="submenu1">
+                            <ul> 
+                                    <li><a href="oSkole_VybaveniSkoly.jsp">Vybavení školy</a></li>
+                                    <li><a href="oSkole_ZamereniStudia.jsp">Zaměření studia</a></li>
+                                    <li><a href="oSkole_VyukaCizichJazyku.jsp">Výuka cizích jazyků</a></li>
+                                    <li><a href="oSkole_VolitelnePredmety.jsp">Volitelné předměty</a></li>
+                                    <li><a href="oSkole_StudentskaRada.jsp">Studentská rada</a></li>
+                                    <li><a href="oSkole_ICTPlan.jsp">ICT plán</a></li>
+                                    <li><a href="oSkole_SkolskaRada.jsp">Školská rada</a></li>
+                            </ul>    
+                        </div>
+                    </div>
+                </li>
+                <li id="menu-item" class="menu-item  
                     <%= menu.getProPedagogy() %>
-                    menu-item-17"><a href="proPedagogy.jsp">Pro pedagogy</a></li>
-                <li id="menu-item-18" class="menu-item menu-item-type-post_type menu-item-object-page 
+                    ">
+                    <a href="proPedagogy.jsp">Pro pedagogy</a>
+                </li>
+                <li id="menu-item" class="menu-item  
                     <%= menu.getProUchazece() %>
-                    menu-item-18"><a href="proUchazece.jsp">Pro uchazeče o studium</a></li>
-                <li id="menu-item-19" class="menu-item menu-item-type-post_type menu-item-object-page 
+                    ">
+                    <div onmouseover="javascript: show( 'submenu2' );" onmouseout="javascript: hide( 'submenu2' );">
+                        <a>Pro uchazeče o studium</a>
+                        <div id="submenu2">
+                            <ul> 
+                                    <li><a href="proUchazece_Prihlaska.jsp">Elektronická přihláška</a></li>
+                                    <li><a href="proUchazece_DnyOtevrenychDveri.jsp">Dny otevřených dveří</a></li>
+                                    <li><a href="proUchazece_UkazkovePrijimaciTesty.jsp">Ukázkové přijímací testy</a></li>
+                                    <li><a href="proUchazece_KriteriaPrijimacihoRizeni.jsp">Kritéria přijímacího řízení</a></li>
+                                    <li><a href="proUchazece_PrijimaciZkousky.jsp">Přijímací zkoušky</a></li>
+                                    <li><a href="proUchazece_VysledkyPrijimacichZkousek.jsp">Výsledky přijímacích zkoušek</a></li>
+                            </ul>    
+                        </div>
+                    </div>
+                </li>
+                <li id="menu-item" class="menu-item  
                     <%= menu.getProStudenty() %>
-                    menu-item-19"><a href="proStudenty.jsp">Pro studenty</a></li>
-                <li id="menu-item-23" class="menu-item menu-item-type-post_type menu-item-object-page 
+                    ">
+                    <div onmouseover="javascript: show( 'submenu3' );" onmouseout="javascript: hide( 'submenu3' );">
+                        <a>Pro studenty</a>
+                        <div id="submenu3">
+                            <ul> 
+                                    <li><a href="proStudenty_OrganizaceSkolnihoRoku.jsp">Organizace školního roku</a></li>
+                                    <li><a href="proStudenty_SkolniRad.jsp">Školní řád</a></li>
+                                    <li><a href="proStudenty_UcebniPlany.jsp">Učební plány</a></li>
+                                    <li><a href="proStudenty_InformaceKJednotlivymPredmetum.jsp">Informace k jednotlivým předmětům</a></li>
+                                    <li><a href="proStudenty_MezinarodniProgramy.jsp">Mezinárodní programy</a></li>
+                                    <li><a href="proStudenty_UspechyStudentu.jsp">Úspěchy studentů</a></li>
+                                    <li><a href="proStudenty_AktivityStudentu.jsp">Aktivity studentů</a></li>
+                                    <li><a href="proStudenty_Knihovna.jsp">Knihovna</a></li>
+                                    <li><a href="proStudenty_Suplovani.jsp">Suplování</a></li>
+                                    <li><a href="proStudenty_Rozvrhy.jsp">Rozvrhy</a></li>
+                            </ul>    
+                        </div>
+                    </div>
+                </li>
+                <li id="menu-item" class="menu-item  
                     <%= menu.getProAdministrativu() %>
-                    menu-item-23"><a href="proAdministrativu.jsp">Pro administrativu</a></li>
-                <li id="menu-item-23" class="menu-item menu-item-type-post_type menu-item-object-page 
+                    ">
+                    <a href="proAdministrativu.jsp">Pro administrativu</a>
+                </li>
+                <li id="menu-item" class="menu-item  
                     <%= menu.getUredniDeska() %>
-                    menu-item-23"><a href="uredniDeska.jsp">Úřední deska</a></li>
+                    ">
+                    <a href="uredniDeska.jsp">Úřední deska</a>
+                </li>
                 <%
                     if(security.hasUchazecRights()){ 
                 %>
-                <li id="menu-item-23" class="menu-item menu-item-type-post_type menu-item-object-page 
+                <li id="menu-item" class="menu-item  
                     <%= menu.getProPrihlasene()%>
-                    menu-item-23"><a href="proPrihlasene.jsp">Můj profil</a></li>
+                    "><a href="proPrihlasene.jsp">Můj profil</a></li>
                 <%
                     }
                 %>

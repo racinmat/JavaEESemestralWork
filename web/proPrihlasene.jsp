@@ -33,7 +33,7 @@
         session.setAttribute("registered", null);                               //session proměnná registered určuje, zda se podařil zápis do mysql databáze
         
     %>
-<h1 class="title-header">Pro přihlášené uživatele</h1>
+<h1 class="title-header"></h1>
         </div><!-- end .column-title -->
 
        <%@ include file="/leftColumn.jsp"%>

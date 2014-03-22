@@ -520,12 +520,13 @@ img.aligncenter,
 #main-nav .menu-item:hover,
 #main-nav .page_item:hover,
 #main-nav .current-menu-item > a,
+#main-nav .current-menu-item div > a,                                           /*tento řásek jsem přidal já, kvůli rozbalovacím menu*/
 #main-nav .current-menu-ancestor > a,
 #main-nav .current_page_item > a,
 #main-nav .current_page_ancestor > a {
 	color: #fff;
 	background-color: #e98a2a;
-}
+}                                                                               
 
 #main-nav ul ul a {
 	background-color: #444;
@@ -540,7 +541,7 @@ img.aligncenter,
 #main-nav li:hover ul ul,
 #main-nav li:hover ul ul ul,
 #main-nav li:hover ul ul ul ul {
-	display: none;
+	//display: none;
 }
 
 #main-nav li:hover ul,
