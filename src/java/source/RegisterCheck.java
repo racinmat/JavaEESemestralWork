@@ -23,25 +23,75 @@ import javax.servlet.http.HttpSession;
 public class RegisterCheck extends HttpServlet {
 
     public static boolean notNumeric(String str)  {  
-    try  
-        {  
-          int d = Integer.parseInt(str);  
-        }  
-        catch(NumberFormatException nfe)  
-        {  
+    try {  
+          long temp = Long.parseLong(str);  
+        } catch(NumberFormatException nfe){  
           return true;  
         }  
         return false;  
     }
     
     public static boolean notValidEmail(String str){
-        int atposition=str.indexOf("@");                                  //pozice zavináče
-        int dotposition=str.lastIndexOf(".");                             //pozice tečky
+        int atposition=str.indexOf("@");                                        //pozice zavináče
+        int dotposition=str.lastIndexOf(".");                                   //pozice tečky
         if (atposition<1 || dotposition<atposition+2 || dotposition+2>=str.length()){
-            return true;                                                     //pokud neprojde validace, nastaví se error na false
+            return true;                                                        //pokud neprojde validace, nastaví se error na false
         }
         return false;
     }
+    
+    public static boolean notValidBirthNumber(String str){
+        if (str.contains("/")) {
+            str=str.replace("/", "");
+        }
+        if (notNumeric(str)) {
+            return notNumeric(str);
+        }
+        if (!(str.length()==10)) {
+            return true;
+        }
+        int mesic=Integer.parseInt(str.substring(2, 4));
+        if (mesic==0||(mesic>12&&mesic<21)||(mesic>32&&mesic<51)||(mesic>62&&mesic<71)||mesic>82) {
+            return true;
+        }
+        int den=Integer.parseInt(str.substring(4, 6));
+        if (den==0||den>31) {
+            return true;
+        }
+        int cislo=Integer.parseInt(str);
+        if (cislo%11!=0) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static String getBirthDay(String str){
+        String temp=str.substring(0,2);
+        int output=Integer.parseInt(temp);
+        return Integer.toString(output);
+    }
+    
+    public static String getBirthMonth(String str){
+        String temp=str.substring(2,4);
+        int output=Integer.parseInt(temp);
+        if (output>20&&output<33) {
+            return Integer.toString(output-20);
+        }
+        if (output>50&&output<63) {
+            return Integer.toString(output-50);
+        }
+        if (output>70&&output<83) {
+            return Integer.toString(output-70);
+        }
+        return Integer.toString(output);
+    }
+    
+    public static String getBirthYear(String str){
+        String temp=str.substring(4,6);
+        int output=Integer.parseInt(temp);
+        return Integer.toString(output);
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -65,18 +115,24 @@ public class RegisterCheck extends HttpServlet {
             
             String[] input = new String[labelRaw.length-2];
             for (int i = 1; i < labelRaw.length-2; i++) {
-                if (i==3) {
+                if (i==3||i==10||i==11||i==12) {
                     
                 } else {
                     input[i]=request.getParameter(labelRaw[i]);
                 }
             }
             
-            for (int i = 10; i <= 15; i++) {
-                if (notNumeric(input[i])) {
-                    notFilled[i]=notFilledStyle;                                          //pokud je notFilled true, pak je v daném políčku chyba
-                    error=true;
-                }
+            if (notNumeric(input[13])) {
+                notFilled[13]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
+                error=true;
+            }
+            if (notNumeric(input[15])) {
+                notFilled[15]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
+                error=true;
+            }
+            if (notValidBirthNumber(input[14])) {
+                notFilled[14]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
+                error=true;
             }
             if (notNumeric(input[19])) {
                 notFilled[19]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
@@ -124,6 +180,10 @@ public class RegisterCheck extends HttpServlet {
                     input[i]=input[i-9];
                 }
             }
+            
+            input[10]=getBirthDay(input[14]);                                   //z rodného čísla
+            input[11]=getBirthMonth(input[14]);
+            input[12]=getBirthYear(input[14]);
             
             
             HttpSession session = request.getSession();
