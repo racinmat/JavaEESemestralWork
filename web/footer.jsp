@@ -16,11 +16,41 @@
     String userInfo="";
     String form="";
     if(logged==null){                                                           //výpis formuláře je podmíněný
-        form="<form action=\"login\" method=\"POST\">uživatelské jméno:<input type=\"text\" name=\"username\">heslo:<input type=\"password\" name=\"password\"><input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\"></form>";
+        form="<form action=\"login\" method=\"POST\">"
+                + "<div>"
+                    + "uživatelské jméno:"
+                + "</div>"
+                + "<div>"
+                    + "<input type=\"text\" name=\"username\">"
+                + "<div>"
+                    + "heslo:"
+                + "</div>"
+                + "<div>"
+                    + "<input type=\"password\" name=\"password\">"
+                + "</div>"
+                + "<div>"
+                    + "<input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\">"
+                + "</div>"
+            + "</form>";
     }                                                                           
     
     if(logged!=null&&logged.equals("fail")){                                    //ošetřena inicializace proměnné
-        form="<form action=\"login\" method=\"POST\">uživatelské jméno:<input type=\"text\" name=\"username\">heslo:<input type=\"password\" name=\"password\"><input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\"></form>";
+        form="<form action=\"login\" method=\"POST\">"
+                + "<div>"
+                    + "uživatelské jméno:"
+                + "</div>"
+                + "<div>"
+                    + "<input type=\"text\" name=\"username\">"
+                + "<div>"
+                    + "heslo:"
+                + "</div>"
+                + "<div>"
+                    + "<input type=\"password\" name=\"password\">"
+                + "</div>"
+                + "<div>"
+                    + "<input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\">"
+                + "</div>"
+            + "</form>";
         failMessage="<div>Přihlášení se nezdařilo, bylo nesprávně zadáno uživatelské jméno nebo heslo</div>";
         if(logged.equals("fail")){
             session.setAttribute("logged", null);
@@ -28,7 +58,7 @@
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
     if(logged!=null&&logged.equals("success")){                                    //ošetřena inicializace proměnné
         form="<form action=\"logout\" method=\"POST\"><input type=\"submit\" name=\"odhlásit se\" value=\"odhlásit se\"></form>";
-        userInfo="<div id=\"footer\" class=\"clearfix\">Jste přihlášen jako "+name+" "+lastname+", váš status je "+pravaString+"</div>";
+        userInfo="<div class=\"clearfix\">Jste přihlášen jako "+name+" "+lastname+", váš status je "+pravaString+"</div>";
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
     
 %>
@@ -43,13 +73,14 @@
 				<li class="clearfix post">
                                     <%= form %>
                                     <%= failMessage %>
+                                    <%= userInfo %>
                                 </li>
 
 				
 			</ul><!-- end .posts -->
 
 			</div>	</div><!-- end .column-narrow -->
-                        <%= userInfo %>
+                        
     </div><!-- end #content -->
 
     <div id="footer" class="clearfix">
