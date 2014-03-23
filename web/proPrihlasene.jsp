@@ -4,12 +4,14 @@
     Author     : Azathoth
 --%>
 
+<%@page import="source.Mysql"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
     <%
         String[] label=Label.getLabel();
         String[] labelRaw=Label.getLabelRaw();
         String[] empty=new String[22];                                          //měnit v případě změny počtu položek ve formuláři
+        Mysql sql=new Mysql();
         if(session.getAttribute("formCheck")!=null){
             empty=(String[]) session.getAttribute("formCheck");                 //zjistí se, jak byl uživatel úspěšný při registraci
         }
@@ -43,11 +45,76 @@
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
                 <h2></h2>
                 <p class="entry-meta">
-                  </p><!-- end .entry-meta -->
+                </p><!-- end .entry-meta -->
                 <%
                     if(security.hasUchazecRights()){ 
                 %>
-                  <div class="entry-summary"><p>Pro přihlášené uživatele.</p>
+                <div class="entry-summary"><p></p>
+                    
+                    <div>
+                        Osobní údaje:
+                    </div>
+                    
+                    <%
+                        
+                        String username=(String) session.getAttribute("username");
+                        String[] info;
+                        if(security.isUchazec()||security.isStudent()){
+                            String table=sql.findTableWithApplicant(username);
+                            info=sql.showApplicant(username, table);
+                        } else {
+                            info=sql.showLoginInfoOfUser(username);
+                        }
+                        for(int i = 0; i < info.length; i++) {
+                            if(i==3){
+                            }
+                            else {
+                                if(i==0||i==9||i==10||i==18||i==27||i==36||i==43){
+                            %>
+                                <fieldset>
+                                    <legend>
+                                    <%
+                                        if(i==0){
+                                    %>nacionále<%
+                                        }
+                                        if(i==9){
+                                    %>kontakt<%
+                                        }
+                                        if(i==10){
+                                    %>narození<%
+                                        }
+                                        if(i==18){
+                                    %>trvalé bydliště<%
+                                        }
+                                        if(i==27){
+                                    %>kontaktní adresa<%
+                                        }
+                                        if(i==36){
+                                    %>střední škola<%
+                                        }
+                                        if(i==43){
+                                    %>ostatní<%
+                                        }
+                                        
+                                    %>
+                    </legend>
+                            <%
+                                }
+                    %>
+                    <div>
+                        <span id="listOfApplicantsLabel"><%= label[i] %></span>
+                        <span id="listOfApplicants"><%= info[i] %></span>
+                    </div>
+                    <%
+                                if(i==8||i==9||i==17||i==26||i==35||i==42||i==45){
+                            %>
+                                </fieldset>
+                            <%
+                                }
+                            }
+                        }
+                    %>
+                    
                     <%= message %>
                     <div>
                         Změna osobních údajů:

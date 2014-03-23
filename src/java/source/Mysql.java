@@ -350,10 +350,10 @@ public class Mysql {
             try {
             String sql=createUpdateStatement(tabulka);
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-                for (int j = 1; j < 42; j++) {
+                for (int j = 1; j < uchazec[0].length-3; j++) {
                     ps.setString(j,uchazec[i][j+3]);
                 }
-            ps.setString(42,uchazec[i][0]);
+            ps.setString(uchazec[0].length-3,uchazec[i][0]);
             
             rs[2*i] = ps.executeUpdate(); 
             
@@ -436,8 +436,8 @@ public class Mysql {
      * @return returns all data in chosen table, table is indexed by label, 
      */
     public String[] showApplicant(String username, String tabulka){
-        String[] output = new String[45];
         String[] label=Label.getLabelRaw();
+        String[] output = new String[label.length];
         try {
             String sql = "SELECT * FROM "+tabulka+" where "+label[0]+" = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
@@ -449,7 +449,17 @@ public class Mysql {
                     output[i]=rs.getString(label[i]);
                 }
             }
-            
+            sql = "SELECT * FROM login where "+label[0]+" = ?";
+            ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,output[0]);
+            ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
+            while(rsLogin.next()){
+                output[1]=rsLogin.getString(label[1]);
+                output[2]=rsLogin.getString(label[2]);
+                output[3]=rsLogin.getString(label[3]);
+                //outputString[i][3]=outputString[i][3].substring(0, 5);
+            }
+                
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -500,6 +510,27 @@ public class Mysql {
                 }
             }
             throw new IllegalArgumentException("Username "+username+" was not found.");
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return output;
+    }
+    
+    public String[] showLoginInfoOfUser(String username){
+        String[] output = new String[3];
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "SELECT * FROM login where "+label[0]+" = ?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                for (int i = 0; i < 3; i++) {
+                    output[i]=rs.getString(label[i]);
+                }
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
