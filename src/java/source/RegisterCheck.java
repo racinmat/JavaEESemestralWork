@@ -66,7 +66,7 @@ public class RegisterCheck extends HttpServlet {
     }
     
     public static String getBirthDay(String str){
-        String temp=str.substring(0,2);
+        String temp=str.substring(4,6);
         int output=Integer.parseInt(temp);
         return Integer.toString(output);
     }
@@ -87,8 +87,13 @@ public class RegisterCheck extends HttpServlet {
     }
     
     public static String getBirthYear(String str){
-        String temp=str.substring(4,6);
+        String temp=str.substring(0,2);
         int output=Integer.parseInt(temp);
+        if (output<30) {
+            output+=2000;
+        } else {
+            output+=1900;
+        }
         return Integer.toString(output);
     }
     
