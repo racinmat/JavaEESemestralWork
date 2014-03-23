@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import static source.RegisterCheck.*;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -69,6 +71,16 @@ public class Register extends HttpServlet{
             }
         }
         
+        if (!notValidBirthNumber(input[14])) {
+            input[10]=getBirthDay(input[14]);                                   //z rodného čísla
+            input[11]=getBirthMonth(input[14]);
+            input[12]=getBirthYear(input[14]);
+        } else {
+            input[10]="";
+            input[11]="";
+            input[12]="";
+        }
+            
         for (int i = 27; i <= 35; i++) {                                        //kontaktní údaje, nepovinné, pokud nevyplněny, předají se údaje z trvalého bydliště
             if (input[i].equals("")) {
                 input[i]=input[i-9];
@@ -99,6 +111,6 @@ public class Register extends HttpServlet{
         else {
             session.setAttribute("registered", "fail");
         }
-        response.sendRedirect("proUchazece.jsp");
+        response.sendRedirect("proUchazece_Prihlaska.jsp");
     }
 }

@@ -223,11 +223,11 @@ public class Mysql {
                     + "?,?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
-            for (int i = 2; i <= label.length-2; i++) {
+            for (int i = 2; i < label.length-4; i++) {
                 ps.setString(i,input[i+2]);
             }
-            ps.setString(41,"nezevidován administrativou");
-            ps.setString(42,"nezaplaceno");
+            ps.setString(42,"nezevidován administrativou");
+            ps.setString(43,"nezaplaceno");
             
             int rsUchazec = ps.executeUpdate(); 
             
