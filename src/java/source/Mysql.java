@@ -199,7 +199,7 @@ public class Mysql {
         boolean output=false;
         input[44]="nezevidován administrativou";
         input[45]="nezaplaceno";
-        boolean output1=insertNewUserToLogin(tabulka, input);
+        boolean output1=insertNewUserToLogin(input);
         boolean output2=insertApplicant(tabulka, input);
         output=output1&&output2;
         return output;
@@ -565,7 +565,7 @@ public class Mysql {
         return output;
     }
     
-    public boolean insertNewUserToLogin(String tabulka, String[] input){
+    public boolean insertNewUserToLogin(String[] input){
         boolean output=false;
         String[] label=Label.getLabelRaw();
         try {
