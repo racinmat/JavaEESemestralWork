@@ -29,7 +29,7 @@
             <%
                 if(security.hasAdministrativaRights()){
             %>
-                <h2>Seznam uchazečů:</h2>
+            <h2>Seznam uchazečů z tabulky <%= session.getAttribute("tabulka") %>:</h2>
                 
                 <form id="showPeopleForm" action="uchazeci" method="POST">
                     <%  
@@ -103,8 +103,6 @@
                             }
                         }
                     %>
-                        <br/>
-                    </div>
                     <%
                         if(spam){
                     %>
@@ -114,6 +112,8 @@
                     <%
                         }
                     %>
+                        <br/>
+                    </div>
                         
                     <form action="uchazeci" method="POST">
                     <%
@@ -147,15 +147,16 @@
                         <%
                                     }
                                 }
-                                if(spam){
+                            }
+                        
+                            if(spam){
                             %>
                                 <span id="listOfApplicantsLabel">
-                                    <input type="checkbox" name="<%= "transfer"+"+"+i %>">
+                                    <input type="checkbox" name="<%= "transfer"+"+"+i %>" value="checked">
                                 </span>
                             <%
-                                }
                             }
-                        %>
+                            %>
                         <br/>
                     </div>
                     <%

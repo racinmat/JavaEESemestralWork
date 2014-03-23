@@ -106,7 +106,7 @@
                         <span id="listOfApplicants"><%= info[i] %></span>
                     </div>
                     <%
-                                if(i==8||i==9||i==17||i==26||i==35||i==42||i==45){
+                                if(i==8||i==9||i==17||i==26||i==35||i==42||i==45||(i==2&&!(security.isUchazec()||security.isStudent()))){
                             %>
                                 </fieldset>
                             <%

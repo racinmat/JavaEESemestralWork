@@ -71,7 +71,7 @@ public class Mysql {
         String[] output=new String[6];
         String[] label=Label.getLabelRaw();
         try {
-            System.out.println("Check if mysql connection is closed or not: Mysql commection isClosed = " + conn.isClosed());
+            System.out.println("Check if mysql connection is closed or not: Mysql connection isClosed = " + conn.isClosed());
             String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
@@ -197,47 +197,11 @@ public class Mysql {
      */
     public boolean insertNewApplicant(String tabulka, String[] input){
         boolean output=false;
-        String[] label=Label.getLabelRaw();
-        try {
-            String sql = "INSERT INTO login("+label[0]+", "+label[1]+", "+label[2]+", "+label[3]+", rights) VALUES(?,?,?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            ps.setString(2,input[1]);
-            ps.setString(3,input[2]);
-            ps.setString(4,input[3]);
-            ps.setInt(5,4);
-            int rsLogin = ps.executeUpdate(); 
-            
-            sql = "INSERT INTO "+tabulka+"("+ label[0]+", ";
-            for (int i = 4; i < label.length; i++) {
-                sql+=label[i];
-                if (i<label.length-1) {
-                    sql+=", ";
-                }
-            }
-            sql+=") VALUES("
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            for (int i = 2; i < label.length-4; i++) {
-                ps.setString(i,input[i+2]);
-            }
-            ps.setString(42,"nezevidován administrativou");
-            ps.setString(43,"nezaplaceno");
-            
-            int rsUchazec = ps.executeUpdate(); 
-            
-            int rs=Math.min(rsLogin, rsUchazec);
-            if (rs==1) {
-                output=true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        input[44]="nezevidován administrativou";
+        input[45]="nezaplaceno";
+        boolean output1=insertNewUserToLogin(tabulka, input);
+        boolean output2=insertApplicant(tabulka, input);
+        output=output1&&output2;
         return output;
     }
     
@@ -539,9 +503,86 @@ public class Mysql {
     }
     
     public boolean transferApplicant(String tableFrom, String applicantUsername, String tableTo){
-        
-        return false;
+        boolean output=false;
+        String[] input=showApplicant(applicantUsername, tableFrom);
+        boolean temp1=insertApplicant(tableTo, input);
+        boolean temp2=deleteRow(applicantUsername, tableFrom);
+        output=temp1&&temp2;
+        return output;
         
     }
     
+    public boolean insertApplicant(String tabulka, String[] input){
+        boolean output=false;
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "INSERT INTO "+tabulka+"("+ label[0]+", ";
+            for (int i = 4; i < label.length; i++) {
+                sql+=label[i];
+                if (i<label.length-1) {
+                    sql+=", ";
+                }
+            }
+            sql+=") VALUES("
+                    + "?,?,?,?,?,?,?,?,?,?,"
+                    + "?,?,?,?,?,?,?,?,?,?,"
+                    + "?,?,?,?,?,?,?,?,?,?,"
+                    + "?,?,?,?,?,?,?,?,?,?,"
+                    + "?,?,?)";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,input[0]);
+            for (int i = 2; i < label.length-2; i++) {
+                ps.setString(i,input[i+2]);
+            }
+            
+            int rs = ps.executeUpdate(); 
+            
+            if (rs==1) {
+                output=true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return output;
+    }
+    
+    public boolean deleteRow(String username, String table){
+        String[] label=Label.getLabelRaw();
+        int rs = 0;
+        try {
+            String sql = "DELETE FROM "+table+" where "+label[0]+"=?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,username);
+            rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        boolean output=true;
+        if (rs!=1) {
+            output=false;
+        }
+        return output;
+    }
+    
+    public boolean insertNewUserToLogin(String tabulka, String[] input){
+        boolean output=false;
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "INSERT INTO login("+label[0]+", "+label[1]+", "+label[2]+", "+label[3]+", rights) VALUES(?,?,?,?,?)";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,input[0]);
+            ps.setString(2,input[1]);
+            ps.setString(3,input[2]);
+            ps.setString(4,input[3]);
+            ps.setInt(5,4);
+            int rs = ps.executeUpdate(); 
+            if (rs==1) {
+                output=true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return output;
+    }
 }

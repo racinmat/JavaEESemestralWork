@@ -41,6 +41,7 @@ public class Uchazeci extends HttpServlet {
         HttpSession session = request.getSession(true);
         try {
             this.table=request.getParameter("table");                           //tabulka, která bude vypisována
+            session.setAttribute("tabulka", table);
             if (table.equals("uchazeci_spam")||table.equals("uchazeci_ipspam")) {
                 session.setAttribute("spam", true);                             //určuje, zda je spam true či false kvůli přesunu do tabulky uchazeci ve výpisu uchazečů
             } else {
@@ -60,13 +61,15 @@ public class Uchazeci extends HttpServlet {
         HttpSession session = request.getSession(true);
         String[] labelRaw=Label.getLabelRaw();
         String[] label=Label.getLabel();
+        String temp;
         try {
             request.setCharacterEncoding("UTF-8");
             if (request.getParameter("zobrazitvysledky")!=null) {
                 getApplicants(request);
                 String[] show=new String[label.length+1];                       //kvůli políčku zaškrtnout vše
                 for (int i = 0; i < show.length; i++) {
-                    if (request.getParameter("sloupec"+i)!=null&&request.getParameter("sloupec"+i).equals("checked")) {
+                    temp=request.getParameter("sloupec"+i);
+                    if (temp!=null&&temp.equals("checked")) {
                         show[i]="show";
                     }
                     else {
@@ -74,7 +77,8 @@ public class Uchazeci extends HttpServlet {
                     }
                 }
                 int last=show.length-1;
-                if (request.getParameter("sloupec"+last)!=null&&request.getParameter("sloupec"+last).equals("checked")) {
+                temp=request.getParameter("sloupec"+last);
+                if (temp!=null&&temp.equals("checked")) {
                     for (int i = 0; i < show.length; i++) {                    //zobrazení všech sloupců
                         show[i]="show";
                     }
@@ -93,16 +97,17 @@ public class Uchazeci extends HttpServlet {
                             udajeouzivatelich[i][j]=request.getParameter(labelRaw[j]+"+"+i);
                         }
                     }
-                    if (request.getParameter("transfer"+"+"+i)!=null&&request.getParameter("transfer"+"+"+i).equals("checked")) {
+                    temp=request.getParameter("transfer"+"+"+i);
+                    if (temp!=null&&temp.equals("checked")) {
                         transfer.add(udajeouzivatelich[i][0]);
                     }
                 }
                 boolean output = sql.updateApplicants(table, udajeouzivatelich);
                 boolean success=true;                                           //používá se jako vyhodnocovací proměnná pro přenos mezi tabulkami
                 int i=0;
-                while (!transfer.isEmpty()&&success) {                          //while cyklus se zastaví pokud je arraylist prázdný nebo pokud se nezdaří přenos
-                    i++;
+                while (!(i==transfer.size())&&success) {                          //while cyklus se zastaví pokud je arraylist prázdný nebo pokud se nezdaří přenos
                     success=sql.transferApplicant(table, transfer.get(i), "uchazeci");
+                    i++;
                     if (!success) {
                         System.out.println("Transfer failed at number: "+i);
                     }
