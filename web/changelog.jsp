@@ -22,6 +22,7 @@
         1.0.0: funkční registrace, přihlašování, zasílání emailů při registraci<br/>
         1.1.0: funkční přihlašování a privátní zóna<br/>
         1.2.0: funkční výpis uchazečů pro administrativu<br/>
+        1.3.0: přidáno mnoho stránek a vyjížděcí menu v záhlaví<br/>
     </div>
 </div>
 

@@ -55,6 +55,56 @@ public class Label {
         "kkov",
         "izo",
         "rok maturity",
+        "mobilní telefon",
+        "stav přihlášky",
+        "školné",
+    };
+    
+    private static final String[] labelApplicantForm={
+        "uživatelské jméno",
+        "jméno",
+        "příjmení",
+        "hash hesla",
+        "studijní program",
+        "studijní obor",
+        "pohlaví",
+        "státní příslušnost",
+        "rodinný stav",
+        "email",
+        "den narození",
+        "měsíc narození",
+        "rok narození",
+        "číslo OP",
+        "rodné číslo",
+        "číslo pasu",
+        "místo narození",
+        "okres narození",
+        "ulice",
+        "číslo domu",
+        "část obce",
+        "obec",
+        "okres",
+        "psč",
+        "stát",
+        "telefon",
+        "pošta",
+        "ulice",
+        "číslo domu",
+        "část obce",
+        "obec",
+        "okres",
+        "psč",
+        "stát",
+        "telefon",
+        "pošta",
+        "název střední školy",
+        "adresa střední školy",
+        "obor střední školy",
+        "jkov",
+        "kkov",
+        "izo",
+        "rok maturity",
+        "mobilní telefon",
         "stav přihlášky",
         "školné",
     };
@@ -103,9 +153,14 @@ public class Label {
         "kkov",                                                                 //40
         "izo",                                                                  //41
         "rokmaturity",                                                          //42
-        "stavprihlasky",                                                        //43
-        "skolne",                                                               //44
+        "mobilnitelefon",                                                       //43
+        "stavprihlasky",                                                        //44
+        "skolne",                                                               //45
     };
+
+    public static String[] getLabelApplicantForm() {
+        return labelApplicantForm;
+    }
 
     public static String[] getLabel() {
         return label;

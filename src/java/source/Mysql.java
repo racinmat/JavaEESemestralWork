@@ -220,10 +220,10 @@ public class Mysql {
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?)";
+                    + "?,?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
-            for (int i = 2; i <= 40; i++) {
+            for (int i = 2; i <= label.length-2; i++) {
                 ps.setString(i,input[i+2]);
             }
             ps.setString(41,"nezevidován administrativou");

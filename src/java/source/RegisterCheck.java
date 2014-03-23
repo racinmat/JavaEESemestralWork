@@ -58,7 +58,7 @@ public class RegisterCheck extends HttpServlet {
         if (den==0||den>31) {
             return true;
         }
-        int cislo=Integer.parseInt(str);
+        long cislo=Long.parseLong(str);
         if (cislo%11!=0) {
             return true;
         }
@@ -92,14 +92,32 @@ public class RegisterCheck extends HttpServlet {
         return Integer.toString(output);
     }
     
+    public static boolean notValidPhoneNumber(String str){
+        int plusposition=str.indexOf("+");                                      //pozice plusu z předvolby
+        if (plusposition>0){
+            return true;                                                        //pokud neprojde validace, nastaví se error na false
+        }
+        if (notNumeric(str.substring(1))) {
+            return true;
+        }
+        if (str.length()>13||str.length()<11) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static String stripPredvolba(String predvolba, String str){
+        if (str.contains(predvolba)) {
+            str=str.substring(predvolba.length());
+        }
+        return str;
+    }
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -115,21 +133,22 @@ public class RegisterCheck extends HttpServlet {
             
             String[] input = new String[labelRaw.length-2];
             for (int i = 1; i < labelRaw.length-2; i++) {
-                if (i==3||i==10||i==11||i==12) {
+                if (i==3||i==10||i==11||i==12) {                                //políčka s tímto číslem labelu nejsou ve formuláři
                     
-                } else {
+                } else if(i==25||i==34||i==43){
+                    input[i]=request.getParameter("predvolba"+labelRaw[i])+request.getParameter(labelRaw[i]);   //na telefonní čísla
+                }
+                else {
                     input[i]=request.getParameter(labelRaw[i]);
                 }
             }
             
-            if (notNumeric(input[13])) {
+            if (notNumeric(input[13])&&notNumeric(input[15])) {                 //pokud je alespoň jedno z nich v pořádku, pak je druhé nepovinné
                 notFilled[13]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
-                error=true;
-            }
-            if (notNumeric(input[15])) {
                 notFilled[15]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
                 error=true;
             }
+            
             if (notValidBirthNumber(input[14])) {
                 notFilled[14]=notFilledStyle;                                             //pokud je notFilled true, pak je v daném políčku chyba
                 error=true;
@@ -142,7 +161,7 @@ public class RegisterCheck extends HttpServlet {
                 notFilled[23]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
-            if (notNumeric(input[25])) {
+            if (notValidPhoneNumber(input[25])) {
                 notFilled[25]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
@@ -150,11 +169,11 @@ public class RegisterCheck extends HttpServlet {
                 notFilled[28]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
-            if ((!input[28].equals(""))&&notNumeric(input[32])) {
+            if ((!input[32].equals(""))&&notNumeric(input[32])) {
                 notFilled[32]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
-            if ((!input[28].equals(""))&&notNumeric(input[34])) {
+            if ((!input[34].equals(""))&&notValidPhoneNumber(input[34])) {
                 notFilled[34]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
@@ -162,11 +181,26 @@ public class RegisterCheck extends HttpServlet {
                 notFilled[42]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
                 error=true;
             }
+            if (notValidPhoneNumber(input[43])) {
+                notFilled[43]=notFilledStyle;                                             //pokud je notFilled 1, pak je v daném políčku chyba
+                error=true;
+            }
+            
+            if (!notValidBirthNumber(input[14])) {
+                input[10]=getBirthDay(input[14]);                                   //z rodného čísla
+                input[11]=getBirthMonth(input[14]);
+                input[12]=getBirthYear(input[14]);
+            } else {
+                input[10]="";
+                input[11]="";
+                input[12]="";
+            }
+            
             for (int i = 1; i < notFilled.length; i++) {                        //testování prázdnosti vyplněných polí
                 if (i!=3&&input[i].equals("")) {                                //3 je pro heslo, to se nezadává
-                    if (i<27|i>35) {                                            //políčka 27 až 35 jsou nepovinná, pokud jsou přízdná, nakopíruje se do nich hodnota z trvalého bydliště
+                    if (i!=15||i!=13||i<27||i>35) {                             //políčka 27 až 35 jsou nepovinná, pokud jsou přízdná, nakopíruje se do nich hodnota z trvalého bydliště
                         notFilled[i]=notFilledStyle;                            //pokud je notFilled true, pak je v daném políčku chyba
-                        error=true;
+                        error=true;                                             //políčko 3 je heslo a políčka 13 a 15 jsou OP a pas, výše je validace, azda je aspoň jeden z nich správně
                     }
                 }
             }
@@ -181,17 +215,13 @@ public class RegisterCheck extends HttpServlet {
                 }
             }
             
-            input[10]=getBirthDay(input[14]);                                   //z rodného čísla
-            input[11]=getBirthMonth(input[14]);
-            input[12]=getBirthYear(input[14]);
-            
-            
             HttpSession session = request.getSession();
             session.setAttribute("formContent", input);
             session.setAttribute("formCheck", notFilled);
                         
             if (error) {
-                response.sendRedirect("proUchazece.jsp");
+                
+                response.sendRedirect("proUchazece_Prihlaska.jsp");
             }
             else{
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/register");

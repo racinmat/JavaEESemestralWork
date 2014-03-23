@@ -56,12 +56,15 @@ public class Register extends HttpServlet{
             spam=2;//pro vyplněné skryté políčko je spam=2
             tabulka="uchazeci_spam";//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
         }
-        String[] input = new String[43];
+        String[] input = new String[label.length-2];
         input[0]=username;
         for (int i = 1; i < label.length-2; i++) {
             if (i==3) {
                 input[i]=password;
-            } else {
+            } else if(i==25||i==34||i==43){
+                input[i]=request.getParameter("predvolba"+labelRaw[i])+request.getParameter(labelRaw[i]);   //na telefonní čísla
+            }
+            else {
                 input[i]=request.getParameter(labelRaw[i]);
             }
         }
@@ -69,6 +72,12 @@ public class Register extends HttpServlet{
         for (int i = 27; i <= 35; i++) {                                        //kontaktní údaje, nepovinné, pokud nevyplněny, předají se údaje z trvalého bydliště
             if (input[i].equals("")) {
                 input[i]=input[i-9];
+            }
+        }
+        
+        for (int i = 0; i < input.length; i++) {                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
+            if (input[i].equals("")) {
+                input[i]="nevyplněno";
             }
         }
         

@@ -189,9 +189,9 @@ video {
 }
 
 fieldset {
-	border: 0;
+	//border: 0;            //tento řádek původně nebyl zakomentován
 	margin: 0;
-	padding: 0;
+	//padding: 0;           //tento řádek původně nebyl zakomentován
 }
 
 legend {
@@ -1384,4 +1384,13 @@ p.pages {
 
 .wideList{
     white-space: nowrap;
+}
+
+.loginForm {
+    background-color: #ccc;
+    box-shadow: 2px 2px 20px #ddd;
+}
+
+.predvolba{
+    width: 50px
 }

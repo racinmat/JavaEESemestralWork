@@ -9,7 +9,7 @@
 <%
     session = request.getSession(true);                                         //zpřístupní se session
     String registered="";
-    String[] label=Label.getLabel();
+    String[] label=Label.getLabelApplicantForm();
     String[] labelRaw=Label.getLabelRaw();
     if(session.getAttribute("registered")!=null){
         registered=(String) session.getAttribute("registered");                 //zjistí se, jak byl uživatel úspěšný při registraci
@@ -21,7 +21,7 @@
     if(session.getAttribute("formCheck")!=null){
         empty=(String[]) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
-    String[] content=new String[43];
+    String[] content=new String[label.length-2];
     for (int i = 0; i < content.length; i++) {
         content[i]="";
     }
@@ -45,19 +45,6 @@
         muz="selected=\"selected\"";
     } else if(content[6].equals("žena")){
         zena="selected=\"selected\"";
-    }
-    
-    String[] mesic=new String[12];
-    for (int i = 0; i < mesic.length; i++) {
-        mesic[i]="";
-    }
-    if(!content[11].equals("")){
-        int mesicCislo=Integer.parseInt(content[11]);
-        for (int i = 0; i < mesic.length; i++) {
-            if(mesicCislo==i){
-                mesic[i]="selected=\"selected\"";
-            }
-        }
     }
     
     session.setAttribute("registered", null);
@@ -113,10 +100,21 @@
                     <label for="<%= labelRaw[8] %>"<%= empty[8] %>><%= label[8] %>:</label>
                     <input id="<%= labelRaw[8] %>" type="text" name="<%= labelRaw[8] %>" value="<%= content[8] %>">
                 </div>
+            </fieldset>
+            <fieldset>
+                <legend>kontakt</legend>
                 <div>    
                     <label for="<%= labelRaw[9] %>"<%= empty[9] %>><%= label[9] %>:</label>
                     <input id="<%= labelRaw[9] %>" type="text" name="<%= labelRaw[9] %>" value="<%= content[9] %>">
                 </div>
+                <div>    
+                    <label for="<%= labelRaw[43] %>"<%= empty[43] %>><%= label[43] %>:</label>
+                    <input class="predvolba" type="text" name="<%= "predvolba"+labelRaw[43] %>" value="+420">
+                    <input id="<%= labelRaw[43] %>" type="text" name="<%= labelRaw[43] %>" value="<%= content[43] %>">
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>narození</legend>
                 <div>
                     <label for="<%= labelRaw[13] %>"<%= empty[13] %>><%= label[13] %>:</label>
                     <input id="<%= labelRaw[13] %>" type="text" name="<%= labelRaw[13] %>" value="<%= content[13] %>">
@@ -137,6 +135,9 @@
                     <label for="<%= labelRaw[17] %>"<%= empty[17] %>><%= label[17] %>:</label>
                     <input id="<%= labelRaw[17] %>" type="text" name="<%= labelRaw[17] %>" value="<%= content[17] %>">
                 </div>
+            </fieldset>
+            <fieldset>
+                <legend>trvalé bydliště</legend>
                 <div>
                     <label for="<%= labelRaw[18] %>"<%= empty[18] %>><%= label[18] %>:</label>
                     <input id="<%= labelRaw[18] %>" type="text" name="<%= labelRaw[18] %>" value="<%= content[18] %>">
@@ -167,12 +168,16 @@
                 </div>
                 <div>
                     <label for="<%= labelRaw[25] %>"<%= empty[25] %>><%= label[25] %>:</label>
+                    <input class="predvolba" type="text" name="<%= "predvolba"+labelRaw[25] %>" value="+420">
                     <input id="<%= labelRaw[25] %>" type="text" name="<%= labelRaw[25] %>" value="<%= content[25] %>">
                 </div>
                 <div>
                     <label for="<%= labelRaw[26] %>"<%= empty[26] %>><%= label[26] %>:</label>
                     <input id="<%= labelRaw[26] %>" type="text" name="<%= labelRaw[26] %>" value="<%= content[26] %>">
                 </div>
+            </fieldset>
+            <fieldset>
+                <legend>kontaktní adresa</legend>
                 <div>
                     <label for="<%= labelRaw[27] %>"<%= empty[27] %>><%= label[27] %>:</label>
                     <input id="<%= labelRaw[27] %>" type="text" name="<%= labelRaw[27] %>" value="<%= content[27] %>">
@@ -203,12 +208,16 @@
                 </div>
                 <div>
                     <label for="<%= labelRaw[34] %>"<%= empty[34] %>><%= label[34] %>:</label>
+                    <input class="predvolba" type="text" name="<%= "predvolba"+labelRaw[34] %>" value="+420">
                     <input id="<%= labelRaw[34] %>" type="text" name="<%= labelRaw[34] %>" value="<%= content[34] %>">
                 </div>
                 <div>
                     <label for="<%= labelRaw[35] %>"<%= empty[35] %>><%= label[35] %>:</label>
                     <input id="<%= labelRaw[35] %>" type="text" name="<%= labelRaw[35] %>" value="<%= content[35] %>">
                 </div>
+            </fieldset>
+            <fieldset>
+                <legend>střední škola</legend>
                 <div>
                     <label for="<%= labelRaw[36] %>"<%= empty[36] %>><%= label[36] %>:</label>
                     <input id="<%= labelRaw[36] %>" type="text" name="<%= labelRaw[36] %>" value="<%= content[36] %>">
@@ -228,6 +237,14 @@
                 <div>
                     <label for="<%= labelRaw[40] %>"<%= empty[40] %>><%= label[40] %>:</label>
                     <input id="<%= labelRaw[40] %>" type="text" name="<%= labelRaw[40] %>" value="<%= content[40] %>">
+                </div>
+                <div>
+                    <label for="<%= labelRaw[41] %>"<%= empty[41] %>><%= label[41] %>:</label>
+                    <input id="<%= labelRaw[41] %>" type="text" name="<%= labelRaw[41] %>" value="<%= content[41] %>">
+                </div>
+                <div>
+                    <label for="<%= labelRaw[42] %>"<%= empty[42] %>><%= label[42] %>:</label>
+                    <input id="<%= labelRaw[42] %>" type="text" name="<%= labelRaw[42] %>" value="<%= content[42] %>">
                 </div>
             </fieldset>
             <input type="submit" name="odeslat" value="odeslat přihlášku">

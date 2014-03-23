@@ -17,6 +17,7 @@
     String form="";
     if(logged==null){                                                           //výpis formuláře je podmíněný
         form="<form action=\"login\" method=\"POST\">"
+            + "<fieldset class=\"loginForm\">"
                 + "<div>"
                     + "uživatelské jméno:"
                 + "</div>"
@@ -29,13 +30,18 @@
                     + "<input type=\"password\" name=\"password\">"
                 + "</div>"
                 + "<div>"
+                    + "<br/>"
+                + "</div>"
+                + "<div>"
                     + "<input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\">"
                 + "</div>"
+            + "</fieldset>"
             + "</form>";
     }                                                                           
     
     if(logged!=null&&logged.equals("fail")){                                    //ošetřena inicializace proměnné
         form="<form action=\"login\" method=\"POST\">"
+            + "<fieldset class=\"loginForm\">"
                 + "<div>"
                     + "uživatelské jméno:"
                 + "</div>"
@@ -48,8 +54,12 @@
                     + "<input type=\"password\" name=\"password\">"
                 + "</div>"
                 + "<div>"
+                    + "<br/>"
+                + "</div>"
+                + "<div>"
                     + "<input type=\"submit\" name=\"přihlásit se\" value=\"přihlásit se\">"
                 + "</div>"
+            + "</fieldset>"
             + "</form>";
         failMessage="<div>Přihlášení se nezdařilo, bylo nesprávně zadáno uživatelské jméno nebo heslo</div>";
         if(logged.equals("fail")){
@@ -88,7 +98,7 @@
         <p class="copy">
             <span class="sep">Inspired by <a href="http://wordpress.org/">WordPress</a> template <a href="http://www.wpzoom.com/">Academica by WPZOOM</a></span>
             © 2014 Všechna práva vyhrazena. autor: Matěj Račinský.
-            <a href="changelog.jsp">Verze: 1.2.0</a>
+            <a href="changelog.jsp">Verze: 1.3.0</a>
         </p>
     </div><!-- end #footer -->
 </div><!-- end #wrap -->
