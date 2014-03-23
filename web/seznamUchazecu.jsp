@@ -128,7 +128,7 @@
                             }
                             for(int j = 1; j < label.length; j++){
                                 if(show[j]!=null&&show[j].equals("show")){
-                                    if(j==43) {                                 //stav přihlášky se vypisuje jako select
+                                    if(j==44) {                                 //stav přihlášky se vypisuje jako select
                         %>
                                     <span id="listOfApplicants">
                                         <select name="<%= labelRaw[j]+"+"+i %>">

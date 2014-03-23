@@ -255,7 +255,7 @@ public class Mysql {
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                String[] temp=new String[45];                                   //navíc na konci políčko přijat
+                String[] temp=new String[label.length];                         
                 temp[0]=rs.getString(label[0]);
                 for (int i = 4; i < label.length; i++) {
                     temp[i]=rs.getString(label[i]);
