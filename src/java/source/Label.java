@@ -157,6 +157,32 @@ public class Label {
         "stavprihlasky",                                                        //44
         "skolne",                                                               //45
     };
+    
+    private static final String[] labelStudent={
+        "uživatelské jméno",                                                    //0
+        "jméno",                                                                //1
+        "příjmení",                                                             //2
+        "semestr",                                                              //3
+        "stav studia",                                                          //4
+        "skupina",                                                              //5
+    };
+    
+    private static final String[] labelStudentRaw={
+        "uzivatelskejmeno",                                                     //0
+        "jmeno",                                                                //1
+        "prijmeni",                                                             //2
+        "semestr",                                                              //3
+        "stavstudia",                                                           //4
+        "skupina",                                                              //5
+    };
+
+    public static String[] getLabelStudent() {
+        return labelStudent;
+    }
+
+    public static String[] getLabelStudentRaw() {
+        return labelStudentRaw;
+    }
 
     public static String[] getLabelApplicantForm() {
         return labelApplicantForm;

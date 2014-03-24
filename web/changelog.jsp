@@ -24,6 +24,7 @@
         1.2.0: funkční výpis uchazečů pro administrativu<br/>
         1.3.0: přidáno mnoho stránek a vyjížděcí menu v záhlaví<br/>
         1.4.0: výpis údajů v mém profilu a administrativě umožněno přesouvat uchazeče podezřelé ze spamu mezi běžné uchazeče a přidáno telefonní číslo na mobil<br/>
+        1.5.0: přidáno přidávání pedagogů, administrativy a studentů<br/>
     </div>
 </div>
 

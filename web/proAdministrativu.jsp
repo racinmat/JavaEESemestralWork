@@ -7,9 +7,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
 
-    <%
-
-    %>
     <h1 class="title-header">Pro Administrativu</h1>
         </div><!-- end .column-title -->
 
@@ -31,6 +28,7 @@
                     <p><a href="uchazeci?table=uchazeci_ipspam">Vypsat seznam studentů.</a></p>
                     <p><a href="pridaniPedagoga.jsp">Přidat pedagoga.</a></p>
                     <p><a href="pridaniAdministrativy.jsp">Přidat administrativu.</a></p>
+                    <p><a href="pridaniStudenta.jsp">Přidat studenta.</a></p>
             <% 
             } 
             else {

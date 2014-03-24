@@ -637,4 +637,31 @@ public class Mysql {
         
         return output;
     }
+    
+    public boolean insertNewStudent(String[] input){
+        boolean output=false;
+        boolean output1=insertNewUserToLogin(input,3);
+        boolean output2;
+        String[] label=Label.getLabelStudentRaw();
+        try {
+            String sql = "INSERT INTO studenti("+label[0]+", "+label[3]+", "+label[4]+", "+label[5]+") VALUES(?,?,?,?)";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,input[0]);
+            ps.setString(2,input[4]);
+            ps.setString(3,input[5]);
+            ps.setString(4,input[6]);
+            int rs = ps.executeUpdate(); 
+            if (rs==1) {
+                output2=true;
+            } else {
+                output2=false;
+            }
+            output=output1&&output2;
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return output;
+    }
+    
 }
