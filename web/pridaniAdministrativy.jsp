@@ -1,6 +1,6 @@
 <%-- 
-    Document   : pridaniPedagoga
-    Created on : 21.3.2014, 16:27:04
+    Document   : pridaniAdministrativy
+    Created on : 24.3.2014, 21:49:22
     Author     : Azathoth
 --%>
 
@@ -30,9 +30,9 @@
     }
     
     if(registered.equals("success")){
-        message="<div>Přidání pedagoga proběhlo úspěšně.</div>";
+        message="<div>Přidání administrativy proběhlo úspěšně.</div>";
     }else if(registered.equals("fail")){
-        message="<div>Bohužel se přidání pedagoga nezdařilo, zkuste provést přidání znovu nebo kontaktujte administrátora.</div>";
+        message="<div>Bohužel se přidání administrativy nezdařilo, zkuste provést přidání znovu nebo kontaktujte administrátora.</div>";
     }
     
     session.setAttribute("registered", null);
@@ -48,9 +48,9 @@
 
             <%= message %>
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
-                <div class="entry-summary"><p>Přidání nového pedagoga</p></div>
+                <div class="entry-summary"><p>Přidání nové administrativy</p></div>
                 <div>
-                    <form action="AddPedagogCheck" method="POST" id="registerForm">
+                    <form action="AddAdministrativaCheck" method="POST" id="registerForm">
 
                         <div>    
                             <label for="<%= labelRaw[1] %>"<%= empty[0] %>><%= label[1] %>:</label>

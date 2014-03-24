@@ -15,16 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import static source.RegisterCheck.getBirthDay;
-import static source.RegisterCheck.getBirthMonth;
-import static source.RegisterCheck.getBirthYear;
-import static source.RegisterCheck.notValidBirthNumber;
 
 /**
  *
  * @author Azathoth
  */
-public class AddPedagog extends HttpServlet {
+public class AddAdministrativa extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -58,7 +54,7 @@ public class AddPedagog extends HttpServlet {
             input[5]=request.getParameter("predvolba"+labelRaw[25])+request.getParameter(labelRaw[25]);
             input[6]=request.getParameter("predvolba"+labelRaw[43])+request.getParameter(labelRaw[43]);
             
-            boolean rs=sql.insertNewPedagog(input);
+            boolean rs=sql.insertNewAdministrativa(input);
             
             if (rs) {
                 session.setAttribute("registered", "success");
@@ -66,10 +62,11 @@ public class AddPedagog extends HttpServlet {
             else {
                 session.setAttribute("registered", "fail");
             }
-            response.sendRedirect("pridaniPedagoga.jsp");
+            response.sendRedirect("pridaniAdministrativy.jsp");
         } catch (IOException ex) {
             Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
 }
+

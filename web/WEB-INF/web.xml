@@ -7,12 +7,20 @@
         </session-timeout>
     </session-config>
     <servlet>
-        <servlet-name>addpedagogcheck</servlet-name>
-        <servlet-class>source.AddPedagogCheck</servlet-class>
+        <servlet-name>AddAdministrativa</servlet-name>
+        <servlet-class>source.AddAdministrativa</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>addpedagogcheck</servlet-name>
-        <url-pattern>/AddPedagogCheck</url-pattern>
+        <servlet-name>AddAdministrativa</servlet-name>
+        <url-pattern>/AddAdministrativa</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AddAdministrativaCheck</servlet-name>
+        <servlet-class>source.AddAdministrativaCheck</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddAdministrativaCheck</servlet-name>
+        <url-pattern>/AddAdministrativaCheck</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>addPedagog</servlet-name>
@@ -21,6 +29,14 @@
     <servlet-mapping>
         <servlet-name>addPedagog</servlet-name>
         <url-pattern>/AddPedagog</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>addpedagogcheck</servlet-name>
+        <servlet-class>source.AddPedagogCheck</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addpedagogcheck</servlet-name>
+        <url-pattern>/AddPedagogCheck</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>changeData</servlet-name>

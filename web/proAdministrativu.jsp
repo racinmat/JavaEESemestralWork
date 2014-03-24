@@ -30,6 +30,7 @@
                     <p><a href="uchazeci?table=uchazeci&criteriumColumn=stavprihlasky&criterium=nezevidován administrativou">Vypsat seznam nezevidovaných uchazečů.</a></p>
                     <p><a href="uchazeci?table=uchazeci_ipspam">Vypsat seznam studentů.</a></p>
                     <p><a href="pridaniPedagoga.jsp">Přidat pedagoga.</a></p>
+                    <p><a href="pridaniAdministrativy.jsp">Přidat administrativu.</a></p>
             <% 
             } 
             else {

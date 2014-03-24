@@ -7,7 +7,6 @@
 package source;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -16,13 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import static source.RegisterCheck.*;
+import static source.RegisterCheck.notValidEmail;
+import static source.RegisterCheck.notValidPhoneNumber;
 
 /**
  *
  * @author Azathoth
  */
-public class AddPedagogCheck extends HttpServlet {
+public class AddAdministrativaCheck extends HttpServlet{
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -77,10 +77,10 @@ public class AddPedagogCheck extends HttpServlet {
             session.setAttribute("formCheck", notFilled);
                         
             if (error) {
-                response.sendRedirect("pridaniPedagoga.jsp");
+                response.sendRedirect("pridaniAdministrativy.jsp");
             }
             else{
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/AddPedagog");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/AddAdministrativa");
                 dispatcher.forward(request, response);
             }
         } catch (ServletException ex) {

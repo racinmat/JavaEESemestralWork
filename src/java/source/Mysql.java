@@ -199,7 +199,7 @@ public class Mysql {
         boolean output=false;
         input[44]="nezevidován administrativou";
         input[45]="nezaplaceno";
-        boolean output1=insertNewUserToLogin(input);
+        boolean output1=insertNewUserToLogin(input,4);
         boolean output2=insertApplicant(tabulka, input);
         output=output1&&output2;
         return output;
@@ -565,7 +565,7 @@ public class Mysql {
         return output;
     }
     
-    public boolean insertNewUserToLogin(String[] input){
+    public boolean insertNewUserToLogin(String[] input, int rights){
         boolean output=false;
         String[] label=Label.getLabelRaw();
         try {
@@ -575,7 +575,7 @@ public class Mysql {
             ps.setString(2,input[1]);
             ps.setString(3,input[2]);
             ps.setString(4,input[3]);
-            ps.setInt(5,4);
+            ps.setInt(5,rights);
             int rs = ps.executeUpdate(); 
             if (rs==1) {
                 output=true;
@@ -583,6 +583,58 @@ public class Mysql {
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return output;
+    }
+    
+    public boolean insertNewPedagog(String[] input){
+        boolean output=false;
+        boolean output1=insertNewUserToLogin(input,2);
+        boolean output2;
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "INSERT INTO pedagogove("+label[0]+", "+label[9]+", "+label[25]+", "+label[43]+") VALUES(?,?,?,?)";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,input[0]);
+            ps.setString(2,input[4]);
+            ps.setString(3,input[5]);
+            ps.setString(4,input[6]);
+            int rs = ps.executeUpdate(); 
+            if (rs==1) {
+                output2=true;
+            } else {
+                output2=false;
+            }
+            output=output1&&output2;
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return output;
+    }
+    
+    public boolean insertNewAdministrativa(String[] input){
+        boolean output=false;
+        boolean output1=insertNewUserToLogin(input,1);
+        boolean output2;
+        String[] label=Label.getLabelRaw();
+        try {
+            String sql = "INSERT INTO administrativa("+label[0]+", "+label[9]+", "+label[25]+", "+label[43]+") VALUES(?,?,?,?)";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setString(1,input[0]);
+            ps.setString(2,input[4]);
+            ps.setString(3,input[5]);
+            ps.setString(4,input[6]);
+            int rs = ps.executeUpdate(); 
+            if (rs==1) {
+                output2=true;
+            } else {
+                output2=false;
+            }
+            output=output1&&output2;
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return output;
     }
 }
