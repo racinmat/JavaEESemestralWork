@@ -110,7 +110,14 @@
                             přesunout ze spamu mezi běžné uchazeče
                         </span>
                     <%
-                        }
+                        } else{
+                    %>
+                        <span id="listOfApplicantsLabel">
+                            vytvořit studenta
+                        </span>
+                    
+                    <%
+                        } 
                     %>
                         <br/>
                     </div>
@@ -153,6 +160,12 @@
                             %>
                                 <span id="listOfApplicantsLabel">
                                     <input type="checkbox" name="<%= "transfer"+"+"+i %>" value="checked">
+                                </span>
+                            <%
+                            } else {
+                            %>
+                                <span id="listOfApplicantsLabel">
+                                    <input type="checkbox" name="<%= "createstudent"+"+"+i %>" value="checked">
                                 </span>
                             <%
                             }

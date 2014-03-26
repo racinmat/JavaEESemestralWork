@@ -90,6 +90,7 @@ public class Uchazeci extends HttpServlet {
             }
             if (request.getParameter("zmenitudaje")!=null) {
                 ArrayList<String> transfer=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
+                ArrayList<String> createstudent=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql=new Mysql();
                 for (int i = 0; i < udajeouzivatelich.length; i++) {
                     for (int j = 0; j < Label.getLength(); j++) {
@@ -101,6 +102,11 @@ public class Uchazeci extends HttpServlet {
                     if (temp!=null&&temp.equals("checked")) {
                         transfer.add(udajeouzivatelich[i][0]);
                     }
+                    temp=request.getParameter("createstudent"+"+"+i);
+                    if (temp!=null&&temp.equals("checked")) {
+                        createstudent.add(udajeouzivatelich[i][0]);
+                    }
+                    
                 }
                 boolean output = sql.updateApplicants(table, udajeouzivatelich);
                 boolean success=true;                                           //používá se jako vyhodnocovací proměnná pro přenos mezi tabulkami
@@ -112,7 +118,13 @@ public class Uchazeci extends HttpServlet {
                         System.out.println("Transfer failed at number: "+i);
                     }
                 }
+                if (!createstudent.isEmpty()) {
+                    session.setAttribute("newstudent", createstudent);
+                    response.sendRedirect("pridaniStudenta.jsp");
+                }
+            
             }
+            
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
             Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);

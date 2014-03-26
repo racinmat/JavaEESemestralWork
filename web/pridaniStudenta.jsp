@@ -4,6 +4,7 @@
     Author     : Azathoth
 --%>
 
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
 <%
@@ -17,16 +18,24 @@
     String message="";
     
     boolean[] notFilled = new boolean[label.length];
-    String[] empty=new String[label.length];
-    if(session.getAttribute("formCheck")!=null){
-        empty=(String[]) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
+    ArrayList<String> listOfStudents=new ArrayList<String>();
+    if(session.getAttribute("newstudent")!=null){
+        listOfStudents=(ArrayList<String>) session.getAttribute("newstudent");
     }
-    String[] content=new String[label.length];
+    
+    String[][] empty=new String[listOfStudents.size()][label.length];
+    if(session.getAttribute("formCheck")!=null){
+        empty=(String[][]) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
+    }
+    
+    String[][] content=new String[listOfStudents.size()][label.length];
     for (int i = 0; i < content.length; i++) {
-        content[i]="";
+        for (int j = 0; j < 10; j++) {
+            content[i][j]="";
+        }
     }
     if(session.getAttribute("formContent")!=null){
-        content=(String[]) session.getAttribute("formContent");
+        content=(String[][]) session.getAttribute("formContent");
     }
     
     if(registered.equals("success")){
@@ -48,32 +57,51 @@
 
             <%= message %>
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
-                <div class="entry-summary"><p>Přidání nového pedagoga</p></div>
+                <div class="entry-summary"><p>Přidání nových studentů</p></div>
                 <div>
                     <form action="AddStudentCheck" method="POST" id="registerForm">
-
-                        <div>    
-                            <label for="<%= labelRaw[1] %>"<%= empty[1] %>><%= label[1] %>:</label>
-                            <input id="<%= labelRaw[1] %>" type="text" name="<%= labelRaw[1] %>" value="<%= content[1] %>">
+                        <div>
+                            <span>
+                                <%= label[1] %>
+                            </span>
+                            <span>   
+                                <%= label[2] %>
+                            </span>
+                            <span>   
+                                <%= label[3] %>
+                            </span>
+                            <span>   
+                                <%= label[4] %>
+                            </span>
+                            <span>    
+                                <%= label[5] %>
+                            </span>
                         </div>
-                        <div>    
-                            <label for="<%= labelRaw[2] %>"<%= empty[2] %>><%= label[2] %>:</label>
-                            <input id="<%= labelRaw[2] %>" type="text" name="<%= labelRaw[2] %>" value="<%= content[2] %>">
+                        <%
+                            for (int i = 0; i < listOfStudents.size(); i++) {
+                        %>
+                        <div>
+                            <span>    
+                                <input id="<%= labelRaw[1]+"+"+i %>" type="text" name="<%= labelRaw[1]+"+"+i %>" value="<%= content[1] %>">
+                            </span>
+                            <span>    
+                                <input id="<%= labelRaw[2]+"+"+i %>" type="text" name="<%= labelRaw[2]+"+"+i %>" value="<%= content[2] %>">
+                            </span>
+                            <span>    
+                                <input id="<%= labelRaw[3]+"+"+i %>" type="text" name="<%= labelRaw[3]+"+"+i %>" value="<%= content[3] %>">
+                            </span>
+                            <span>    
+                                <input id="<%= labelRaw[4]+"+"+i %>" type="text" name="<%= labelRaw[4]+"+"+i %>" value="<%= content[4] %>">
+                            </span>
+                            <span>    
+                                <input id="<%= labelRaw[5]+"+"+i %>" type="text" name="<%= labelRaw[5]+"+"+i %>" value="<%= content[5] %>">
+                            </span>
                         </div>
-                        <div>    
-                            <label for="<%= labelRaw[3] %>"<%= empty[3] %>><%= label[3] %>:</label>
-                            <input id="<%= labelRaw[3] %>" type="text" name="<%= labelRaw[3] %>" value="<%= content[3] %>">
-                        </div>
-                        <div>    
-                            <label for="<%= labelRaw[4] %>"<%= empty[4] %>><%= label[4] %>:</label>
-                            <input id="<%= labelRaw[4] %>" type="text" name="<%= labelRaw[4] %>" value="<%= content[4] %>">
-                        </div>
-                        <div>    
-                            <label for="<%= labelRaw[5] %>"<%= empty[5] %>><%= label[5] %>:</label>
-                            <input id="<%= labelRaw[5] %>" type="text" name="<%= labelRaw[5] %>" value="<%= content[5] %>">
-                        </div>
+                        <%
+                            }
+                        %>    
                         
-                        <input type="submit" name="odeslat" value="přidat pedagoga">
+                        <input type="submit" name="odeslat" value="přidat studenty">
                     </form>
                 </div>
             </div>

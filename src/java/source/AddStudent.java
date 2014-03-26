@@ -8,6 +8,7 @@ package source;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -22,6 +23,16 @@ import javax.servlet.http.HttpSession;
  */
 public class AddStudent extends HttpServlet {
 
+    public boolean isAllTrue(boolean[] input){
+        boolean output=true;
+        for (int i = 0; i < input.length; i++) {
+            if (input[i]==false) {
+                output=false;
+            }
+        }
+        return output;
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,20 +52,25 @@ public class AddStudent extends HttpServlet {
             String[] labelRaw=Label.getLabelStudentRaw();
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
+            ArrayList<String> seznamStudentu=(ArrayList<String>) session.getAttribute("newstudent");
             
             Mysql sql=new Mysql();
             String[] input = new String[7];
-            input[0]=username;
-            input[3]=password;
-            input[1]=request.getParameter(labelRaw[1]);
-            input[2]=request.getParameter(labelRaw[2]);
-            input[4]=request.getParameter(labelRaw[3]);
-            input[5]=request.getParameter(labelRaw[4]);
-            input[6]=request.getParameter(labelRaw[5]);
+            boolean rs[]=new boolean[seznamStudentu.size()];
+            for (int i = 0; i < 10; i++) {
+                input[0]=username;
+                input[3]=password;
+                input[1]=request.getParameter(labelRaw[1]+"+"+i);
+                input[2]=request.getParameter(labelRaw[2]+"+"+i);
+                input[4]=request.getParameter(labelRaw[3]+"+"+i);
+                input[5]=request.getParameter(labelRaw[4]+"+"+i);
+                input[6]=request.getParameter(labelRaw[5]+"+"+i);
+
+                rs[i]=sql.insertNewStudent(input);
             
-            boolean rs=sql.insertNewStudent(input);
+            }
             
-            if (rs) {
+            if (isAllTrue(rs)) {
                 session.setAttribute("registered", "success");
             }
             else {

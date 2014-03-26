@@ -8,6 +8,7 @@ package source;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -34,39 +35,46 @@ public class AddStudentCheck extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession(true);
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
             String[] labelRaw=Label.getLabelStudentRaw();
-            String[] notFilled = new String[labelRaw.length];
-            for (int i = 0; i < notFilled.length; i++) {
-                notFilled[i]="";
-            }
             boolean error=false;
             String notFilledStyle=" class=\"notFilled\"";
-            
-            String[] input = new String[5];
-            input[1]=request.getParameter(labelRaw[1]);
-            input[2]=request.getParameter(labelRaw[2]);
-            input[3]=request.getParameter(labelRaw[3]);
-            
-            for (int i = 1; i < notFilled.length; i++) {                        //testování prázdnosti vyplněných polí
-                if (input[i].equals("")) {                                //3 je pro heslo, to se nezadává
-                    notFilled[i]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
-                    error=true;
+            ArrayList<String> seznamStudentu=(ArrayList<String>) session.getAttribute("newstudent");
+            String[][] input = new String[seznamStudentu.size()][5];
+            String[][] notFilled = new String[seznamStudentu.size()][labelRaw.length];
+            for (int i = 0; i < notFilled.length; i++) {
+                for (int j = 0; j < notFilled[0].length; j++) {
+                    notFilled[i][j]="";
                 }
             }
-            
-            if (notNumeric(input[3])) {
-                notFilled[3]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
-                error=true;
+            for (int i = 0; i < input.length; i++) {
+                String[] temp=new String[5];
+                temp[1]=request.getParameter(labelRaw[1]+"+"+i);
+                temp[2]=request.getParameter(labelRaw[2]+"+"+i);
+                temp[3]=request.getParameter(labelRaw[3]+"+"+i);
+
+                for (int j = 1; j < notFilled.length; j++) {                    //testování prázdnosti vyplněných polí
+                    if (temp[j].equals("")) {                                   //3 je pro heslo, to se nezadává
+                        notFilled[i][j]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
+                        error=true;
+                    }
+                }
+
+                if (notNumeric(temp[3])) {
+                    notFilled[i][3]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
+                    error=true;
+                }
+
+                if (notNumeric(temp[5])) {
+                    notFilled[i][5]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
+                    error=true;
+                }
+                input[i]=temp;
             }
             
-            if (notNumeric(input[5])) {
-                notFilled[5]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
-                error=true;
-            }
             
-            HttpSession session = request.getSession();
             session.setAttribute("formContent", input);
             session.setAttribute("formCheck", notFilled);
                         
