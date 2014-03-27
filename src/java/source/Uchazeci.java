@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +93,7 @@ public class Uchazeci extends HttpServlet {
                 ArrayList<String> transfer=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 ArrayList<String> createstudent=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql=new Mysql();
+                getApplicants(request);
                 for (int i = 0; i < udajeouzivatelich.length; i++) {
                     for (int j = 0; j < Label.getLength(); j++) {
                         if (request.getParameter(labelRaw[j]+"+"+i)!=null) {
@@ -120,13 +122,17 @@ public class Uchazeci extends HttpServlet {
                 }
                 if (!createstudent.isEmpty()) {
                     session.setAttribute("newstudent", createstudent);
-                    response.sendRedirect("pridaniStudenta.jsp");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("pridaniStudenta.jsp");
+                    dispatcher.forward(request, response);
+                    //response.sendRedirect("pridaniStudenta.jsp");
                 }
             
             }
             
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
+            Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServletException ex) {
             Logger.getLogger(Uchazeci.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

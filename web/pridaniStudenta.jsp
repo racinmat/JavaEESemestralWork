@@ -30,7 +30,7 @@
     
     String[][] content=new String[listOfStudents.size()][label.length];
     for (int i = 0; i < content.length; i++) {
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < content[0].length; j++) {
             content[i][j]="";
         }
     }
@@ -62,6 +62,9 @@
                     <form action="AddStudentCheck" method="POST" id="registerForm">
                         <div>
                             <span>
+                                <%= label[0] %>
+                            </span>
+                            <span>
                                 <%= label[1] %>
                             </span>
                             <span>   
@@ -82,10 +85,13 @@
                         %>
                         <div>
                             <span>    
-                                <input id="<%= labelRaw[1]+"+"+i %>" type="text" name="<%= labelRaw[1]+"+"+i %>" value="<%= content[1] %>">
+                                <%= content[0] %>
                             </span>
                             <span>    
-                                <input id="<%= labelRaw[2]+"+"+i %>" type="text" name="<%= labelRaw[2]+"+"+i %>" value="<%= content[2] %>">
+                                <%= content[1] %>
+                            </span>
+                            <span>    
+                                <%= content[2] %>
                             </span>
                             <span>    
                                 <input id="<%= labelRaw[3]+"+"+i %>" type="text" name="<%= labelRaw[3]+"+"+i %>" value="<%= content[3] %>">
