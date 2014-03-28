@@ -21,11 +21,12 @@
                 <p class="entry-meta">
                   </p><!-- end .entry-meta -->
                 <div class="entry-summary">
-                    <p><a href="uchazeci?table=uchazeci">Vypsat seznam uchazečů.</a></p>
+                    <p><a href="uchazeci?table=uchazeci">Vypsat seznam uchazečů i studentů.</a></p>
+                    <p><a href="uchazeci?table=uchazeci&criteriumColumn=stavprihlasky&criterium=přijat&negate=yes">Vypsat seznam uchazečů.</a></p>
                     <p><a href="uchazeci?table=uchazeci_spam">Vypsat seznam uchazečů, kteří vyplnili skryté pole.</a></p>
                     <p><a href="uchazeci?table=uchazeci_ipspam">Vypsat seznam uchazečů, kteří podali více než 10 přihlášek za den z jedné IP adresy.</a></p>
                     <p><a href="uchazeci?table=uchazeci&criteriumColumn=stavprihlasky&criterium=nezevidován administrativou">Vypsat seznam nezevidovaných uchazečů.</a></p>
-                    <p><a href="uchazeci?table=uchazeci_ipspam">Vypsat seznam studentů.</a></p>
+                    <p><a href="uchazeci?table=studenti">Vypsat seznam studentů.</a></p>
                     <p><a href="pridaniPedagoga.jsp">Přidat pedagoga.</a></p>
                     <p><a href="pridaniAdministrativy.jsp">Přidat administrativu.</a></p>
                     <p><a href="pridaniStudenta.jsp">Přidat studenta.</a></p>

@@ -28,8 +28,9 @@
             <div class="wideList">
             <%
                 if(security.hasAdministrativaRights()){
+                String tabulka=(String)session.getAttribute("tabulka");
             %>
-            <h2>Seznam uchazečů z tabulky <%= session.getAttribute("tabulka") %>:</h2>
+            <h2>Seznam uchazečů z tabulky <%= tabulka %>:</h2>
                 
                 <form id="showPeopleForm" action="uchazeci" method="POST">
                     <%  
@@ -37,20 +38,26 @@
                         boolean spam=(Boolean) session.getAttribute("spam");
                         String[] label=Label.getLabel();
                         String[] labelRaw=Label.getLabelRaw();
+                        if(tabulka.equals("studenti")){
+                            label=Label.getLabelStudent();
+                            labelRaw=Label.getLabelStudentRaw();
+                        }
                         String[] show=new String[label.length+1];
                         String[] checked = new String [label.length+1];
                         String[] input = new String [label.length+1];           //kvůli políčko zaškrtnout všechno je tam o 1 víc než labelů
-                        String[] stavPrihlasky={"zaplacen registrační poplatek", "nezaplacen registrační poplatek", "nezevidován administrativou"};
-                        String[] stavPrihlaskyRaw={"zaplacenregistracnipoplatek", "nezaplacenregistracnipoplatek", "nezevidovanadministrativou"};
+                        String[] stavPrihlasky={"přijat","zaplacen registrační poplatek", "nezaplacen registrační poplatek", "nezevidován administrativou"};
+                        String[] stavPrihlaskyRaw={"prijat","zaplacenregistracnipoplatek", "nezaplacenregistracnipoplatek", "nezevidovanadministrativou"};
                         String[][] stavPrihlaskySelected=new String[uchazec.length][stavPrihlasky.length];              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
                         
-                        for (int i = 0; i < stavPrihlaskySelected.length; i++) {//naplnení pole polí hodnotami podle toho, co je u uživatele v mysql tabulce
-                            if(stavPrihlaskySelected[0]!=null){
-                                for (int j = 0; j < stavPrihlaskySelected[0].length; j++) {
-                                    if (stavPrihlasky[j].equals(uchazec[i][43])) {
-                                        stavPrihlaskySelected[i][j]="selected=\"selected\"";
-                                    } else {
-                                        stavPrihlaskySelected[i][j]="";
+                        if(!tabulka.equals("studenti")){
+                            for (int i = 0; i < stavPrihlaskySelected.length; i++) {//naplnení pole polí hodnotami podle toho, co je u uživatele v mysql tabulce
+                                if(stavPrihlaskySelected[0]!=null){
+                                    for (int j = 0; j < stavPrihlaskySelected[0].length; j++) {
+                                        if (stavPrihlasky[j].equals(uchazec[i][43])) {
+                                            stavPrihlaskySelected[i][j]="selected=\"selected\"";
+                                        } else {
+                                            stavPrihlaskySelected[i][j]="";
+                                        }
                                     }
                                 }
                             }
@@ -110,7 +117,7 @@
                             přesunout ze spamu mezi běžné uchazeče
                         </span>
                     <%
-                        } else{
+                        } else if(tabulka.equals("uchazeci")){
                     %>
                         <span id="listOfApplicantsLabel">
                             vytvořit studenta
@@ -162,7 +169,7 @@
                                     <input type="checkbox" name="<%= "transfer"+"+"+i %>" value="checked">
                                 </span>
                             <%
-                            } else {
+                            } else if(tabulka.equals("uchazeci")){
                             %>
                                 <span id="listOfApplicantsLabel">
                                     <input type="checkbox" name="<%= "createstudent"+"+"+i %>" value="checked">

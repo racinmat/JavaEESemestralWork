@@ -162,6 +162,7 @@ public class Label {
         "uživatelské jméno",                                                    //0
         "jméno",                                                                //1
         "příjmení",                                                             //2
+        "hash hesla",                                                           //3
         "semestr",                                                              //3
         "stav studia",                                                          //4
         "skupina",                                                              //5
@@ -171,9 +172,10 @@ public class Label {
         "uzivatelskejmeno",                                                     //0
         "jmeno",                                                                //1
         "prijmeni",                                                             //2
-        "semestr",                                                              //3
-        "stavstudia",                                                           //4
-        "skupina",                                                              //5
+        "hashhesla",                                                            //3
+        "semestr",                                                              //4
+        "stavstudia",                                                           //5
+        "skupina",                                                              //6
     };
 
     public static String[] getLabelStudent() {

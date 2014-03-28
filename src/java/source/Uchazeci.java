@@ -36,6 +36,7 @@ public class Uchazeci extends HttpServlet {
     private String[][] udajeouzivatelich;                                       //proměnná, která uloží všechna data o uživatelích a potom se při čtení z tablky do ní ukládají nové ne-null hodnoty   
     private String criterium;
     private String criteriumColumn;
+    private String negate;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -50,6 +51,7 @@ public class Uchazeci extends HttpServlet {
             }
             this.criterium=request.getParameter("criterium");                   //obsah, který má být ve sloupci criteriumColumn, aby byl řádek vypsán
             this.criteriumColumn=request.getParameter("criteriumColumn");       //sloupec, podle kterého se bude řídit výpis
+            this.negate=request.getParameter("negate");                //pokud je yes, potom je to negace kritéria
             getApplicants(request);
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
@@ -62,6 +64,11 @@ public class Uchazeci extends HttpServlet {
         HttpSession session = request.getSession(true);
         String[] labelRaw=Label.getLabelRaw();
         String[] label=Label.getLabel();
+        String tabulka=(String)session.getAttribute("tabulka");
+        if(tabulka.equals("studenti")){
+            label=Label.getLabelStudent();
+            labelRaw=Label.getLabelStudentRaw();
+        }
         String temp;
         try {
             request.setCharacterEncoding("UTF-8");
@@ -94,6 +101,8 @@ public class Uchazeci extends HttpServlet {
                 ArrayList<String[]> createstudent=new ArrayList<String[]>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql=new Mysql();
                 getApplicants(request);
+                int oprava=0;                                                   //používá se kvůli přenosu uchazečů na studenty a nejsou zaškrtlá všechna políčka
+                    
                 for (int i = 0; i < udajeouzivatelich.length; i++) {
                     for (int j = 0; j < Label.getLength(); j++) {
                         if (request.getParameter(labelRaw[j]+"+"+i)!=null) {
@@ -106,10 +115,12 @@ public class Uchazeci extends HttpServlet {
                     }
                     temp=request.getParameter("createstudent"+"+"+i);
                     if (temp!=null&&temp.equals("checked")) {
-                        createstudent.add(new String [3]);
-                        createstudent.get(i)[0]=udajeouzivatelich[i][0];
-                        createstudent.get(i)[1]=udajeouzivatelich[i][1];
-                        createstudent.get(i)[2]=udajeouzivatelich[i][2];
+                        createstudent.add(new String[3]);
+                        createstudent.get(i+oprava)[0]=udajeouzivatelich[i][0];
+                        createstudent.get(i+oprava)[1]=udajeouzivatelich[i][1];
+                        createstudent.get(i+oprava)[2]=udajeouzivatelich[i][2];
+                    } else {
+                        oprava--;
                     }
                     
                 }
@@ -145,8 +156,10 @@ public class Uchazeci extends HttpServlet {
         HttpSession session = request.getSession(true);
         if (criterium==null||criteriumColumn==null) {
             udajeouzivatelich = sql.showApplicants(table);
+        } else if (negate==null){
+            udajeouzivatelich = sql.showApplicants(table, criterium, criteriumColumn, false);
         } else {
-            udajeouzivatelich = sql.showApplicants(table, criterium, criteriumColumn);
+            udajeouzivatelich = sql.showApplicants(table, criterium, criteriumColumn, true);
         }
         session.setAttribute("allApplicants", udajeouzivatelich);
             

@@ -45,30 +45,30 @@ public class AddStudentCheck extends HttpServlet {
             String[][] input = new String[seznamStudentu.size()][labelRaw.length];
             String[][] notFilled = new String[seznamStudentu.size()][labelRaw.length];
             for (int i = 0; i < notFilled.length; i++) {
-                for (int j = 0; j < notFilled[0].length; j++) {
+                for (int j = 4; j < notFilled[0].length; j++) {
                     notFilled[i][j]="";
                 }
             }
             for (int i = 0; i < input.length; i++) {
                 String[] temp=new String[labelRaw.length];
-                temp[3]=request.getParameter(labelRaw[3]+"+"+i);
                 temp[4]=request.getParameter(labelRaw[4]+"+"+i);
                 temp[5]=request.getParameter(labelRaw[5]+"+"+i);
+                temp[6]=request.getParameter(labelRaw[6]+"+"+i);
 
-                for (int j = 3; j < notFilled.length; j++) {                    //testování prázdnosti vyplněných polí
+                for (int j = 4; j < notFilled[0].length; j++) {                    //testování prázdnosti vyplněných polí
                     if (temp[j].equals("")) {                                   //3 je pro heslo, to se nezadává
                         notFilled[i][j]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
                         error=true;
                     }
                 }
 
-                if (notNumeric(temp[3])) {
-                    notFilled[i][3]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
+                if (notNumeric(temp[4])) {
+                    notFilled[i][4]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
                     error=true;
                 }
 
-                if (notNumeric(temp[5])) {
-                    notFilled[i][5]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
+                if (notNumeric(temp[6])) {
+                    notFilled[i][6]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
                     error=true;
                 }
                 input[i]=temp;

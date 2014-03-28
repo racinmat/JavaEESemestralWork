@@ -60,9 +60,9 @@ public class AddStudent extends HttpServlet {
                 input[0]=listOfStudents.get(i)[0];
                 input[1]=listOfStudents.get(i)[1];
                 input[2]=listOfStudents.get(i)[2];
-                input[3]=request.getParameter(labelRaw[3]+"+"+i);
                 input[4]=request.getParameter(labelRaw[4]+"+"+i);
                 input[5]=request.getParameter(labelRaw[5]+"+"+i);
+                input[6]=request.getParameter(labelRaw[6]+"+"+i);
 
                 rs[i]=sql.insertNewStudent(input);
             

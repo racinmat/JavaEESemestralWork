@@ -214,6 +214,11 @@ public class Mysql {
         ArrayList<String[]> output = new ArrayList<String[]>();
         String[][] outputString = null;
         String[] label=Label.getLabelRaw();
+        String[] labelLogin=Label.getLabelRaw();                                //jsou odlišné kvůli tabulce studentů
+        
+        if (tabulka.equals("studenti")) {
+            label=Label.getLabelStudentRaw();                                   //tabulka studentů má jiné sloupce
+        }
         try {
             String sql = "SELECT * FROM "+tabulka+" where 1";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
@@ -232,14 +237,14 @@ public class Mysql {
             }
             
             for (int i = 0; i < outputString.length; i++) {
-                sql = "SELECT * FROM login where "+label[0]+" = ?";
+                sql = "SELECT * FROM login where "+labelLogin[0]+" = ?";
                 ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
                 ps.setString(1,outputString[i][0]);
                 ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
                 while(rsLogin.next()){
-                    outputString[i][1]=rsLogin.getString(label[1]);
-                    outputString[i][2]=rsLogin.getString(label[2]);
-                    outputString[i][3]=rsLogin.getString(label[3]);
+                    outputString[i][1]=rsLogin.getString(labelLogin[1]);
+                    outputString[i][2]=rsLogin.getString(labelLogin[2]);
+                    outputString[i][3]=rsLogin.getString(labelLogin[3]);
                     //outputString[i][3]=outputString[i][3].substring(0, 5);
                 }
             }
@@ -251,17 +256,22 @@ public class Mysql {
         return outputString;
     }
     
-    public String[][] showApplicants(String tabulka, String criterium, String criteriumColumn){
+    public String[][] showApplicants(String tabulka, String criterium, String criteriumColumn, boolean negate){
         ArrayList<String[]> output = new ArrayList<String[]>();
         String[][] outputString = null;
         String[] label=Label.getLabelRaw();
+        String sql;
         try {
-            String sql = "SELECT * FROM "+tabulka+" where "+criteriumColumn+"=?";
+            if (negate) {
+                sql = "SELECT * FROM "+tabulka+" where "+criteriumColumn+"<>?";
+            } else {
+                sql = "SELECT * FROM "+tabulka+" where "+criteriumColumn+"=?";
+            }
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,criterium);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                String[] temp=new String[45];                                   //navíc na konci políčko přijat
+                String[] temp=new String[label.length];                         //navíc na konci políčko přijat
                 temp[0]=rs.getString(label[0]);
                 for (int i = 4; i < label.length; i++) {
                     temp[i]=rs.getString(label[i]);
@@ -644,12 +654,12 @@ public class Mysql {
         boolean output2;
         String[] label=Label.getLabelStudentRaw();
         try {
-            String sql = "INSERT INTO studenti("+label[0]+", "+label[3]+", "+label[4]+", "+label[5]+") VALUES(?,?,?,?)";
+            String sql = "INSERT INTO studenti("+label[0]+", "+label[4]+", "+label[5]+", "+label[6]+") VALUES(?,?,?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
-            ps.setString(2,input[3]);
-            ps.setString(3,input[4]);
-            ps.setString(4,input[5]);
+            ps.setString(2,input[4]);
+            ps.setString(3,input[5]);
+            ps.setString(4,input[6]);
             int rs = ps.executeUpdate(); 
             if (rs==1) {
                 output2=true;

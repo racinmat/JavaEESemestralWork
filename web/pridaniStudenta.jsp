@@ -43,9 +43,9 @@
     }
     
     if(registered.equals("success")){
-        message="<div>Přidání studenta proběhlo úspěšně.</div>";
+        message="<div>Přidání studentů proběhlo úspěšně.</div>";
     }else if(registered.equals("fail")){
-        message="<div>Bohužel se přidání studenta nezdařilo, zkuste provést přidání znovu nebo kontaktujte administrátora.</div>";
+        message="<div>Bohužel se přidání studentů nezdařilo, zkuste provést přidání znovu nebo kontaktujte administrátora.</div>";
     }
     
     session.setAttribute("registered", null);
@@ -62,6 +62,9 @@
             <%= message %>
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">
                 <div class="entry-summary"><p>Přidání nových studentů</p></div>
+                <%
+                    if(message.equals("")){
+                %>
                 <div>
                     <form action="AddStudentCheck" method="POST" id="registerForm">
                         <div>
@@ -75,13 +78,13 @@
                                 <%= label[2] %>
                             </span>
                             <span id="addStudentsLabel">   
-                                <%= label[3] %>
-                            </span>
-                            <span id="addStudentsLabel">   
                                 <%= label[4] %>
                             </span>
-                            <span id="addStudentsLabel">    
+                            <span id="addStudentsLabel">   
                                 <%= label[5] %>
+                            </span>
+                            <span id="addStudentsLabel">    
+                                <%= label[6] %>
                             </span>
                         </div>
                         <%
@@ -98,13 +101,13 @@
                                 <%= content[i][2] %>
                             </span>
                             <span id="addStudents">    
-                                <input id="<%= labelRaw[3]+"+"+i %>" type="text" name="<%= labelRaw[3]+"+"+i %>" value="<%= content[i][3] %>">
-                            </span>
-                            <span id="addStudents">    
                                 <input id="<%= labelRaw[4]+"+"+i %>" type="text" name="<%= labelRaw[4]+"+"+i %>" value="<%= content[i][4] %>">
                             </span>
                             <span id="addStudents">    
                                 <input id="<%= labelRaw[5]+"+"+i %>" type="text" name="<%= labelRaw[5]+"+"+i %>" value="<%= content[i][5] %>">
+                            </span>
+                            <span id="addStudents">    
+                                <input id="<%= labelRaw[6]+"+"+i %>" type="text" name="<%= labelRaw[6]+"+"+i %>" value="<%= content[i][6] %>">
                             </span>
                         </div>
                         <%
@@ -114,6 +117,10 @@
                         <input type="submit" name="odeslat" value="přidat studenty">
                     </form>
                 </div>
+                <%
+                    }
+                %>
+                
             </div>
 
 
