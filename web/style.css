@@ -1394,3 +1394,15 @@ p.pages {
 .predvolba{
     width: 50px
 }
+
+#addStudentsLabel {
+    min-width: 80px;
+    width: 80px;
+    text-align: left;
+    display:inline-block;
+}
+
+#addStudents input{
+    min-width: 80px;
+    width: 80px;
+}

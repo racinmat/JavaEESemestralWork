@@ -18,9 +18,9 @@
     String message="";
     
     boolean[] notFilled = new boolean[label.length];
-    ArrayList<String> listOfStudents=new ArrayList<String>();
+    ArrayList<String[]> listOfStudents=new ArrayList<String[]>();
     if(session.getAttribute("newstudent")!=null){
-        listOfStudents=(ArrayList<String>) session.getAttribute("newstudent");
+        listOfStudents=(ArrayList<String[]>) session.getAttribute("newstudent");
     }
     
     String[][] empty=new String[listOfStudents.size()][label.length];
@@ -30,10 +30,14 @@
     
     String[][] content=new String[listOfStudents.size()][label.length];
     for (int i = 0; i < content.length; i++) {
-        for (int j = 0; j < content[0].length; j++) {
+        content[i][0]=listOfStudents.get(i)[0];
+        content[i][1]=listOfStudents.get(i)[1];
+        content[i][2]=listOfStudents.get(i)[2];
+        for (int j = 3; j < content[0].length; j++) {
             content[i][j]="";
         }
     }
+
     if(session.getAttribute("formContent")!=null){
         content=(String[][]) session.getAttribute("formContent");
     }
@@ -61,22 +65,22 @@
                 <div>
                     <form action="AddStudentCheck" method="POST" id="registerForm">
                         <div>
-                            <span>
+                            <span id="addStudentsLabel">
                                 <%= label[0] %>
                             </span>
-                            <span>
+                            <span id="addStudentsLabel">
                                 <%= label[1] %>
                             </span>
-                            <span>   
+                            <span id="addStudentsLabel">   
                                 <%= label[2] %>
                             </span>
-                            <span>   
+                            <span id="addStudentsLabel">   
                                 <%= label[3] %>
                             </span>
-                            <span>   
+                            <span id="addStudentsLabel">   
                                 <%= label[4] %>
                             </span>
-                            <span>    
+                            <span id="addStudentsLabel">    
                                 <%= label[5] %>
                             </span>
                         </div>
@@ -84,23 +88,23 @@
                             for (int i = 0; i < listOfStudents.size(); i++) {
                         %>
                         <div>
-                            <span>    
-                                <%= content[0] %>
+                            <span id="addStudentsLabel">    
+                                <%= content[i][0] %>
                             </span>
-                            <span>    
-                                <%= content[1] %>
+                            <span id="addStudentsLabel">    
+                                <%= content[i][1] %>
                             </span>
-                            <span>    
-                                <%= content[2] %>
+                            <span id="addStudentsLabel">    
+                                <%= content[i][2] %>
                             </span>
-                            <span>    
-                                <input id="<%= labelRaw[3]+"+"+i %>" type="text" name="<%= labelRaw[3]+"+"+i %>" value="<%= content[3] %>">
+                            <span id="addStudents">    
+                                <input id="<%= labelRaw[3]+"+"+i %>" type="text" name="<%= labelRaw[3]+"+"+i %>" value="<%= content[i][3] %>">
                             </span>
-                            <span>    
-                                <input id="<%= labelRaw[4]+"+"+i %>" type="text" name="<%= labelRaw[4]+"+"+i %>" value="<%= content[4] %>">
+                            <span id="addStudents">    
+                                <input id="<%= labelRaw[4]+"+"+i %>" type="text" name="<%= labelRaw[4]+"+"+i %>" value="<%= content[i][4] %>">
                             </span>
-                            <span>    
-                                <input id="<%= labelRaw[5]+"+"+i %>" type="text" name="<%= labelRaw[5]+"+"+i %>" value="<%= content[5] %>">
+                            <span id="addStudents">    
+                                <input id="<%= labelRaw[5]+"+"+i %>" type="text" name="<%= labelRaw[5]+"+"+i %>" value="<%= content[i][5] %>">
                             </span>
                         </div>
                         <%

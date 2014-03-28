@@ -91,7 +91,7 @@ public class Uchazeci extends HttpServlet {
             }
             if (request.getParameter("zmenitudaje")!=null) {
                 ArrayList<String> transfer=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
-                ArrayList<String> createstudent=new ArrayList<String>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
+                ArrayList<String[]> createstudent=new ArrayList<String[]>();             //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql=new Mysql();
                 getApplicants(request);
                 for (int i = 0; i < udajeouzivatelich.length; i++) {
@@ -106,7 +106,10 @@ public class Uchazeci extends HttpServlet {
                     }
                     temp=request.getParameter("createstudent"+"+"+i);
                     if (temp!=null&&temp.equals("checked")) {
-                        createstudent.add(udajeouzivatelich[i][0]);
+                        createstudent.add(new String [3]);
+                        createstudent.get(i)[0]=udajeouzivatelich[i][0];
+                        createstudent.get(i)[1]=udajeouzivatelich[i][1];
+                        createstudent.get(i)[2]=udajeouzivatelich[i][2];
                     }
                     
                 }

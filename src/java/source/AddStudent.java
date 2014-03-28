@@ -45,26 +45,24 @@ public class AddStudent extends HttpServlet {
         try {
             response.setContentType("text/html;charset=UTF-8");
             HttpSession session = request.getSession(true);
-            UsernameGen generator=new UsernameGen(10);
-            String username=generator.getValidatedId();
-            String password=generator.getId();
             String[] label=Label.getLabelStudent();
             String[] labelRaw=Label.getLabelStudentRaw();
-            Encrypt crypt=new Encrypt();
-            password=crypt.encrypt(password, username);
             ArrayList<String> seznamStudentu=(ArrayList<String>) session.getAttribute("newstudent");
             
             Mysql sql=new Mysql();
-            String[] input = new String[7];
+            String[] input = new String[labelRaw.length];
             boolean rs[]=new boolean[seznamStudentu.size()];
-            for (int i = 0; i < 10; i++) {
-                input[0]=username;
-                input[3]=password;
-                input[1]=request.getParameter(labelRaw[1]+"+"+i);
-                input[2]=request.getParameter(labelRaw[2]+"+"+i);
-                input[4]=request.getParameter(labelRaw[3]+"+"+i);
-                input[5]=request.getParameter(labelRaw[4]+"+"+i);
-                input[6]=request.getParameter(labelRaw[5]+"+"+i);
+            ArrayList<String[]> listOfStudents=new ArrayList<String[]>();
+            if(session.getAttribute("newstudent")!=null){
+                listOfStudents=(ArrayList<String[]>) session.getAttribute("newstudent");
+            }
+            for (int i = 0; i < seznamStudentu.size(); i++) {
+                input[0]=listOfStudents.get(i)[0];
+                input[1]=listOfStudents.get(i)[1];
+                input[2]=listOfStudents.get(i)[2];
+                input[3]=request.getParameter(labelRaw[3]+"+"+i);
+                input[4]=request.getParameter(labelRaw[4]+"+"+i);
+                input[5]=request.getParameter(labelRaw[5]+"+"+i);
 
                 rs[i]=sql.insertNewStudent(input);
             
@@ -76,7 +74,7 @@ public class AddStudent extends HttpServlet {
             else {
                 session.setAttribute("registered", "fail");
             }
-            response.sendRedirect("pridaniPedagoga.jsp");
+            response.sendRedirect("pridaniStudenta.jsp");
         } catch (IOException ex) {
             Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
         }

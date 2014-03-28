@@ -42,7 +42,7 @@ public class AddStudentCheck extends HttpServlet {
             boolean error=false;
             String notFilledStyle=" class=\"notFilled\"";
             ArrayList<String> seznamStudentu=(ArrayList<String>) session.getAttribute("newstudent");
-            String[][] input = new String[seznamStudentu.size()][5];
+            String[][] input = new String[seznamStudentu.size()][labelRaw.length];
             String[][] notFilled = new String[seznamStudentu.size()][labelRaw.length];
             for (int i = 0; i < notFilled.length; i++) {
                 for (int j = 0; j < notFilled[0].length; j++) {
@@ -50,12 +50,12 @@ public class AddStudentCheck extends HttpServlet {
                 }
             }
             for (int i = 0; i < input.length; i++) {
-                String[] temp=new String[5];
-                temp[1]=request.getParameter(labelRaw[1]+"+"+i);
-                temp[2]=request.getParameter(labelRaw[2]+"+"+i);
+                String[] temp=new String[labelRaw.length];
                 temp[3]=request.getParameter(labelRaw[3]+"+"+i);
+                temp[4]=request.getParameter(labelRaw[4]+"+"+i);
+                temp[5]=request.getParameter(labelRaw[5]+"+"+i);
 
-                for (int j = 1; j < notFilled.length; j++) {                    //testování prázdnosti vyplněných polí
+                for (int j = 3; j < notFilled.length; j++) {                    //testování prázdnosti vyplněných polí
                     if (temp[j].equals("")) {                                   //3 je pro heslo, to se nezadává
                         notFilled[i][j]=notFilledStyle;                                //pokud je notFilled notFilledStyle, pak je v daném políčku chyba a notFilledStyle definuje css pro nevyplněné labely
                         error=true;
@@ -79,7 +79,7 @@ public class AddStudentCheck extends HttpServlet {
             session.setAttribute("formCheck", notFilled);
                         
             if (error) {
-                response.sendRedirect("pridaniPedagoga.jsp");
+                response.sendRedirect("pridaniStudenta.jsp");
             }
             else{
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/AddStudent");

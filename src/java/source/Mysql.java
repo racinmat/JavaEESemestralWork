@@ -640,16 +640,16 @@ public class Mysql {
     
     public boolean insertNewStudent(String[] input){
         boolean output=false;
-        boolean output1=insertNewUserToLogin(input,3);
+        boolean output1=updateRights(input[0],3);
         boolean output2;
         String[] label=Label.getLabelStudentRaw();
         try {
             String sql = "INSERT INTO studenti("+label[0]+", "+label[3]+", "+label[4]+", "+label[5]+") VALUES(?,?,?,?)";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,input[0]);
-            ps.setString(2,input[4]);
-            ps.setString(3,input[5]);
-            ps.setString(4,input[6]);
+            ps.setString(2,input[3]);
+            ps.setString(3,input[4]);
+            ps.setString(4,input[5]);
             int rs = ps.executeUpdate(); 
             if (rs==1) {
                 output2=true;
@@ -661,6 +661,26 @@ public class Mysql {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        return output;
+    }
+    
+    public boolean updateRights(String username, int rights){
+        String[] label=Label.getLabelRaw();
+        int rs = 0;
+        try {
+            String sql = "UPDATE login SET rights=? where "+label[0]+"=?";
+            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            ps.setInt(1,rights);
+            ps.setString(2,username);
+            rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        boolean output=true;
+        if (rs!=1) {
+            output=false;
+        }
         return output;
     }
     
