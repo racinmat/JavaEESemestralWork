@@ -31,14 +31,13 @@ public class SendEmail
      * @param password heslo
      * @param name jméno
      * @param lastname příjmení
-     * @param sex pohlaví
+     * @param email email
      */
-    public SendEmail(String username, String password, String name, String lastname, String sex, String email) {
+    public SendEmail(String username, String password, String name, String lastname, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.lastname = lastname;
-        this.sex = sex;
         this.email = email;
     }
     
@@ -53,8 +52,9 @@ public class SendEmail
             return " ";
         }
     }
-
-    public void sendGmail(){
+    
+    public void sendGmailToApplicant(String sex){
+        this.sex=sex;
         Properties props = new Properties();
 	props.put("mail.smtp.host", "smtp.gmail.com");
 	props.put("mail.smtp.socketFactory.port", "465");
@@ -88,6 +88,50 @@ public class SendEmail
                 + " a vaše heslo je "+password
                 + " .\r\n"
                 + "Pomocí techto přihlašovacích údajů můžete na stránkách školy pozorovat stav vyřízení své přihlášky.\r\n"
+                + "Po přihlášení si můžete změnit své heslo.\r\n"
+                + "S pozdravem, automatizovaný systém."
+            );
+            Transport.send(message);
+            System.out.println("Done");
+	} catch (MessagingException e) {
+            throw new RuntimeException(e);
+	}
+    }
+    
+    public void sendGmailToRegisteredUser(){
+        Properties props = new Properties();
+	props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.socketFactory.port", "465");
+	props.put(
+            "mail.smtp.socketFactory.class",
+            "javax.net.ssl.SSLSocketFactory"
+        );
+	props.put("mail.smtp.auth", "true");
+	props.put("mail.smtp.port", "465");
+        props.put("mail.imaps.ssl.trust", "*");
+ 
+	Session session = Session.getDefaultInstance(props,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("testovaciemail666","testovani!!!");
+                }
+            }
+        );
+	try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("testovaciemail666@gmail.com"));
+            message.setRecipients(
+                Message.RecipientType.TO,
+                InternetAddress.parse(email)
+            );
+            message.setSubject("Úspěšné podání elektronické přihlášky");
+            message.setText(
+                "Dobrý den, "+osloveni()+lastname+",\r\n"
+                + "byl jste přidán do školní databáze,\r\n"
+                + "vaše přihlašovací jméno je "+username
+                + " a vaše heslo je "+password
+                + " .\r\n"
+                + "Pomocí techto přihlašovacích údajů můžete na stránkách školy přistupovat k obsahu určenému přihlšeným uživatelům.\r\n"
                 + "Po přihlášení si můžete změnit své heslo.\r\n"
                 + "S pozdravem, automatizovaný systém."
             );

@@ -33,8 +33,8 @@ public class Register extends HttpServlet{
             String password=generator.getId();
             String[] label=Label.getLabel();
             String[] labelRaw=Label.getLabelRaw();
-            SendEmail mail=new SendEmail(username, password, request.getParameter(labelRaw[1]), request.getParameter(labelRaw[2]), request.getParameter(labelRaw[6]), request.getParameter(labelRaw[9]));
-            mail.sendGmail();
+            SendEmail mail=new SendEmail(username, password, request.getParameter(labelRaw[1]), request.getParameter(labelRaw[2]), request.getParameter(labelRaw[9]));
+            mail.sendGmailToApplicant(request.getParameter(labelRaw[6]));
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
             String ip=request.getRemoteAddr();//určuje se, do jaké tabulky se data uloží

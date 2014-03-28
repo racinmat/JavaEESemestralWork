@@ -54,6 +54,8 @@ public class AddAdministrativa extends HttpServlet {
             input[5]=request.getParameter("predvolba"+labelRaw[25])+request.getParameter(labelRaw[25]);
             input[6]=request.getParameter("predvolba"+labelRaw[43])+request.getParameter(labelRaw[43]);
             
+            SendEmail mail=new SendEmail(input[0], input[3], input[1], input[2], input[4]);
+            mail.sendGmailToRegisteredUser();
             boolean rs=sql.insertNewAdministrativa(input);
             
             if (rs) {
