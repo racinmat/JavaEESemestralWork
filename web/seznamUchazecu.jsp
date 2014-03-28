@@ -45,15 +45,14 @@
                         String[] show=new String[label.length+1];
                         String[] checked = new String [label.length+1];
                         String[] input = new String [label.length+1];           //kvůli políčko zaškrtnout všechno je tam o 1 víc než labelů
-                        String[] stavPrihlasky={"přijat","zaplacen registrační poplatek", "nezaplacen registrační poplatek", "nezevidován administrativou"};
-                        String[] stavPrihlaskyRaw={"prijat","zaplacenregistracnipoplatek", "nezaplacenregistracnipoplatek", "nezevidovanadministrativou"};
+                        String[] stavPrihlasky={"přijat", "zaplacen registrační poplatek", "nezaplacen registrační poplatek", "nezevidován administrativou"};
                         String[][] stavPrihlaskySelected=new String[uchazec.length][stavPrihlasky.length];              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
                         
                         if(!tabulka.equals("studenti")){
                             for (int i = 0; i < stavPrihlaskySelected.length; i++) {//naplnení pole polí hodnotami podle toho, co je u uživatele v mysql tabulce
                                 if(stavPrihlaskySelected[0]!=null){
                                     for (int j = 0; j < stavPrihlaskySelected[0].length; j++) {
-                                        if (stavPrihlasky[j].equals(uchazec[i][43])) {
+                                        if (stavPrihlasky[j].equals(uchazec[i][44])) {
                                             stavPrihlaskySelected[i][j]="selected=\"selected\"";
                                         } else {
                                             stavPrihlaskySelected[i][j]="";
@@ -146,9 +145,13 @@
                         %>
                                     <span id="listOfApplicants">
                                         <select name="<%= labelRaw[j]+"+"+i %>">
-                                            <option value="<%= stavPrihlasky[0] %>" <%= stavPrihlaskySelected[i][0] %>><%= stavPrihlasky[0] %></option>
-                                            <option value="<%= stavPrihlasky[1] %>" <%= stavPrihlaskySelected[i][1] %>><%= stavPrihlasky[1] %></option>
-                                            <option value="<%= stavPrihlasky[2] %>" <%= stavPrihlaskySelected[i][2] %>><%= stavPrihlasky[2] %></option>
+                                        <%
+                                            for(int k = 0; k < stavPrihlasky.length; k++){
+                                        %>
+                                            <option value="<%= stavPrihlasky[k] %>" <%= stavPrihlaskySelected[i][k] %>><%= stavPrihlasky[k] %></option>
+                                        <%
+                                            } 
+                                        %>
                                         </select>
                                     </span>
                         <%

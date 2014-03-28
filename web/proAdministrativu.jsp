@@ -29,7 +29,6 @@
                     <p><a href="uchazeci?table=studenti">Vypsat seznam studentů.</a></p>
                     <p><a href="pridaniPedagoga.jsp">Přidat pedagoga.</a></p>
                     <p><a href="pridaniAdministrativy.jsp">Přidat administrativu.</a></p>
-                    <p><a href="pridaniStudenta.jsp">Přidat studenta.</a></p>
             <% 
             } 
             else {
