@@ -41,14 +41,12 @@ public class AddPedagog extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             HttpSession session = request.getSession(true);
             UsernameGen generator=new UsernameGen(10);
+            Mysql sql=new Mysql();
             String username=generator.getValidatedId();
             String password=generator.getId();
             String[] label=Label.getLabel();
             String[] labelRaw=Label.getLabelRaw();
-            Encrypt crypt=new Encrypt();
-            password=crypt.encrypt(password, username);
             
-            Mysql sql=new Mysql();
             String[] input = new String[7];
             input[0]=username;
             input[3]=password;
@@ -60,6 +58,10 @@ public class AddPedagog extends HttpServlet {
             
             SendEmail mail=new SendEmail(input[0], input[3], input[1], input[2], input[4]);
             mail.sendGmailToRegisteredUser();
+            
+            Encrypt crypt=new Encrypt();
+            input[3]=crypt.encrypt(input[3], username);
+            
             boolean rs=sql.insertNewPedagog(input);
             
             if (rs) {

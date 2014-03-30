@@ -61,7 +61,7 @@ public class Register extends HttpServlet{
                 spam=2;//pro vyplněné skryté políčko je spam=2
                 tabulka="uchazeci_spam";//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
             }
-            String[] input = new String[label.length-2];
+            String[] input = new String[label.length];                          //poslední dvě místa se nechávají pro automaticky vyplněné položky jako je stav přihlášky a školné
             input[0]=username;
             for (int i = 1; i < label.length-2; i++) {
                 if (i==3) {
@@ -90,8 +90,8 @@ public class Register extends HttpServlet{
                 }
             }
             
-            for (int i = 0; i < input.length; i++) {                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
-                if (input[i].equals("")) {
+            for (int i = 0; i < input.length-2; i++) {                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
+                if (input[i].equals("")) {                          //poslední dvě políčka jsou vyhrazena automatickému vyplnění při registraci
                     input[i]="nevyplněno";
                 }
             }

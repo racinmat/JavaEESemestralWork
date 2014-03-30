@@ -75,7 +75,7 @@
                             <input id="<%= labelRaw[43] %>" type="text" name="<%= labelRaw[43] %>" value="<%= content[4] %>">
                         </div>
                         
-                        <input type="submit" name="odeslat" value="přidat pedagoga">
+                        <input type="submit" name="odeslat" value="přidat administrativu">
                     </form>
                 </div>
             </div>
