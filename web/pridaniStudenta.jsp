@@ -4,42 +4,48 @@
     Author     : Azathoth
 --%>
 
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="enums.Rights"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
 <%
     session = request.getSession(true);                                         //zpřístupní se session
     String registered="";
-    String[] label=Label.getLabelStudent();
-    String[] labelRaw=Label.getLabelStudentRaw();
     if(session.getAttribute("registered")!=null){
         registered=(String) session.getAttribute("registered");                 //zjistí se, jak byl uživatel úspěšný při registraci
     }
     String message="";
     
-    boolean[] notFilled = new boolean[label.length];
-    ArrayList<String[]> listOfStudents=new ArrayList<String[]>();
+    ArrayList<LinkedHashMap<Label, String>> listOfStudents=new ArrayList<LinkedHashMap<Label, String>>();
     if(session.getAttribute("newstudent")!=null){
-        listOfStudents=(ArrayList<String[]>) session.getAttribute("newstudent");
+        listOfStudents=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("newstudent");
     }
     
-    String[][] empty=new String[listOfStudents.size()][label.length];
+    ArrayList<LinkedHashMap<Label, String>> empty=new ArrayList<LinkedHashMap<Label, String>>();
     if(session.getAttribute("formCheck")!=null){
-        empty=(String[][]) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
+        empty=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
     
-    String[][] content=new String[listOfStudents.size()][label.length];
-    for (int i = 0; i < content.length; i++) {
-        content[i][0]=listOfStudents.get(i)[0];
-        content[i][1]=listOfStudents.get(i)[1];
-        content[i][2]=listOfStudents.get(i)[2];
-        for (int j = 3; j < content[0].length; j++) {
-            content[i][j]="";
+    ArrayList<LinkedHashMap<Label, String>> content=new ArrayList<LinkedHashMap<Label, String>>();
+    for (int i = 0; i < listOfStudents.size(); i++) {
+        content.add(new LinkedHashMap<Label, String>());
+    }
+    for (int i = 0; i < content.size(); i++) {
+        for (Label label : listOfStudents.get(i).keySet()) {
+            content.get(i).put(label, listOfStudents.get(i).get(label));
+        }
+        for (Label label : Label.values()) {
+            if (label.isStudenti()&&!label.isPrimaryKey()) {
+                content.get(i).put(label, "");
+            }
         }
     }
-
+    
     if(session.getAttribute("formContent")!=null){
-        content=(String[][]) session.getAttribute("formContent");
+        content=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("formContent");
     }
     
     if(registered.equals("success")){
@@ -52,6 +58,7 @@
     session.setAttribute("formCheck", null);
     session.setAttribute("formContent", null);
     
+    security.accesedTo(Rights.administrativa, response);
 %>
     <h1 class="title-header">Pro administrativu</h1>
         </div><!-- end .column-title -->
@@ -68,52 +75,46 @@
                 <div>
                     <form action="AddStudentCheck" method="POST" id="registerForm">
                         <div>
-                            <span id="addStudentsLabel">
-                                <%= label[0] %>
-                            </span>
-                            <span id="addStudentsLabel">
-                                <%= label[1] %>
-                            </span>
-                            <span id="addStudentsLabel">   
-                                <%= label[2] %>
-                            </span>
-                            <span id="addStudentsLabel">   
-                                <%= label[4] %>
-                            </span>
-                            <span id="addStudentsLabel">   
-                                <%= label[5] %>
-                            </span>
-                            <span id="addStudentsLabel">    
-                                <%= label[6] %>
-                            </span>
+                            <%
+                                for (Label label : content.get(0).keySet()) {
+                            %>
+                            
+                                    <span id="addStudentsLabel">
+                                        <%= label.getNazevProUzivatele() %>
+                                    </span>
+                            <%
+                                }
+                            %>
+                            
                         </div>
                         <%
                             for (int i = 0; i < listOfStudents.size(); i++) {
                         %>
                         <div>
-                            <span id="addStudentsLabel">    
-                                <%= content[i][0] %>
-                            </span>
-                            <span id="addStudentsLabel">    
-                                <%= content[i][1] %>
-                            </span>
-                            <span id="addStudentsLabel">    
-                                <%= content[i][2] %>
-                            </span>
+                            <%
+                                for (Label label : content.get(i).keySet()) {
+                                    if (label.isLogin()) {
+                                            
+                            %>
+                                        <span id="addStudentsLabel">    
+                                            <%= content.get(i).get(label) %>
+                                        </span>
+                            <%
+                                    }
+                                    else if(label.isStudenti()&&!label.isAutomatickeVyplneni()){
+                            %>
                             <span id="addStudents">    
-                                <input id="<%= labelRaw[4]+"+"+i %>" type="text" name="<%= labelRaw[4]+"+"+i %>" value="<%= content[i][4] %>">
+                                <input type="text" name="<%= label.getNazevRaw()+"+"+i %>" value="<%= content.get(i).get(label) %>">
                             </span>
-                            <span id="addStudents">    
-                                <input id="<%= labelRaw[5]+"+"+i %>" type="text" name="<%= labelRaw[5]+"+"+i %>" value="<%= content[i][5] %>">
-                            </span>
-                            <span id="addStudents">    
-                                <input id="<%= labelRaw[6]+"+"+i %>" type="text" name="<%= labelRaw[6]+"+"+i %>" value="<%= content[i][6] %>">
-                            </span>
+                            
+                            <%
+                                    }
+                                }
+                            %>
                         </div>
                         <%
                             }
                         %>    
-                        
                         <input type="submit" name="odeslat" value="přidat studenty">
                     </form>
                 </div>

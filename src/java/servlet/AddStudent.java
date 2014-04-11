@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 
-package source;
+package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import enums.Label;
+import enums.SQLTables;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import source.Mysql;
 
 /**
  *
@@ -45,27 +51,27 @@ public class AddStudent extends HttpServlet {
         try {
             response.setContentType("text/html;charset=UTF-8");
             HttpSession session = request.getSession(true);
-            String[] label=Label.getLabelStudent();
-            String[] labelRaw=Label.getLabelStudentRaw();
-            ArrayList<String> seznamStudentu=(ArrayList<String>) session.getAttribute("newstudent");
-            
+            ArrayList<LinkedHashMap<Label, String>> seznamStudentu=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("newstudent");
             Mysql sql=new Mysql();
-            String[] input = new String[labelRaw.length];
+            HashMap<Label,String> input= new HashMap<>();
             boolean rs[]=new boolean[seznamStudentu.size()];
-            ArrayList<String[]> listOfStudents=new ArrayList<String[]>();
+            ArrayList<HashMap<Label,String>> listOfStudents=new ArrayList<>();
             if(session.getAttribute("newstudent")!=null){
-                listOfStudents=(ArrayList<String[]>) session.getAttribute("newstudent");
+                listOfStudents=(ArrayList<HashMap<Label,String>>) session.getAttribute("newstudent");
             }
             for (int i = 0; i < seznamStudentu.size(); i++) {
-                input[0]=listOfStudents.get(i)[0];
-                input[1]=listOfStudents.get(i)[1];
-                input[2]=listOfStudents.get(i)[2];
-                input[4]=request.getParameter(labelRaw[4]+"+"+i);
-                input[5]=request.getParameter(labelRaw[5]+"+"+i);
-                input[6]=request.getParameter(labelRaw[6]+"+"+i);
-
+                input.put(Label.uzivatelskejmeno, listOfStudents.get(i).get(Label.uzivatelskejmeno));
+                for (Label label : Label.values()) {
+                    if (label.isInTable(SQLTables.studenti)&&!label.isAutomatickeVyplneni()) {
+                        if (label.isTelefonniCislo()){
+                            input.put(label, request.getParameter("predvolba"+label.getNazevRaw()+"+"+i)+request.getParameter(label.getNazevRaw()+"+"+i));
+                        } else {
+                            input.put(label, request.getParameter(label.getNazevRaw()+"+"+i));
+                        }
+                    }
+                }
                 rs[i]=sql.insertNewStudent(input);
-            
+                input.clear();
             }
             
             if (isAllTrue(rs)) {
@@ -75,6 +81,13 @@ public class AddStudent extends HttpServlet {
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("pridaniStudenta.jsp");
+        } catch (SQLException|ClassNotFoundException ex) {
+            try {
+                Logger.getLogger(AddStudent.class.getName()).log(Level.SEVERE, null, ex);
+                response.sendRedirect("chyba.jsp?error=0");
+            } catch (IOException ex1) {
+                Logger.getLogger(AddStudent.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         } catch (IOException ex) {
             Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 
-package source;
+package servlet;
 
+import enums.SQLTables;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -15,6 +17,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import source.Encrypt;
+import enums.Label;
+import enums.Rights;
+import java.util.HashMap;
+import source.LoggedUser;
+import source.Mysql;
 
 /**
  *
@@ -29,15 +37,16 @@ public class ChangeData extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession(true);
-            String[] label=Label.getLabel();
-            String[] labelRaw=Label.getLabelRaw();
             Mysql sql=new Mysql();
             boolean update=false;
-            String username=(String) session.getAttribute("username");
-                
+            LoggedUser user=(LoggedUser) session.getAttribute("user");
+            String username=user.getUsername();
+            SQLTables table=user.getRights().getTable();
+            
             if (request.getParameter("zmenitheslo")!=null) {
                 Encrypt crypt=new Encrypt();
                 String password=request.getParameter("noveheslo");
@@ -53,23 +62,15 @@ public class ChangeData extends HttpServlet {
                 }
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                String tabulka=sql.findTableWithApplicant(username);
-                String[] udaje=sql.showApplicant(username, tabulka);
-                String[] noveudaje=new String[19];
-                noveudaje[0]=request.getParameter(labelRaw[9]);
-                for (int i = 18; i <= 35; i++) {
-                    noveudaje[i-17]=request.getParameter(labelRaw[i]);
-                }
-                if (!noveudaje[0].equals("")) {
-                    udaje[9]=noveudaje[0];
-                }
-                for (int i = 18; i <= 35; i++) {
-                    if (!noveudaje[i-17].equals("")) {
-                        udaje[i]=noveudaje[i-17];
+                SQLTables tabulka=sql.findTableWithApplicant(username);         //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
+                HashMap<Label, String> noveudaje=new HashMap<>();
+                for (Label label : Label.values()) {
+                    if (label.isInTable(table)&&label.isMenitelneUzivatelem()) {
+                        noveudaje.put(label, request.getParameter(label.getNazevRaw()));
                     }
                 }
                 
-                update=sql.updateApplicant(udaje, tabulka);
+                update=sql.updateApplicant(noveudaje, tabulka);
                 
                 if (update) {
                     session.setAttribute("registered", "success");
@@ -84,6 +85,13 @@ public class ChangeData extends HttpServlet {
             
         } catch (IOException ex) {
             Logger.getLogger(ChangeData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException|ClassNotFoundException ex) {
+            try {
+                Logger.getLogger(ChangeData.class.getName()).log(Level.SEVERE, null, ex);
+                response.sendRedirect("chyba.jsp?error=0");
+            } catch (IOException ex1) {
+                Logger.getLogger(ChangeData.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
     }
 }

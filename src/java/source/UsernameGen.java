@@ -1,17 +1,7 @@
 package source;
 
-
-
-
-import source.Login;
-import static java.lang.Math.random;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 
 
 /*
@@ -37,20 +27,20 @@ public class UsernameGen {
     }
     
     public String getId() {
-        return randomAlphaNumeric(length);
+        return randomAlphaNumeric();
     }
     
-    private String randomAlphaNumeric(int count) {
+    private String randomAlphaNumeric() {
         String alphaNumeric="";
-        
+        Random random=new Random();
         for (int i = 0; i < length; i++) {
-            int rand=(int) (ALPHA_NUMERIC_ARRAY.length*Math.random());
+            int rand=random.nextInt(ALPHA_NUMERIC_ARRAY.length-1);             //-1 je proto, aby, v případě vygenerování nejvyššího čísla, nenastal arrayindexoutofboundexception
             alphaNumeric+=ALPHA_NUMERIC_ARRAY[rand];
         }
         return alphaNumeric;
     }
     
-    public String getValidatedId(){
+    public String getValidatedId() throws ClassNotFoundException, SQLException{
         Mysql sql=new Mysql();
         String id=getId();
         boolean unique=sql.validateId(id);

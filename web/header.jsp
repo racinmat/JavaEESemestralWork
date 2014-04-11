@@ -4,10 +4,11 @@
     Author     : Azathoth
 --%>
 
+<%@page import="source.LoggedUser"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="source.MenuColoring" %>
 <%@ page import="source.SecurityCheck" %>
-<%@ page import="source.Label" %>
+<%@ page import="enums.Label" %>
 
 
 <% 
@@ -16,7 +17,8 @@
     String loggingURL=menu.getPageName();                                       //získá se název současné stránky
     session.setAttribute("loggingURL", loggingURL);                             //nastaví se session proměnná loggingURL, abych věděl, odkud se uživatel přihlašovat a tedy, kam jej po přihlášení "vrátit"
     SecurityCheck security=new SecurityCheck(request);
-        
+    LoggedUser user=(LoggedUser) session.getAttribute("user");    
+                            
 %>
 <!DOCTYPE html>
 <html lang="cs-CZ">
@@ -25,7 +27,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <meta charset="UTF-8" >
 
-    <title>Vysoká škola pedagogicko psychologická</title>
+    <title>Vysoká škola</title>
     
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 
@@ -64,11 +66,17 @@
                         </div>
                     </div>
                 </li>
+                <%
+                    if(security.hasPedagogRights()){ 
+                %>
                 <li id="menu-item" class="menu-item  
                     <%= menu.getProPedagogy() %>
                     ">
                     <a href="proPedagogy.jsp">Pro pedagogy</a>
                 </li>
+                <%
+                    }
+                %>
                 <li id="menu-item" class="menu-item  
                     <%= menu.getProUchazece() %>
                     ">
@@ -107,11 +115,17 @@
                         </div>
                     </div>
                 </li>
+                <%
+                    if(security.hasAdministrativaRights()){ 
+                %>
                 <li id="menu-item" class="menu-item  
                     <%= menu.getProAdministrativu() %>
                     ">
                     <a href="proAdministrativu.jsp">Pro administrativu</a>
                 </li>
+                <%
+                    }
+                %>
                 <li id="menu-item" class="menu-item  
                     <%= menu.getUredniDeska() %>
                     ">
@@ -132,7 +146,7 @@
             <h1 id="site-title">
                 <!--hlavní nadpis-->
                 <a href="index.jsp" title="vysoká škola pedagogicko psychologická - " rel="home">
-                    vysoká škola pedagogicko psychologická</a>
+                    vysoká škola</a>
             </h1>
             <p id="site-description"></p>
         </div><!-- end #logo -->

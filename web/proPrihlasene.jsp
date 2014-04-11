@@ -4,16 +4,18 @@
     Author     : Azathoth
 --%>
 
+<%@page import="enums.Rights"%>
+<%@page import="enums.FormularovaSkupina"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="enums.SQLTables"%>
 <%@page import="source.Mysql"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
     <%
-        String[] label=Label.getLabel();
-        String[] labelRaw=Label.getLabelRaw();
-        String[] empty=new String[22];                                          //měnit v případě změny počtu položek ve formuláři
+        HashMap<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
         Mysql sql=new Mysql();
         if(session.getAttribute("formCheck")!=null){
-            empty=(String[]) session.getAttribute("formCheck");                 //zjistí se, jak byl uživatel úspěšný při registraci
+            empty=(HashMap<Label, String>) session.getAttribute("formCheck");   //zjistí se, jak byl uživatel úspěšný při registraci
         }
         String registered="";
         if(session.getAttribute("registered")!=null){
@@ -34,6 +36,7 @@
         session.setAttribute("formCheck", null);
         session.setAttribute("registered", null);                               //session proměnná registered určuje, zda se podařil zápis do mysql databáze
         
+        security.accesedTo(Rights.applicant, response);
     %>
 <h1 class="title-header"></h1>
         </div><!-- end .column-title -->
@@ -46,126 +49,77 @@
                 <h2></h2>
                 <p class="entry-meta">
                 </p><!-- end .entry-meta -->
-                <%
-                    if(security.hasUchazecRights()){ 
-                %>
                 <div class="entry-summary"><p></p>
                     
-                    <div>
-                        Osobní údaje:
-                    </div>
-                    
                     <%
-                        
-                        String username=(String) session.getAttribute("username");
-                        String[] info;
+                        String username=security.getUser().getUsername();
+                        HashMap<Label, String> info;
                         if(security.isUchazec()||security.isStudent()){
-                            String table=sql.findTableWithApplicant(username);
+                            SQLTables table=sql.findTableWithApplicant(username);
                             info=sql.showApplicant(username, table);
                         } else {
                             info=sql.showLoginInfoOfUser(username);
                         }
-                        for(int i = 0; i < info.length; i++) {
-                            if(i==3){
+                        for(Label label : info.keySet()) {
+                            if(FormularovaSkupina.kontakt.getFirst(info)!=null&&FormularovaSkupina.kontakt.getFirst(info).equals(label)){   //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                    %>
+                    <fieldset>
+                        <legend><%= FormularovaSkupina.kontakt.getNazev() %></legend>
+                    <%
                             }
-                            else {
-                                if(i==0||i==9||i==10||i==18||i==27||i==36||i==43){
-                            %>
-                                <fieldset>
-                                    <legend>
-                                    <%
-                                        if(i==0){
-                                    %>nacionále<%
-                                        }
-                                        if(i==9){
-                                    %>kontakt<%
-                                        }
-                                        if(i==10){
-                                    %>narození<%
-                                        }
-                                        if(i==18){
-                                    %>trvalé bydliště<%
-                                        }
-                                        if(i==27){
-                                    %>kontaktní adresa<%
-                                        }
-                                        if(i==36){
-                                    %>střední škola<%
-                                        }
-                                        if(i==43){
-                                    %>ostatní<%
-                                        }
-                                        
-                                    %>
-                    </legend>
-                            <%
-                                }
                     %>
                     <div>
-                        <span id="listOfApplicantsLabel"><%= label[i] %></span>
-                        <span id="listOfApplicants"><%= info[i] %></span>
+                        <span id="listOfApplicantsLabel"><%= label.getNazevProUzivatele() %></span>
+                        <span id="listOfApplicants"><%= info.get(label) %></span>
                     </div>
                     <%
-                                if(i==8||i==9||i==17||i==26||i==35||i==42||i==45||(i==2&&!(security.isUchazec()||security.isStudent()))){
-                            %>
-                                </fieldset>
-                            <%
-                                }
+                            if(FormularovaSkupina.kontakt.getLast(info)!=null&&FormularovaSkupina.kontakt.getLast(info).equals(label)){     //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                    %>
+                    </fieldset>
+                    <%
                             }
                         }
                     %>
-                    
                     <%= message %>
                     <div>
                         Změna osobních údajů:
                     </div>
                     <div>
                         <form action="ChangeDataCheck" method="POST" id="registerForm">
+                            <%
+                                for(Label label : Label.values()){
+                                    if (label.isZmenaHesla()) {
+                            %>
                             <div>
-                            <label for="<%= labelRaw[4] %>"<%= empty[0] %>>Zadejte své heslo:</label>
-                            <input id="<%= labelRaw[4] %>" type="password" name="<%= labelRaw[4] %>">
+                                <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%=label.getNazevProUchazece() %></label>
+                                <input id="<%= label.getNazevRaw() %>" type="password" name="<%= label.getNazevRaw() %>">
                             </div>
-                            <div>
-                            <label for="noveheslo"<%= empty[1] %>>Zadejte své nové heslo:</label>
-                            <input id="noveheslo" type="password" name="noveheslo">
-                            </div>
-                            <div>
-                            <label for="kontrola"<%= empty[2] %>>Zadejte pro kontrolu znovu své nové heslo:</label>
-                            <input id="kontrola" type="password" name="kontrola">
-                            </div>
+                            <%
+                                    }
+                                }
+                            %>
                             <input type="submit" name="zmenitheslo" value="změnit heslo">
                         </form>
                     </div>
                 </div>
+                <div>
+                    <form action="ChangeDataCheck" method="POST" id="registerForm">
                 <%
-                    }
-                    else {
-                        response.sendRedirect("notLogged.jsp");
-                    }
-                    if(security.isUchazec()||security.isStudent()){ 
+                    for(Label label : Label.values()){
+                        if(label.isMenitelneUzivatelem()&&label.isInTable(security.getUser().getRights().getTable())){ 
                 %>
-                    <div>
-                        <form action="ChangeDataCheck" method="POST" id="registerForm">
-                            <div>
-                            <label for="<%= labelRaw[9] %>"<%= empty[3] %>><%= label[9] %></label>
-                            <input id="<%= labelRaw[9] %>" type="text" name="<%= labelRaw[9] %>">
-                            </div>
-                        <%
-                            for (int i = 18; i <= 35; i++) {                      //-2 protože poslední dvě položky uchazeč nebude vyplňovat, vyplní se samy předdefinovaným stringem
-                        %>
-                            <div>
-                            <label for="<%= labelRaw[i] %>"<%= empty[i-14] %>><%= label[i] %></label>
-                            <input id="<%= labelRaw[i] %>" type="text" name="<%= labelRaw[i] %>">
-                            </div>
-                        <%
-                            }
-                        %>
-                            <input type="submit" name="zmenitostatniudaje" value="změnit údaje">
-                        </form>
-                    </div>
+                        <div>
+                            <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%= label.getNazevProUzivatele() %></label>
+                            <input id="<%= label.getNazevRaw() %>" type="text" name="<%= label.getNazevRaw() %>">
+                        </div>
                 <%
+                        }
                     }
                 %>
+                        <input type="submit" name="zmenitostatniudaje" value="změnit údaje">
+                    </form>
+                </div>
+                
 </div>
 
     <%@ include file="/footer.jsp"%>

@@ -4,29 +4,31 @@
     Author     : Azathoth
 --%>
 
+<%@page import="enums.SQLTables"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="enums.Rights"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
 <%
     session = request.getSession(true);                                         //zpřístupní se session
     String registered="";
-    String[] label=Label.getLabel();
-    String[] labelRaw=Label.getLabelRaw();
     if(session.getAttribute("registered")!=null){
         registered=(String) session.getAttribute("registered");                 //zjistí se, jak byl uživatel úspěšný při registraci
     }
     String message="";
     
-    boolean[] notFilled = new boolean[label.length];
-    String[] empty=new String[label.length];
+    HashMap<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
     if(session.getAttribute("formCheck")!=null){
-        empty=(String[]) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
+        empty=(HashMap<Label, String>) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
-    String[] content=new String[label.length];
-    for (int i = 0; i < content.length; i++) {
-        content[i]="";
+    HashMap<Label, String> content=new HashMap<Label, String>();
+    for (Label label : Label.values()) {
+        if(label.isInTables(SQLTables.login, SQLTables.pedagogove)){
+            content.put(label, "");
+        }
     }
     if(session.getAttribute("formContent")!=null){
-        content=(String[]) session.getAttribute("formContent");
+        content=(HashMap<Label, String>) session.getAttribute("formContent");
     }
     
     if(registered.equals("success")){
@@ -39,6 +41,7 @@
     session.setAttribute("formCheck", null);
     session.setAttribute("formContent", null);
     
+    security.accesedTo(Rights.administrativa, response);
 %>
     <h1 class="title-header">Pro administrativu</h1>
         </div><!-- end .column-title -->
@@ -52,29 +55,25 @@
                 <div>
                     <form action="AddPedagogCheck" method="POST" id="registerForm">
 
-                        <div>    
-                            <label for="<%= labelRaw[1] %>"<%= empty[0] %>><%= label[1] %>:</label>
-                            <input id="<%= labelRaw[1] %>" type="text" name="<%= labelRaw[1] %>" value="<%= content[0] %>">
-                        </div>
-                        <div>    
-                            <label for="<%= labelRaw[2] %>"<%= empty[1] %>><%= label[2] %>:</label>
-                            <input id="<%= labelRaw[2] %>" type="text" name="<%= labelRaw[2] %>" value="<%= content[1] %>">
-                        </div>
-                        <div>    
-                            <label for="<%= labelRaw[9] %>"<%= empty[2] %>><%= label[9] %>:</label>
-                            <input id="<%= labelRaw[9] %>" type="text" name="<%= labelRaw[9] %>" value="<%= content[2] %>">
-                        </div>
-                        <div>    
-                            <label for="<%= labelRaw[25] %>"<%= empty[3] %>><%= label[25] %>:</label>
-                            <input class="predvolba" type="text" name="<%= "predvolba"+labelRaw[25] %>" value="+420">
-                            <input id="<%= labelRaw[25] %>" type="text" name="<%= labelRaw[25] %>" value="<%= content[3] %>">
-                        </div>
-                        <div>    
-                            <label for="<%= labelRaw[43] %>"<%= empty[4] %>><%= label[43] %>:</label>
-                            <input class="predvolba" type="text" name="<%= "predvolba"+labelRaw[43] %>" value="+420">
-                            <input id="<%= labelRaw[43] %>" type="text" name="<%= labelRaw[43] %>" value="<%= content[4] %>">
-                        </div>
-                        
+                        <%
+                            for (Label label : Label.values()) {
+                                if(label.isInTables(SQLTables.login, SQLTables.pedagogove)&&!label.isAutomatickeVyplneni()){
+                        %>
+                            <div>    
+                                <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%= label.getNazevProUzivatele() %>:</label>
+                        <%
+                            if(label.isTelefonniCislo()){
+                        %>
+                           <input class="predvolba" type="text" name="<%= "predvolba"+label.getNazevRaw() %>" value="+420">
+                        <%
+                            }
+                        %>
+                                <input id="<%= label.getNazevRaw() %>" type="text" name="<%= label.getNazevRaw() %>" value="<%= content.get(label) %>">
+                            </div>
+                        <%
+                                }
+                            }
+                        %>
                         <input type="submit" name="odeslat" value="přidat pedagoga">
                     </form>
                 </div>

@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-package source;
+package servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -15,6 +15,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import source.Encrypt;
+import enums.Label;
+import enums.SQLTables;
+import java.util.HashMap;
+import source.Mysql;
+import source.SendEmail;
+import source.UsernameGen;
 
 /**
  *
@@ -40,23 +47,23 @@ public class AddAdministrativa extends HttpServlet {
             Mysql sql=new Mysql();
             String username=generator.getValidatedId();
             String password=generator.getId();
-            String[] label=Label.getLabel();
-            String[] labelRaw=Label.getLabelRaw();
-            
-            String[] input = new String[7];
-            input[0]=username;
-            input[3]=password;
-            input[1]=request.getParameter(labelRaw[1]);
-            input[2]=request.getParameter(labelRaw[2]);
-            input[4]=request.getParameter(labelRaw[9]);
-            input[5]=request.getParameter("predvolba"+labelRaw[25])+request.getParameter(labelRaw[25]);
-            input[6]=request.getParameter("predvolba"+labelRaw[43])+request.getParameter(labelRaw[43]);
-            
-            SendEmail mail=new SendEmail(input[0], input[3], input[1], input[2], input[4]);
+            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.jmeno.getNazevRaw()), request.getParameter(Label.prijmeni.getNazevRaw()), request.getParameter(Label.email.getNazevRaw()));
             mail.sendGmailToRegisteredUser();
             Encrypt crypt=new Encrypt();
-            input[3]=crypt.encrypt(input[3], username);
+            password=crypt.encrypt(password, username);
             
+            HashMap<Label, String> input=new HashMap<>();
+            input.put(Label.uzivatelskejmeno, username);
+            input.put(Label.hashhesla, password);
+            for (Label label : Label.values()) {
+                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutomatickeVyplneni()) {
+                    if (label.isTelefonniCislo()){
+                        input.put(label, request.getParameter("predvolba"+label.getNazevRaw())+request.getParameter(label.getNazevRaw()));
+                    } else {
+                        input.put(label, request.getParameter(label.getNazevRaw()));
+                    }
+                }
+            }
             boolean rs=sql.insertNewAdministrativa(input);
             
             if (rs) {
@@ -68,6 +75,13 @@ public class AddAdministrativa extends HttpServlet {
             response.sendRedirect("pridaniAdministrativy.jsp");
         } catch (IOException ex) {
             Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException|ClassNotFoundException ex) {
+            try {
+                Logger.getLogger(AddAdministrativa.class.getName()).log(Level.SEVERE, null, ex);
+                response.sendRedirect("chyba.jsp?error=0");
+            } catch (IOException ex1) {
+                Logger.getLogger(AddAdministrativa.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
     }
 

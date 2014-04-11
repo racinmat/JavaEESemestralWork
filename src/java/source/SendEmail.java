@@ -92,7 +92,7 @@ public class SendEmail
                 + "S pozdravem, automatizovaný systém."
             );
             Transport.send(message);
-            System.out.println("Done");
+            System.out.println("Sending email to "+username+" to email address "+email+" was completed.");
 	} catch (MessagingException e) {
             throw new RuntimeException(e);
 	}
@@ -136,7 +136,7 @@ public class SendEmail
                 + "S pozdravem, automatizovaný systém."
             );
             Transport.send(message);
-            System.out.println("Done");
+            System.out.println("Sending email to "+username+" to email address "+email+" was completed.");
 	} catch (MessagingException e) {
             throw new RuntimeException(e);
 	}

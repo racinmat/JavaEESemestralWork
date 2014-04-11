@@ -19,9 +19,6 @@ import java.util.logging.Logger;
  */
 public class Encrypt {
 
-    public Encrypt() {
-    }
-    
     private String byteToString(byte[] pole){
         String newSalt="";
         for (int j = 0; j < pole.length; j++) {

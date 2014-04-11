@@ -6,12 +6,19 @@
 
 package source;
 
+import enums.Label;
+import enums.Rights;
+import enums.SQLTables;
+import static enums.SQLTables.*;
+import enums.StavPrihlasky;
+import servlet.Login;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,8 +27,8 @@ import java.util.logging.Logger;
  * @author Azathoth
  */
 public class Mysql {
-    private Connection conn = null;
-    private String id=null;
+    private final Connection conn;
+    private String id;
     private PreparedStatement ps;
     private final String url;
     private final String dbName; 
@@ -31,7 +38,7 @@ public class Mysql {
     /**
      * Zadefinuje proměnné a pokusí se vytvořit spojení s databází.
      */
-    public Mysql() {
+    public Mysql() throws ClassNotFoundException, SQLException {                                                            //vyhazuje výjimky, které mohou být chyceny servletem, který uživatele přesměruje na statickou stránku a oznámí mu problém
         url = "jdbc:mysql://localhost:3306/";                                   //pro localhost
         //url = "jdbc:mysql://localhost/azathoth?autoReconnect=true";             //pro eatj
         
@@ -40,19 +47,9 @@ public class Mysql {
         
         uname = "root";
         pwd = "";
-        conn=null;
         id=null;
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url+dbName+"?useUnicode=true&characterEncoding=utf-8",uname,pwd);    //kvůli UTF-8 kódování při komunikaci s mysql databází
-        }
-        catch(ClassNotFoundException e){
-            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, e);
-        } catch (SQLException ex) {
-            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
-            Throwable t = ex.getCause();
-            System.out.println(t);
-        }
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(url+dbName+"?useUnicode=true&characterEncoding=utf-8",uname,pwd);    //kvůli UTF-8 kódování při komunikaci s mysql databází
     }
           
     /**
@@ -67,61 +64,36 @@ public class Mysql {
      * rights, což je integer od 0 výše
      * rightsString, což je název přiřazený každé hodnotě rights
      */
-    public String[] login(String username, String password){
-        String[] output=new String[6];
-        String[] label=Label.getLabelRaw();
+    public LoggedUser login(String username, String password){
+        LoggedUser user=null;
         try {
-            System.out.println("Check if mysql connection is closed or not: Mysql connection isClosed = " + conn.isClosed());
-            String sql = "SELECT * FROM login where "+label[0]+"=? and "+label[3]+"=?";
+            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+Label.uzivatelskejmeno.getNazevRaw()+"=? and "+Label.hashhesla.getNazevRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ps.setString(2,password);
             ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
             int size=0;
             int rights=Integer.MAX_VALUE;                                       //číselná práva jsou od nuly výš, max value tedy nepřidělí platná práva
-            int rightsTemp=Integer.MAX_VALUE;
             String name="";
             String lastname="";
-            String nameTemp="";
-            String lastnameTemp="";
             while(rs.next()){
-                username=rs.getString(label[0]);
-                name=rs.getString(label[1]);
-                lastname=rs.getString(label[2]);
+                username=rs.getString(Label.uzivatelskejmeno.getNazevRaw());
+                name=rs.getString(Label.jmeno.getNazevRaw());
+                lastname=rs.getString(Label.prijmeni.getNazevRaw());
                 rights=rs.getInt("rights");
                 size++;
             }
             if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
-                output[5]=username;
-                output[3]=name;
-                output[4]=lastname;
-                output[0]="success";
-                output[1]=Integer.toString(rights);
-                switch(rights){
-                    case 0:
-                        output[2]="hlavní admin";
-                        break;                    //main admin
-                    case 1:
-                        output[2]="administrativa";
-                        break;                    //administrativa
-                    case 2:
-                        output[2]="pedagog";
-                        break;                    //pedagog
-                    case 3:
-                        output[2]="student";
-                        break;                    //student
-                    case 4:
-                        output[2]="uchazeč";
-                        break;                    //uchazeč
-                }
+                Rights rightsObject=Rights.getRightsFromInt(rights);
+                user=new LoggedUser(name, lastname, rightsObject, username, "success");
             }
             else{
-                output[0]="fail";                         //je zapotřebí pro výpis chybové hlášky ve footeru
+                user=new LoggedUser(null, null, null, null, "fail");            //je zapotřebí pro výpis chybové hlášky ve footeru
             }
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return output;
+        return user;
     }
     
     /**
@@ -195,10 +167,10 @@ public class Mysql {
      * @param input pole, kde jsou všechny údaje o studentovi
      * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
      */
-    public boolean insertNewApplicant(String tabulka, String[] input){
+    public boolean insertNewApplicant(SQLTables tabulka, HashMap<Label, String> input){
         boolean output=false;
-        input[44]="nezevidován administrativou";
-        input[45]="nezaplaceno";
+        input.put(Label.stavprihlasky, StavPrihlasky.getDefaultni().getNazev());
+        input.put(Label.skolne, "nezaplaceno");
         boolean output1=insertNewUserToLogin(input,4);
         boolean output2=insertApplicant(tabulka, input);
         output=output1&&output2;
@@ -210,136 +182,148 @@ public class Mysql {
      * @param tabulka tabulka, do které se mají informace vložit, možné hodnoty: uchazeci, uchazeci_spam a uchazeci_ipspam
      * @return vrátí pole polí stringů, první udává řádek se všemi údaji, druhý udává údaj v konkrétním sloupečku, číslování pole je stejné jako u vkládání údajů o uchazeči do tabulky
      */
-    public String[][] showApplicants(String tabulka){
-        ArrayList<String[]> output = new ArrayList<String[]>();
-        String[][] outputString = null;
-        String[] label=Label.getLabelRaw();
-        String[] labelLogin=Label.getLabelRaw();                                //jsou odlišné kvůli tabulce studentů
-        
-        if (tabulka.equals("studenti")) {
-            label=Label.getLabelStudentRaw();                                   //tabulka studentů má jiné sloupce
-        }
+    public ArrayList<HashMap<Label,String>> showPeople(SQLTables tabulka){                        //protože název tabulky nejde parametrizovat, je to ošetřeno přes výčtový typ
+        ArrayList<HashMap<Label,String>> output = new ArrayList<>();
+        Label debug = null;
         try {
-            String sql = "SELECT * FROM "+tabulka+" where 1";
+            String sql = "SELECT * FROM "+tabulka.getTable()+" where 1";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+            System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                String[] temp=new String[label.length];                         
-                temp[0]=rs.getString(label[0]);
-                for (int i = 4; i < label.length; i++) {
-                    temp[i]=rs.getString(label[i]);
+                HashMap<Label,String> temp=new HashMap<>();                         
+                for (Label label : Label.values()) {
+                    if (label.isInTable(tabulka)) {
+                        temp.put(label, rs.getString(label.getNazevRaw()));
+                    }
                 }
                 output.add(temp);
             }
-            outputString=new String[output.size()][45];
             for (int i = 0; i < output.size(); i++) {
-                outputString[i]=output.get(i);                                  //převedení arraylistu pole stringů na pole polí stringů
-            }
-            
-            for (int i = 0; i < outputString.length; i++) {
-                sql = "SELECT * FROM login where "+labelLogin[0]+" = ?";
+                sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
                 ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-                ps.setString(1,outputString[i][0]);
+                ps.setString(1,output.get(i).get(SQLTables.login.getPrimaryKey()));
+                System.out.println("Sestavené SQL pro tabulku "+SQLTables.login.getTable()+" je: "+sql);
                 ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
                 while(rsLogin.next()){
-                    outputString[i][1]=rsLogin.getString(labelLogin[1]);
-                    outputString[i][2]=rsLogin.getString(labelLogin[2]);
-                    outputString[i][3]=rsLogin.getString(labelLogin[3]);
-                    //outputString[i][3]=outputString[i][3].substring(0, 5);
+                    for (Label label : Label.values()) {
+                        if (label.isInTable(SQLTables.login)) {
+                            debug=label;
+                            String temp=rsLogin.getString(label.getNazevRaw());
+                            output.get(i).put(label, temp);
+                        }
+                    }
                 }
             }
             
         } catch (SQLException ex) {
+            System.out.println(debug.getNazevRaw());
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return outputString;
+        return output;
     }
     
-    public String[][] showApplicants(String tabulka, String criterium, String criteriumColumn, boolean negate){
-        ArrayList<String[]> output = new ArrayList<String[]>();
-        String[][] outputString = null;
-        String[] label=Label.getLabelRaw();
+    public ArrayList<HashMap<Label,String>> showPeople(SQLTables tabulka, String criterium, Label criteriumColumn, boolean negate){
+        ArrayList<HashMap<Label,String>> output = new ArrayList<>();
         String sql;
+        Label debug = null;
         try {
             if (negate) {
-                sql = "SELECT * FROM "+tabulka+" where "+criteriumColumn+"<>?";
+                sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNazevRaw()+"<>?";
             } else {
-                sql = "SELECT * FROM "+tabulka+" where "+criteriumColumn+"=?";
+                sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNazevRaw()+"=?";
             }
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,criterium);
+            System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                String[] temp=new String[label.length];                         //navíc na konci políčko přijat
-                temp[0]=rs.getString(label[0]);
-                for (int i = 4; i < label.length; i++) {
-                    temp[i]=rs.getString(label[i]);
+                HashMap<Label,String> temp=new HashMap<>();                         
+                for (Label label : Label.values()) {
+                    if (label.isInTable(tabulka)) {
+                        temp.put(label, rs.getString(label.getNazevRaw()));
+                    }
                 }
                 output.add(temp);
             }
-            outputString=new String[output.size()][45];
             for (int i = 0; i < output.size(); i++) {
-                outputString[i]=output.get(i);                                  //převedení arraylistu pole stringů na pole polí stringů
-            }
-            
-            for (int i = 0; i < outputString.length; i++) {
-                sql = "SELECT * FROM login where "+label[0]+" = ?";
+                sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
                 ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-                ps.setString(1,outputString[i][0]);
+                ps.setString(1,output.get(i).get(SQLTables.login.getPrimaryKey()));
+                System.out.println("Sestavené SQL pro tabulku "+SQLTables.login.getTable()+" je: "+sql);
                 ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
                 while(rsLogin.next()){
-                    outputString[i][1]=rsLogin.getString(label[1]);
-                    outputString[i][2]=rsLogin.getString(label[2]);
-                    outputString[i][3]=rsLogin.getString(label[3]);
-                    //outputString[i][3]=outputString[i][3].substring(0, 5);
+                    for (Label label : Label.values()) {
+                        if (label.isInTable(SQLTables.login)) {
+                            debug=label;
+                            String temp=rsLogin.getString(label.getNazevRaw());
+                            output.get(i).put(label, temp);
+                        }
+                    }
                 }
             }
             
         } catch (SQLException ex) {
+            System.out.println(debug.getNazevRaw());
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return outputString;
+        return output;
     }
     
-    private String createUpdateStatement(String tabulka){
-        Label lab=new Label();
-        String[] label=lab.getLabelRaw();
-        String sql = "UPDATE "+tabulka+" SET ";
-        for (int i = 4; i < label.length; i++) {                                //protože jméno a příjmení nepatří do tabulky
-            sql+=label[i]+" = ?";
-            if(!(i==label.length-1)){                                      //pro poslední iteraci cyklu nebude na konci čárka
-                sql+= ", ";
+    /**
+     * Nyní vytváří updateStatement přesně podle toho, co je u usera změněno, není zapotřebí kopírovat staré hodnoty
+     * @param user
+     * @param tabulka
+     * @return 
+     */
+    private String createUpdateStatement(HashMap<Label,String> user, SQLTables tabulka){
+        String sql = "UPDATE "+tabulka.getTable()+" SET ";
+        for (Label label : user.keySet()) {
+            if (label.isInTable(tabulka)&&!label.isPrimaryKey()) {
+                sql+=label.getNazevRaw()+" = ?, ";
             }
         }
-        sql+=" WHERE "+label[0]+"= ?";
+        sql=sql.substring(0, sql.length()-2);                            //odtrhne poslední čárku a mezeru za ní
+        sql+=" WHERE "+tabulka.getPrimaryKey().getNazevRaw()+"= ?";
+        System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
         return sql;
     }
     
-    public boolean updateApplicants(String tabulka, String[][] uchazec){
-        int[] rs=new int[uchazec.length*2];
-        String[] label=Label.getLabelRaw();
-        for (int i = 0; i < uchazec.length; i++) {                              //update se provede pro každého uchazeče
+    public boolean updateApplicants(SQLTables tabulka, ArrayList<HashMap<Label, String>> uchazec){
+        int[] rs=new int[uchazec.size()*2];
+        for (int i = 0; i < uchazec.size(); i++) {                              //update se provede pro každého uchazeče
             try {
-            String sql=createUpdateStatement(tabulka);
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-                for (int j = 1; j < uchazec[0].length-3; j++) {
-                    ps.setString(j,uchazec[i][j+3]);
+                String sql=createUpdateStatement(uchazec.get(i), tabulka);
+                ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+                int count=0;
+                for (Label label : uchazec.get(i).keySet()) {
+                    if (!label.isPrimaryKey()&&label.isInTable(tabulka)) {
+                        count++;                                                        //číslování v preparedStatementu začíná od jedné
+                        ps.setString(count,uchazec.get(i).get(label));
+                    }
                 }
-            ps.setString(uchazec[0].length-3,uchazec[i][0]);
-            
-            rs[2*i] = ps.executeUpdate(); 
-            
-            sql = "UPDATE login SET "+label[1]+" = ?, "+label[2]+" = ?, "+label[3]+" = ? WHERE "+label[0]+" = ?";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,uchazec[i][1]);
-            ps.setString(2,uchazec[i][2]);
-            ps.setString(3,uchazec[i][3]);
-            ps.setString(4,uchazec[i][0]);
-            
-            rs[2*i+1] = ps.executeUpdate(); 
-            
+                count++;
+                ps.setString(count,uchazec.get(i).get(tabulka.getPrimaryKey()));
+
+                rs[2*i] = ps.executeUpdate(); 
+                System.out.println(sql+" was successfully executed.");
+                sql=createUpdateStatement(uchazec.get(i), SQLTables.login);
+                ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+                count=0;
+                for (Label label : uchazec.get(i).keySet()) {
+                    if (!label.isPrimaryKey()&&label.isInTable(SQLTables.login)) {
+                        count++;                                                        //číslování v preparedStatementu začíná od jedné
+                        ps.setString(count,uchazec.get(i).get(label));
+                        System.out.println("ps.setString("+count+","+uchazec.get(i).get(label)+");");
+                    }
+                }
+                count++;
+                ps.setString(count,uchazec.get(i).get(tabulka.getPrimaryKey()));
+
+                rs[2*i+1] = ps.executeUpdate(); 
+                System.out.println(sql+" was successfully executed.");
             } catch (SQLException ex) {
                 Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -354,10 +338,9 @@ public class Mysql {
     }
     
     public boolean updatePassword(String username, String password){
-        String[] label=Label.getLabelRaw();
         int rs = 0;
         try {
-            String sql = "UPDATE login SET "+label[3]+"=? where "+label[0]+"=?";
+            String sql = "UPDATE "+SQLTables.login.getTable()+" SET "+Label.hashhesla.getNazevRaw()+"=? where "+SQLTables.login.getPrimaryKey().getNazevRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,password);
             ps.setString(2,username);
@@ -379,10 +362,9 @@ public class Mysql {
      * @return returns true in case of unique id
      */
     public boolean validateId(String id){
-        String[] label=Label.getLabelRaw();
         try
         {
-            String sql = "SELECT * FROM login where "+label[0]+"=?";
+            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,id);
             ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
@@ -409,48 +391,56 @@ public class Mysql {
      * @param tabulka table where is chosen user
      * @return returns all data in chosen table, table is indexed by label, 
      */
-    public String[] showApplicant(String username, String tabulka){
-        String[] label=Label.getLabelRaw();
-        String[] output = new String[label.length];
+    public HashMap<Label, String> showApplicant(String username, SQLTables tabulka){
+        HashMap<Label,String> output=new HashMap<>();                         
+        Label debug = null;
         try {
-            String sql = "SELECT * FROM "+tabulka+" where "+label[0]+" = ?";
+            String sql = "SELECT * FROM "+tabulka.getTable()+" where "+tabulka.getPrimaryKey().getNazevRaw()+" = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                output[0]=rs.getString(label[0]);
-                for (int i = 4; i < label.length; i++) {
-                    output[i]=rs.getString(label[i]);
+                for (Label label : Label.values()) {
+                    if (label.isInTable(tabulka)) {
+                        output.put(label, rs.getString(label.getNazevRaw()));
+                    }
                 }
             }
-            sql = "SELECT * FROM login where "+label[0]+" = ?";
+            sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
             ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,output[0]);
+            ps.setString(1,output.get(SQLTables.login.getPrimaryKey()));
             ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
             while(rsLogin.next()){
-                output[1]=rsLogin.getString(label[1]);
-                output[2]=rsLogin.getString(label[2]);
-                output[3]=rsLogin.getString(label[3]);
-                //outputString[i][3]=outputString[i][3].substring(0, 5);
+                for (Label label : Label.values()) {
+                    if (label.isInTable(SQLTables.login)) {
+                        debug=label;
+                        output.put(label, rs.getString(label.getNazevRaw()));
+                    }
+                }
             }
                 
         } catch (SQLException ex) {
+            System.out.println(debug.getNazevRaw());
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return output;
     }
     
-    public boolean updateApplicant(String[] uchazec, String tabulka){
+    public boolean updateApplicant(HashMap<Label,String> uchazec, SQLTables tabulka){
         int rs=0;
-        String[] label=Label.getLabelRaw();
         try {
-            String sql=createUpdateStatement(tabulka);
+            String sql=createUpdateStatement(uchazec, tabulka);
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            for (int j = 1; j < 42; j++) {
-                ps.setString(j,uchazec[j+3]);
+            int count=0;
+            for (Label label : uchazec.keySet()) {
+                if (!label.isPrimaryKey()&&label.isInTable(tabulka)) {
+                    count++;
+                    ps.setString(count,uchazec.get(label));
+                }
             }
-            ps.setString(42,uchazec[0]);
+            count++;
+            ps.setString(count,uchazec.get(tabulka.getPrimaryKey()));
             
             rs = ps.executeUpdate(); 
             } catch (SQLException ex) {
@@ -468,13 +458,12 @@ public class Mysql {
      * @param username
      * @return returns uchazeci, uchazeci_spam or uchazeci_ipspam, depending on where username from id is stored
      */
-    public String findTableWithApplicant(String username){
-        String output="";
-        String[] tabulky={"uchazeci", "uchazeci_spam", "uchazeci_ipspam"};
-        String[] label=Label.getLabelRaw();
+    public SQLTables findTableWithApplicant(String username) throws IllegalArgumentException{
+        SQLTables output=null;
+        SQLTables[] tabulky={uchazeci, uchazeci_spam, uchazeci_ipspam};
         try {
             for (int i = 0; i < tabulky.length; i++) {
-                String sql = "SELECT * FROM "+tabulky[i]+" where "+label[0]+" = ?";
+                String sql = "SELECT * FROM "+tabulky[i].getTable()+" where "+tabulky[i].getPrimaryKey().getNazevRaw()+" = ?";
                 ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
                 ps.setString(1,username);
                 ResultSet rs = ps.executeQuery();
@@ -483,25 +472,24 @@ public class Mysql {
                     return output;
                 }
             }
-            throw new IllegalArgumentException("Username "+username+" was not found.");
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return output;
+        throw new IllegalArgumentException("User "+username+" was not found.");
     }
     
-    public String[] showLoginInfoOfUser(String username){
-        String[] output = new String[3];
-        String[] label=Label.getLabelRaw();
-        try {
-            String sql = "SELECT * FROM login where "+label[0]+" = ?";
+    public HashMap<Label,String> showLoginInfoOfUser(String username){
+        HashMap<Label,String> output = new HashMap<>();
+       try {
+            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                for (int i = 0; i < 3; i++) {
-                    output[i]=rs.getString(label[i]);
+                for (Label label : Label.values()) {
+                    if (label.isInTable(SQLTables.login)) {
+                        output.put(label, rs.getString(label.getNazevRaw()));
+                    }
                 }
             }
             
@@ -512,9 +500,9 @@ public class Mysql {
         return output;
     }
     
-    public boolean transferApplicant(String tableFrom, String applicantUsername, String tableTo){
+    public boolean transferApplicant(SQLTables tableFrom, String applicantUsername, SQLTables tableTo){
         boolean output=false;
-        String[] input=showApplicant(applicantUsername, tableFrom);
+        HashMap<Label,String> input=showApplicant(applicantUsername, tableFrom);
         boolean temp1=insertApplicant(tableTo, input);
         boolean temp2=deleteRow(applicantUsername, tableFrom);
         output=temp1&&temp2;
@@ -522,45 +510,21 @@ public class Mysql {
         
     }
     
-    public boolean insertApplicant(String tabulka, String[] input){
+    public boolean insertApplicant(SQLTables tabulka, HashMap<Label,String> input){
         boolean output=false;
-        String[] label=Label.getLabelRaw();
         try {
-            String sql = "INSERT INTO "+tabulka+"("+ label[0]+", ";
-            for (int i = 4; i < label.length; i++) {
-                sql+=label[i];
-                if (i<label.length-1) {
-                    sql+=", ";
-                }
-            }
-            sql+=") VALUES("
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?,?,?,?,?,?,?,?,"
-                    + "?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            for (int i = 2; i < label.length-2; i++) {
-                ps.setString(i,input[i+2]);
-            }
-            
-            int rs = ps.executeUpdate(); 
-            
-            if (rs==1) {
-                output=true;
-            }
+            String sql = createInsertStatement(tabulka);
+            output=executeInsertStatement(sql, input, tabulka);
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         return output;
     }
     
-    public boolean deleteRow(String username, String table){
-        String[] label=Label.getLabelRaw();
+    public boolean deleteRow(String username, SQLTables table){
         int rs = 0;
         try {
-            String sql = "DELETE FROM "+table+" where "+label[0]+"=?";
+            String sql = "DELETE FROM "+table.getTable()+" where "+table.getPrimaryKey().getNazevRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
@@ -575,45 +539,26 @@ public class Mysql {
         return output;
     }
     
-    public boolean insertNewUserToLogin(String[] input, int rights){
+    public boolean insertNewUserToLogin(HashMap<Label, String> input, int rights){
         boolean output=false;
-        String[] label=Label.getLabelRaw();
         try {
-            String sql = "INSERT INTO login("+label[0]+", "+label[1]+", "+label[2]+", "+label[3]+", rights) VALUES(?,?,?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            ps.setString(2,input[1]);
-            ps.setString(3,input[2]);
-            ps.setString(4,input[3]);
-            ps.setInt(5,rights);
-            int rs = ps.executeUpdate(); 
-            if (rs==1) {
-                output=true;
-            }
+            input.put(Label.rights, Integer.toString(rights));
+            String sql = createInsertStatement(SQLTables.login);
+            output = executeInsertStatement(sql, input, SQLTables.login);
+            
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         return output;
     }
     
-    public boolean insertNewPedagog(String[] input){
+    public boolean insertNewPedagog(HashMap<Label, String> input){
         boolean output=false;
         boolean output1=insertNewUserToLogin(input,2);
         boolean output2;
-        String[] label=Label.getLabelRaw();
         try {
-            String sql = "INSERT INTO pedagogove("+label[0]+", "+label[9]+", "+label[25]+", "+label[43]+") VALUES(?,?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            ps.setString(2,input[4]);
-            ps.setString(3,input[5]);
-            ps.setString(4,input[6]);
-            int rs = ps.executeUpdate(); 
-            if (rs==1) {
-                output2=true;
-            } else {
-                output2=false;
-            }
+            String sql = createInsertStatement(SQLTables.pedagogove);
+            output2 = executeInsertStatement(sql, input, SQLTables.pedagogove);
             output=output1&&output2;
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
@@ -622,24 +567,13 @@ public class Mysql {
         return output;
     }
     
-    public boolean insertNewAdministrativa(String[] input){
+    public boolean insertNewAdministrativa(HashMap<Label, String> input){
         boolean output=false;
         boolean output1=insertNewUserToLogin(input,1);
         boolean output2;
-        String[] label=Label.getLabelRaw();
         try {
-            String sql = "INSERT INTO administrativa("+label[0]+", "+label[9]+", "+label[25]+", "+label[43]+") VALUES(?,?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            ps.setString(2,input[4]);
-            ps.setString(3,input[5]);
-            ps.setString(4,input[6]);
-            int rs = ps.executeUpdate(); 
-            if (rs==1) {
-                output2=true;
-            } else {
-                output2=false;
-            }
+            String sql = createInsertStatement(SQLTables.administrativa);
+            output2 = executeInsertStatement(sql, input, SQLTables.administrativa);
             output=output1&&output2;
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
@@ -648,24 +582,13 @@ public class Mysql {
         return output;
     }
     
-    public boolean insertNewStudent(String[] input){
+    public boolean insertNewStudent(HashMap<Label, String> input){
         boolean output=false;
-        boolean output1=updateRights(input[0],3);
+        boolean output1=updateRights(input.get(SQLTables.login.getPrimaryKey()),3);
         boolean output2;
-        String[] label=Label.getLabelStudentRaw();
         try {
-            String sql = "INSERT INTO studenti("+label[0]+", "+label[4]+", "+label[5]+", "+label[6]+") VALUES(?,?,?,?)";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,input[0]);
-            ps.setString(2,input[4]);
-            ps.setString(3,input[5]);
-            ps.setString(4,input[6]);
-            int rs = ps.executeUpdate(); 
-            if (rs==1) {
-                output2=true;
-            } else {
-                output2=false;
-            }
+            String sql = createInsertStatement(SQLTables.studenti);
+            output2 = executeInsertStatement(sql, input, SQLTables.studenti);
             output=output1&&output2;
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
@@ -675,10 +598,9 @@ public class Mysql {
     }
     
     public boolean updateRights(String username, int rights){
-        String[] label=Label.getLabelRaw();
         int rs = 0;
         try {
-            String sql = "UPDATE login SET rights=? where "+label[0]+"=?";
+            String sql = "UPDATE "+SQLTables.login.getTable()+" SET "+Label.rights.getNazevRaw()+"=? where "+SQLTables.login.getPrimaryKey().getNazevRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setInt(1,rights);
             ps.setString(2,username);
@@ -689,6 +611,49 @@ public class Mysql {
         }
         boolean output=true;
         if (rs!=1) {
+            output=false;
+        }
+        return output;
+    }
+    
+    private String createInsertStatement(SQLTables tabulka){
+        String sql = "INSERT INTO "+tabulka.getTable()+"(";
+        for (Label label : Label.values()) {
+            if (label.isInTable(tabulka)) {
+                sql+=label.getNazevRaw();
+                sql+=", ";
+            }
+        }
+        sql=sql.substring(0, sql.length()-2);                               //odtrhne poslední čárku a mezeru za ní
+        sql+=") VALUES(";
+        for (Label label : Label.values()) {
+            if (label.isInTable(tabulka)) {
+                sql+="?,";
+            }
+        }
+        sql=sql.substring(0, sql.length()-1);                               //odtrhne poslední čárku
+        sql+=")";
+        System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
+        return sql;
+    }
+    
+    private boolean executeInsertStatement(String sql, HashMap<Label, String> input, SQLTables table) throws SQLException{
+        boolean output;
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        int count=0;
+        for (Label label : Label.values()) {
+            if (label.isInTable(table)) {
+                count++;
+                if (input.get(label)==null) {
+                    throw new NullPointerException("Chyba při vkládání do tabulky "+table+", sql dotaz je "+sql+", input má null pod labelem "+label);
+                }
+                ps.setString(count,input.get(label));
+            }
+        }
+        int rs = ps.executeUpdate(); 
+        if (rs==1) {
+            output=true;
+        } else {
             output=false;
         }
         return output;
