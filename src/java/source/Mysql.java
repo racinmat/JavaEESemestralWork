@@ -10,7 +10,7 @@ import enums.Label;
 import enums.Rights;
 import enums.SQLTables;
 import static enums.SQLTables.*;
-import enums.StavPrihlasky;
+import enums.ApplicationState;
 import servlet.Login;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -67,7 +67,7 @@ public class Mysql {
     public LoggedUser login(String username, String password){
         LoggedUser user=null;
         try {
-            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+Label.uzivatelskejmeno.getNazevRaw()+"=? and "+Label.hashhesla.getNazevRaw()+"=?";
+            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+Label.userName.getNameRaw()+"=? and "+Label.password.getNameRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ps.setString(2,password);
@@ -77,9 +77,9 @@ public class Mysql {
             String name="";
             String lastname="";
             while(rs.next()){
-                username=rs.getString(Label.uzivatelskejmeno.getNazevRaw());
-                name=rs.getString(Label.jmeno.getNazevRaw());
-                lastname=rs.getString(Label.prijmeni.getNazevRaw());
+                username=rs.getString(Label.userName.getNameRaw());
+                name=rs.getString(Label.name.getNameRaw());
+                lastname=rs.getString(Label.lastname.getNameRaw());
                 rights=rs.getInt("rights");
                 size++;
             }
@@ -169,8 +169,8 @@ public class Mysql {
      */
     public boolean insertNewApplicant(SQLTables tabulka, HashMap<Label, String> input){
         boolean output=false;
-        input.put(Label.stavprihlasky, StavPrihlasky.getDefaultni().getNazev());
-        input.put(Label.skolne, "nezaplaceno");
+        input.put(Label.applicationstate, ApplicationState.getDefaultBoolean().getName());
+        input.put(Label.tuition, "nezaplaceno");
         boolean output1=insertNewUserToLogin(input,4);
         boolean output2=insertApplicant(tabulka, input);
         output=output1&&output2;
@@ -194,13 +194,13 @@ public class Mysql {
                 HashMap<Label,String> temp=new HashMap<>();                         
                 for (Label label : Label.values()) {
                     if (label.isInTable(tabulka)) {
-                        temp.put(label, rs.getString(label.getNazevRaw()));
+                        temp.put(label, rs.getString(label.getNameRaw()));
                     }
                 }
                 output.add(temp);
             }
             for (int i = 0; i < output.size(); i++) {
-                sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
+                sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+" = ?";
                 ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
                 ps.setString(1,output.get(i).get(SQLTables.login.getPrimaryKey()));
                 System.out.println("Sestavené SQL pro tabulku "+SQLTables.login.getTable()+" je: "+sql);
@@ -209,7 +209,7 @@ public class Mysql {
                     for (Label label : Label.values()) {
                         if (label.isInTable(SQLTables.login)) {
                             debug=label;
-                            String temp=rsLogin.getString(label.getNazevRaw());
+                            String temp=rsLogin.getString(label.getNameRaw());
                             output.get(i).put(label, temp);
                         }
                     }
@@ -217,7 +217,9 @@ public class Mysql {
             }
             
         } catch (SQLException ex) {
-            System.out.println(debug.getNazevRaw());
+            if (debug!=null) {
+                System.out.println(debug.getNameRaw());
+            }
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -230,9 +232,9 @@ public class Mysql {
         Label debug = null;
         try {
             if (negate) {
-                sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNazevRaw()+"<>?";
+                sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNameRaw()+"<>?";
             } else {
-                sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNazevRaw()+"=?";
+                sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNameRaw()+"=?";
             }
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,criterium);
@@ -242,13 +244,13 @@ public class Mysql {
                 HashMap<Label,String> temp=new HashMap<>();                         
                 for (Label label : Label.values()) {
                     if (label.isInTable(tabulka)) {
-                        temp.put(label, rs.getString(label.getNazevRaw()));
+                        temp.put(label, rs.getString(label.getNameRaw()));
                     }
                 }
                 output.add(temp);
             }
             for (int i = 0; i < output.size(); i++) {
-                sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
+                sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+" = ?";
                 ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
                 ps.setString(1,output.get(i).get(SQLTables.login.getPrimaryKey()));
                 System.out.println("Sestavené SQL pro tabulku "+SQLTables.login.getTable()+" je: "+sql);
@@ -257,7 +259,7 @@ public class Mysql {
                     for (Label label : Label.values()) {
                         if (label.isInTable(SQLTables.login)) {
                             debug=label;
-                            String temp=rsLogin.getString(label.getNazevRaw());
+                            String temp=rsLogin.getString(label.getNameRaw());
                             output.get(i).put(label, temp);
                         }
                     }
@@ -265,7 +267,9 @@ public class Mysql {
             }
             
         } catch (SQLException ex) {
-            System.out.println(debug.getNazevRaw());
+            if (debug!=null) {
+                System.out.println(debug.getNameRaw());
+            }
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -282,11 +286,11 @@ public class Mysql {
         String sql = "UPDATE "+tabulka.getTable()+" SET ";
         for (Label label : user.keySet()) {
             if (label.isInTable(tabulka)&&!label.isPrimaryKey()) {
-                sql+=label.getNazevRaw()+" = ?, ";
+                sql+=label.getNameRaw()+" = ?, ";
             }
         }
         sql=sql.substring(0, sql.length()-2);                            //odtrhne poslední čárku a mezeru za ní
-        sql+=" WHERE "+tabulka.getPrimaryKey().getNazevRaw()+"= ?";
+        sql+=" WHERE "+tabulka.getPrimaryKey().getNameRaw()+"= ?";
         System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
         return sql;
     }
@@ -340,7 +344,7 @@ public class Mysql {
     public boolean updatePassword(String username, String password){
         int rs = 0;
         try {
-            String sql = "UPDATE "+SQLTables.login.getTable()+" SET "+Label.hashhesla.getNazevRaw()+"=? where "+SQLTables.login.getPrimaryKey().getNazevRaw()+"=?";
+            String sql = "UPDATE "+SQLTables.login.getTable()+" SET "+Label.password.getNameRaw()+"=? where "+SQLTables.login.getPrimaryKey().getNameRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,password);
             ps.setString(2,username);
@@ -364,7 +368,7 @@ public class Mysql {
     public boolean validateId(String id){
         try
         {
-            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+"=?";
+            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,id);
             ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
@@ -395,18 +399,18 @@ public class Mysql {
         HashMap<Label,String> output=new HashMap<>();                         
         Label debug = null;
         try {
-            String sql = "SELECT * FROM "+tabulka.getTable()+" where "+tabulka.getPrimaryKey().getNazevRaw()+" = ?";
+            String sql = "SELECT * FROM "+tabulka.getTable()+" where "+tabulka.getPrimaryKey().getNameRaw()+" = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 for (Label label : Label.values()) {
                     if (label.isInTable(tabulka)) {
-                        output.put(label, rs.getString(label.getNazevRaw()));
+                        output.put(label, rs.getString(label.getNameRaw()));
                     }
                 }
             }
-            sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
+            sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+" = ?";
             ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,output.get(SQLTables.login.getPrimaryKey()));
             ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
@@ -414,13 +418,13 @@ public class Mysql {
                 for (Label label : Label.values()) {
                     if (label.isInTable(SQLTables.login)) {
                         debug=label;
-                        output.put(label, rs.getString(label.getNazevRaw()));
+                        output.put(label, rs.getString(label.getNameRaw()));
                     }
                 }
             }
                 
         } catch (SQLException ex) {
-            System.out.println(debug.getNazevRaw());
+            System.out.println(debug.getNameRaw());
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -460,10 +464,10 @@ public class Mysql {
      */
     public SQLTables findTableWithApplicant(String username) throws IllegalArgumentException{
         SQLTables output=null;
-        SQLTables[] tabulky={uchazeci, uchazeci_spam, uchazeci_ipspam};
+        SQLTables[] tabulky={applicants, applicants_spam, applicants_ipspam};
         try {
             for (int i = 0; i < tabulky.length; i++) {
-                String sql = "SELECT * FROM "+tabulky[i].getTable()+" where "+tabulky[i].getPrimaryKey().getNazevRaw()+" = ?";
+                String sql = "SELECT * FROM "+tabulky[i].getTable()+" where "+tabulky[i].getPrimaryKey().getNameRaw()+" = ?";
                 ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
                 ps.setString(1,username);
                 ResultSet rs = ps.executeQuery();
@@ -481,14 +485,14 @@ public class Mysql {
     public HashMap<Label,String> showLoginInfoOfUser(String username){
         HashMap<Label,String> output = new HashMap<>();
        try {
-            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNazevRaw()+" = ?";
+            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+" = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 for (Label label : Label.values()) {
                     if (label.isInTable(SQLTables.login)) {
-                        output.put(label, rs.getString(label.getNazevRaw()));
+                        output.put(label, rs.getString(label.getNameRaw()));
                     }
                 }
             }
@@ -524,7 +528,7 @@ public class Mysql {
     public boolean deleteRow(String username, SQLTables table){
         int rs = 0;
         try {
-            String sql = "DELETE FROM "+table.getTable()+" where "+table.getPrimaryKey().getNazevRaw()+"=?";
+            String sql = "DELETE FROM "+table.getTable()+" where "+table.getPrimaryKey().getNameRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
@@ -557,8 +561,8 @@ public class Mysql {
         boolean output1=insertNewUserToLogin(input,2);
         boolean output2;
         try {
-            String sql = createInsertStatement(SQLTables.pedagogove);
-            output2 = executeInsertStatement(sql, input, SQLTables.pedagogove);
+            String sql = createInsertStatement(SQLTables.teachers);
+            output2 = executeInsertStatement(sql, input, SQLTables.teachers);
             output=output1&&output2;
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
@@ -587,8 +591,8 @@ public class Mysql {
         boolean output1=updateRights(input.get(SQLTables.login.getPrimaryKey()),3);
         boolean output2;
         try {
-            String sql = createInsertStatement(SQLTables.studenti);
-            output2 = executeInsertStatement(sql, input, SQLTables.studenti);
+            String sql = createInsertStatement(SQLTables.students);
+            output2 = executeInsertStatement(sql, input, SQLTables.students);
             output=output1&&output2;
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
@@ -600,7 +604,7 @@ public class Mysql {
     public boolean updateRights(String username, int rights){
         int rs = 0;
         try {
-            String sql = "UPDATE "+SQLTables.login.getTable()+" SET "+Label.rights.getNazevRaw()+"=? where "+SQLTables.login.getPrimaryKey().getNazevRaw()+"=?";
+            String sql = "UPDATE "+SQLTables.login.getTable()+" SET "+Label.rights.getNameRaw()+"=? where "+SQLTables.login.getPrimaryKey().getNameRaw()+"=?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setInt(1,rights);
             ps.setString(2,username);
@@ -620,7 +624,7 @@ public class Mysql {
         String sql = "INSERT INTO "+tabulka.getTable()+"(";
         for (Label label : Label.values()) {
             if (label.isInTable(tabulka)) {
-                sql+=label.getNazevRaw();
+                sql+=label.getNameRaw();
                 sql+=", ";
             }
         }

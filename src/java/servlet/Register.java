@@ -39,11 +39,11 @@ public class Register extends HttpServlet{
             UsernameGen generator=new UsernameGen(10);
             String username=generator.getValidatedId();
             String password=generator.getId();
-            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.jmeno.getNazevRaw()), request.getParameter(Label.prijmeni.getNazevRaw()), request.getParameter(Label.email.getNazevRaw()));
+            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.name.getNameRaw()), request.getParameter(Label.lastname.getNameRaw()), request.getParameter(Label.email.getNameRaw()));
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
             String ip=request.getRemoteAddr();//určuje se, do jaké tabulky se data uloží
-            SQLTables tabulka=SQLTables.uchazeci;//určuje se, do jaké tabulky se data uloží
+            SQLTables tabulka=SQLTables.applicants;//určuje se, do jaké tabulky se data uloží
             
             int size=0;                                                         //vyberu z tabulky stejnou ip adresu, pokud tam není, tak vytvořím nový řádek
             boolean rsIP=false;
@@ -55,45 +55,45 @@ public class Register extends HttpServlet{
             }
             else if(count>10){
                 spam=1;                                                         //pro stejnou ip je spam=1
-                tabulka=SQLTables.uchazeci_ipspam;
+                tabulka=SQLTables.applicants_ipspam;
                 rsIP = sql.increaseIPcount(ip);
             }
             else{
-                tabulka=SQLTables.uchazeci;
+                tabulka=SQLTables.applicants;
                 rsIP = sql.increaseIPcount(ip);
             }
             if (request.getParameter("stoletimaturity") != null) {//skryté tlačítko, formulář se uloží do průběžné tabulky a vytvoří se mu uživateslé jméno a heslo, ale ve finále kandidát na vymazání
                 spam=2;//pro vyplněné skryté políčko je spam=2
-                tabulka=SQLTables.uchazeci_spam;//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
+                tabulka=SQLTables.applicants_spam;//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
             }
             HashMap<Label, String> input=new HashMap<>();
-            input.put(Label.uzivatelskejmeno, username);
-            input.put(Label.hashhesla, password);
+            input.put(Label.userName, username);
+            input.put(Label.password, password);
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.uchazeci, SQLTables.login)&&!label.isAutomatickeVyplneni()) {
-                    if (label.isTelefonniCislo()){
-                        input.put(label, request.getParameter("predvolba"+label.getNazevRaw())+request.getParameter(label.getNazevRaw()));
+                if (label.isInTables(SQLTables.applicants, SQLTables.login)&&!label.isAutoFill()) {
+                    if (label.isPhonenumber()){
+                        input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
-                        input.put(label, request.getParameter(label.getNazevRaw()));
+                        input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
             }
             
-            input.put(Label.dennarozeni, getBirthDay(input.get(Label.rodnecislo)));//z rodného čísla, zde není zapotřebí kontrola, protože ta se provádí v RegisterChecku
-            input.put(Label.mesicnarozeni, getBirthMonth(input.get(Label.rodnecislo)));
-            input.put(Label.roknarozeni, getBirthYear(input.get(Label.rodnecislo)));
-            input.put(Label.pohlavi, getSexFromBirthNumber(input.get(Label.rodnecislo)));
+            input.put(Label.birthday, getBirthDay(input.get(Label.birthnumber)));//z rodného čísla, zde není zapotřebí kontrola, protože ta se provádí v RegisterChecku
+            input.put(Label.birthmonth, getBirthMonth(input.get(Label.birthnumber)));
+            input.put(Label.birthyear, getBirthYear(input.get(Label.birthnumber)));
+            input.put(Label.sex, getSexFromBirthNumber(input.get(Label.birthnumber)));
             
             for (Label label : Label.values()) {                                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
-                if (label.isInTable(SQLTables.uchazeci)&&label.getKopirovanoZ()!=null) {
+                if (label.isInTable(SQLTables.applicants)&&label.getCopiedFrom()!=null) {
                     if (input.get(label).equals("")) {
-                        input.put(label, input.get(label.getKopirovanoZ()));
+                        input.put(label, input.get(label.getCopiedFrom()));
                     }
                 }
             }
             
             for (Label label : Label.values()) {                                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
-                if (label.isInTable(SQLTables.uchazeci)&&!label.isAutomatickeVyplneni()) {
+                if (label.isInTable(SQLTables.applicants)&&!label.isAutoFill()) {
                     if (input.get(label).equals("")) {
                         input.put(label, "nevyplněno");
                     }
@@ -102,7 +102,7 @@ public class Register extends HttpServlet{
             
             boolean rsWrite=sql.insertNewApplicant(tabulka, input);
             if (rsWrite) {
-                mail.sendGmailToApplicant(request.getParameter(Label.pohlavi.getNazevRaw()));//aby se email neodeslal, pokud se nezdaří registrace
+                mail.sendGmailToApplicant(request.getParameter(Label.sex.getNameRaw()));//aby se email neodeslal, pokud se nezdaří registrace
             }
             System.out.println("rsWrite:"+rsWrite);
             System.out.println("rsIP:"+rsIP);

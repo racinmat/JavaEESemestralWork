@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="enums.Rights"%>
-<%@page import="enums.FormularovaSkupina"%>
+<%@page import="enums.FormGroup"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="enums.SQLTables"%>
 <%@page import="source.Mysql"%>
@@ -61,19 +61,19 @@
                             info=sql.showLoginInfoOfUser(username);
                         }
                         for(Label label : info.keySet()) {
-                            if(FormularovaSkupina.kontakt.getFirst(info)!=null&&FormularovaSkupina.kontakt.getFirst(info).equals(label)){   //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                            if(FormGroup.contact.getFirst(info)!=null&&FormGroup.contact.getFirst(info).equals(label)){   //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
                     %>
                     <fieldset>
-                        <legend><%= FormularovaSkupina.kontakt.getNazev() %></legend>
+                        <legend><%= FormGroup.contact.getName() %></legend>
                     <%
                             }
                     %>
                     <div>
-                        <span id="listOfApplicantsLabel"><%= label.getNazevProUzivatele() %></span>
+                        <span id="listOfApplicantsLabel"><%= label.getNameForUsers() %></span>
                         <span id="listOfApplicants"><%= info.get(label) %></span>
                     </div>
                     <%
-                            if(FormularovaSkupina.kontakt.getLast(info)!=null&&FormularovaSkupina.kontakt.getLast(info).equals(label)){     //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                            if(FormGroup.contact.getLast(info)!=null&&FormGroup.contact.getLast(info).equals(label)){     //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
                     %>
                     </fieldset>
                     <%
@@ -88,11 +88,11 @@
                         <form action="ChangeDataCheck" method="POST" id="registerForm">
                             <%
                                 for(Label label : Label.values()){
-                                    if (label.isZmenaHesla()) {
+                                    if (label.isPasswordChange()) {
                             %>
                             <div>
-                                <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%=label.getNazevProUchazece() %></label>
-                                <input id="<%= label.getNazevRaw() %>" type="password" name="<%= label.getNazevRaw() %>">
+                                <label for="<%= label.getNameRaw() %>"<%= empty.get(label) %>><%=label.getNameForApplicants() %></label>
+                                <input id="<%= label.getNameRaw() %>" type="password" name="<%= label.getNameRaw() %>">
                             </div>
                             <%
                                     }
@@ -106,11 +106,11 @@
                     <form action="ChangeDataCheck" method="POST" id="registerForm">
                 <%
                     for(Label label : Label.values()){
-                        if(label.isMenitelneUzivatelem()&&label.isInTable(security.getUser().getRights().getTable())){ 
+                        if(label.isChangableByUser()&&label.isInTable(security.getUser().getRights().getTable())){ 
                 %>
                         <div>
-                            <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%= label.getNazevProUzivatele() %></label>
-                            <input id="<%= label.getNazevRaw() %>" type="text" name="<%= label.getNazevRaw() %>">
+                            <label for="<%= label.getNameRaw() %>"<%= empty.get(label) %>><%= label.getNameForUsers() %></label>
+                            <input id="<%= label.getNameRaw() %>" type="text" name="<%= label.getNameRaw() %>">
                         </div>
                 <%
                         }

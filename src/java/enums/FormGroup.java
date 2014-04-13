@@ -14,30 +14,30 @@ import java.util.Stack;
  *
  * @author Azathoth
  */
-public enum FormularovaSkupina {
-    nacionale(      "nacionále",        new Label[]{Label.jmeno, Label.prijmeni, Label.studijniprogram, Label.studijniobor, Label.statniprislusnost, Label.rodinnystav}),
-    kontakt(        "kontakt",          new Label[]{Label.email, Label.mobilnitelefon}),
-    narozeni(       "narození",         new Label[]{Label.mistonarozeni, Label.okresnarozeni, Label.rodnecislo, Label.cisloOP, Label.cislopasu}),
-    trvalebydliste( "trvalé bydliště",  new Label[]{Label.ulice, Label.cislodomu, Label.castobce, Label.obec, Label.okres, Label.psc, Label.stat, Label.telefon, Label.posta}),
-    kontaktniudaje( "kontaktní údaje",  new Label[]{Label.kontaktniadresacastobce, Label.kontaktniadresacislodomu, Label.kontaktniadresaobec, Label.kontaktniadresaokres, Label.kontaktniadresaposta, Label.kontaktniadresapsc, Label.kontaktniadresastat, Label.kontaktniadresatelefon, Label.kontaktniadresaulice}),
-    stredniskola(   "střední škola",    new Label[]{Label.nazevstredniskoly, Label.adresastredniskoly, Label.oborstredniskoly, Label.jkov, Label.kkov, Label.izo, Label.rokmaturity}),
-    zmenaHesla(     "změna hesla",      new Label[]{Label.hashhesla, Label.noveheslo, Label.noveheslokonrola}),
+public enum FormGroup {
+    personalData(       "nacionále",        new Label[]{Label.name, Label.lastname, Label.studyProgram, Label.branchOfStudy, Label.citizenship, Label.maritalStatus}),
+    contact(            "kontakt",          new Label[]{Label.email, Label.cellphone}),
+    birth(              "narození",         new Label[]{Label.birthplace, Label.birthcouty, Label.birthnumber, Label.ID, Label.passport}),
+    permanentAddress(   "trvalé bydliště",  new Label[]{Label.street, Label.houseNumber, Label.municipalityPart, Label.municipality, Label.couty, Label.zip, Label.country, Label.phone, Label.post}),
+    contactAddress(     "kontaktní údaje",  new Label[]{Label.contactmunicipalityPart, Label.contacthouseNumber, Label.contactmunicipality, Label.contactcouty, Label.contactpost, Label.contactzip, Label.contactcountry, Label.contactphone, Label.contactstreet}),
+    highSchool(         "střední škola",    new Label[]{Label.nameofHighSchool, Label.adresaofHighSchool, Label.oborofHighSchool, Label.jkov, Label.kkov, Label.izo, Label.yearmaturity}),
+    passwordChange(     "změna hesla",      new Label[]{Label.password, Label.newpassword, Label.newpasswordcheck}),
     ;
     
-    private String nazev;
-    private Label[] obsah;
+    private String name;
+    private Label[] content;
 
-    private FormularovaSkupina(String nazev, Label[] obsah) {
-        this.nazev = nazev;
-        this.obsah = obsah;
+    private FormGroup(String name, Label[] content) {
+        this.name = name;
+        this.content = content;
     }
 
-    public String getNazev() {
-        return nazev;
+    public String getName() {
+        return name;
     }
 
-    public Label[] getObsah() {
-        return obsah;
+    public Label[] getContent() {
+        return content;
     }
     
     public Label getFirst(HashMap<Label, String> input){
@@ -90,8 +90,8 @@ public enum FormularovaSkupina {
             throw new IllegalArgumentException("You cannot use null as argument.");
         }
         boolean output=false;
-        for (int i = 0; i < this.obsah.length; i++) {
-            if (label.equals(this.obsah[i])) {
+        for (int i = 0; i < this.content.length; i++) {
+            if (label.equals(this.content[i])) {
                 output=true;
             }
         }

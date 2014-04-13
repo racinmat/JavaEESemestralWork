@@ -38,20 +38,20 @@ public class RegisterCheck extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
-            int length=Label.getNumberOfColumnsInTable(SQLTables.uchazeci);
+            int length=Label.getNumberOfColumnsInTable(SQLTables.applicants);
             String notFilledStyle=" class=\"notFilled\"";
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.uchazeci, SQLTables.login)&&!label.isAutomatickeVyplneni()) {
-                    if (label.isTelefonniCislo()){
-                        input.put(label, request.getParameter("predvolba"+label.getNazevRaw())+request.getParameter(label.getNazevRaw()));
+                if (label.isInTables(SQLTables.applicants, SQLTables.login)&&!label.isAutoFill()) {
+                    if (label.isPhonenumber()){
+                        input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
-                        input.put(label, request.getParameter(label.getNazevRaw()));
+                        input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.uchazeci, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTables.applicants, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
             input=stripPredvolba(input);

@@ -50,20 +50,20 @@ public class AddStudentCheck extends HttpServlet {
             boolean error = false;
             for (LinkedHashMap<Label, String> map : seznamStudentu) {
                 HashMap<Label, String> temp=new HashMap<>();
-                temp.put(Label.uzivatelskejmeno, map.get(Label.uzivatelskejmeno));
+                temp.put(Label.userName, map.get(Label.userName));
                 input.add(temp);
             }
             for (int i = 0; i < input.size(); i++) {
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTables.studenti)&&!label.isAutomatickeVyplneni()) {
-                        if (label.isTelefonniCislo()){
-                            input.get(i).put(label, request.getParameter("predvolba"+label.getNazevRaw()+"+"+i)+request.getParameter(label.getNazevRaw()+"+"+i));
+                    if (label.isInTable(SQLTables.students)&&!label.isAutoFill()) {
+                        if (label.isPhonenumber()){
+                            input.get(i).put(label, request.getParameter("predvolba"+label.getNameRaw()+"+"+i)+request.getParameter(label.getNameRaw()+"+"+i));
                         } else {
-                            input.get(i).put(label, request.getParameter(label.getNazevRaw()+"+"+i));
+                            input.get(i).put(label, request.getParameter(label.getNameRaw()+"+"+i));
                         }
                     }
                 }
-                FormValidation form=validateForm(input.get(i), SQLTables.studenti, notFilledStyle);
+                FormValidation form=validateForm(input.get(i), SQLTables.students, notFilledStyle);
                 notFilled.add(form.getNotFilled());
                 if (form.isError()) {       //aby nenastalo přemátání true falsem v případě, kdy např. předposlední bude špatně a poslední správně
                     error=form.isError();

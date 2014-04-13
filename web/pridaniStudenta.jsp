@@ -38,7 +38,7 @@
             content.get(i).put(label, listOfStudents.get(i).get(label));
         }
         for (Label label : Label.values()) {
-            if (label.isStudenti()&&!label.isPrimaryKey()) {
+            if (label.isStudents()&&!label.isPrimaryKey()) {
                 content.get(i).put(label, "");
             }
         }
@@ -80,7 +80,7 @@
                             %>
                             
                                     <span id="addStudentsLabel">
-                                        <%= label.getNazevProUzivatele() %>
+                                        <%= label.getNameForUsers() %>
                                     </span>
                             <%
                                 }
@@ -101,10 +101,10 @@
                                         </span>
                             <%
                                     }
-                                    else if(label.isStudenti()&&!label.isAutomatickeVyplneni()){
+                                    else if(label.isStudents()&&!label.isAutoFill()){
                             %>
                             <span id="addStudents">    
-                                <input type="text" name="<%= label.getNazevRaw()+"+"+i %>" value="<%= content.get(i).get(label) %>">
+                                <input type="text" name="<%= label.getNameRaw()+"+"+i %>" value="<%= content.get(i).get(label) %>">
                             </span>
                             
                             <%

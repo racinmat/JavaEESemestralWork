@@ -43,15 +43,15 @@ public class AddPedagogCheck extends HttpServlet {
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.pedagogove, SQLTables.login)&&!label.isAutomatickeVyplneni()) {
-                    if (label.isTelefonniCislo()){
-                        input.put(label, request.getParameter("predvolba"+label.getNazevRaw())+request.getParameter(label.getNazevRaw()));
+                if (label.isInTables(SQLTables.teachers, SQLTables.login)&&!label.isAutoFill()) {
+                    if (label.isPhonenumber()){
+                        input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
-                        input.put(label, request.getParameter(label.getNazevRaw()));
+                        input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.pedagogove, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTables.teachers, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
             input=stripPredvolba(input);

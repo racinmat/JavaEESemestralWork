@@ -6,7 +6,7 @@
 
 <%@page import="enums.SQLTables"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="enums.FormularovaSkupina"%>
+<%@page import="enums.FormGroup"%>
 <%@page import="java.util.HashMap"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
@@ -24,7 +24,7 @@
     }
     HashMap<Label, String> content=new HashMap<Label, String>();
     for (Label label : Label.values()) {
-        if((!label.isAutomatickeVyplneni())&&label.isInTables(SQLTables.uchazeci, SQLTables.login)){
+        if((!label.isAutoFill())&&label.isInTables(SQLTables.applicants, SQLTables.login)){
             content.put(label, "");
         }
     }
@@ -63,33 +63,33 @@
                 </div>
                 <%
                     ArrayList<Label> list=new ArrayList<Label>();               //kvůli fieldsetu, aby se bral první pouze z labelů, které projdou ifem
-                    FormularovaSkupina[] skupina=new FormularovaSkupina[]{FormularovaSkupina.nacionale, FormularovaSkupina.narozeni, FormularovaSkupina.kontakt, FormularovaSkupina.trvalebydliste, FormularovaSkupina.kontaktniudaje, FormularovaSkupina.stredniskola};
+                    FormGroup[] skupina=new FormGroup[]{FormGroup.personalData, FormGroup.birth, FormGroup.contact, FormGroup.permanentAddress, FormGroup.contactAddress, FormGroup.highSchool};
                     for(Label label : Label.values()){
-                        if((!label.isAutomatickeVyplneni())&&label.isInTables(SQLTables.uchazeci, SQLTables.login)){
+                        if((!label.isAutoFill())&&label.isInTables(SQLTables.applicants, SQLTables.login)){
                             list.add(label);
                         }
                     }
                     for(Label label : Label.values()){
-                        if((!label.isAutomatickeVyplneni())&&label.isInTables(SQLTables.uchazeci, SQLTables.login)){
+                        if((!label.isAutoFill())&&label.isInTables(SQLTables.applicants, SQLTables.login)){
                             for (int i = 0; i < skupina.length; i++) {
                                 if(skupina[i].getFirst(list).equals(label)){
                 %>
                             <fieldset>
-                                <legend><%= skupina[i].getNazev() %></legend>
+                                <legend><%= skupina[i].getName() %></legend>
                 <%
                                 }
                             }
                 %>
                        <div>
-                            <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%= label.getNazevProUzivatele() %></label>
+                            <label for="<%= label.getNameRaw() %>"<%= empty.get(label) %>><%= label.getNameForUsers() %></label>
                 <%
-                            if(label.isTelefonniCislo()){
+                            if(label.isPhonenumber()){
                 %>
-                           <input class="predvolba" type="text" name="<%= "predvolba"+label.getNazevRaw() %>" value="+420">
+                           <input class="predvolba" type="text" name="<%= "predvolba"+label.getNameRaw() %>" value="+420">
                 <%
                             }
                 %>
-                            <input id="<%= label.getNazevRaw() %>" type="text" name="<%= label.getNazevRaw() %>" value="<%= content.get(label) %>">
+                            <input id="<%= label.getNameRaw() %>" type="text" name="<%= label.getNameRaw() %>" value="<%= content.get(label) %>">
                         </div>
                 <%
                             for (int i = 0; i < skupina.length; i++) {

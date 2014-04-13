@@ -57,18 +57,18 @@
 
                         <%
                             for (Label label : Label.values()) {
-                                if(label.isInTables(SQLTables.login, SQLTables.administrativa)&&!label.isAutomatickeVyplneni()){
+                                if(label.isInTables(SQLTables.login, SQLTables.administrativa)&&!label.isAutoFill()){
                         %>
                             <div>    
-                                <label for="<%= label.getNazevRaw() %>"<%= empty.get(label) %>><%= label.getNazevProUzivatele() %>:</label>
+                                <label for="<%= label.getNameRaw() %>"<%= empty.get(label) %>><%= label.getNameForUsers() %>:</label>
                         <%
-                            if(label.isTelefonniCislo()){
+                            if(label.isPhonenumber()){
                         %>
-                           <input class="predvolba" type="text" name="<%= "predvolba"+label.getNazevRaw() %>" value="+420">
+                           <input class="predvolba" type="text" name="<%= "predvolba"+label.getNameRaw() %>" value="+420">
                         <%
                             }
                         %>
-                                <input id="<%= label.getNazevRaw() %>" type="text" name="<%= label.getNazevRaw() %>" value="<%= content.get(label) %>">
+                                <input id="<%= label.getNameRaw() %>" type="text" name="<%= label.getNameRaw() %>" value="<%= content.get(label) %>">
                             </div>
                         <%
                                 }

@@ -44,11 +44,11 @@ public class AddAdministrativaCheck extends HttpServlet{
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutomatickeVyplneni()) {
-                    if (label.isTelefonniCislo()){
-                        input.put(label, request.getParameter("predvolba"+label.getNazevRaw())+request.getParameter(label.getNazevRaw()));
+                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutoFill()) {
+                    if (label.isPhonenumber()){
+                        input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
-                        input.put(label, request.getParameter(label.getNazevRaw()));
+                        input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
             }

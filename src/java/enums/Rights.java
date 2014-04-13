@@ -12,9 +12,9 @@ package enums;
  */
 public enum Rights {//rightsValue   rightsString    initialRedirect         table
     notLogged(          5,  "nepřihlášený",         "index.jsp",            SQLTables.nullTable         ),
-    applicant(          4,  "uchazeč",              "proPrihlasene.jsp",    SQLTables.uchazeci          ),
-    student(            3,  "student",              "proPrihlasene.jsp",    SQLTables.studenti          ),
-    pedagog(            2,  "pedagog",              "proPedagogy.jsp",      SQLTables.pedagogove        ),
+    applicant(          4,  "uchazeč",              "proPrihlasene.jsp",    SQLTables.applicants          ),
+    student(            3,  "student",              "proPrihlasene.jsp",    SQLTables.students          ),
+    pedagog(            2,  "pedagog",              "proPedagogy.jsp",      SQLTables.teachers        ),
     administrativa(     1,  "administrativa",       "proAdministrativu.jsp",SQLTables.administrativa    ),
     mainAdmin(          0,  "hlavní administrátor", "index.jsp",            SQLTables.login             ),
     ;

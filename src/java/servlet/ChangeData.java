@@ -65,8 +65,8 @@ public class ChangeData extends HttpServlet {
                 SQLTables tabulka=sql.findTableWithApplicant(username);         //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
                 HashMap<Label, String> noveudaje=new HashMap<>();
                 for (Label label : Label.values()) {
-                    if (label.isInTable(table)&&label.isMenitelneUzivatelem()) {
-                        noveudaje.put(label, request.getParameter(label.getNazevRaw()));
+                    if (label.isInTable(table)&&label.isChangableByUser()) {
+                        noveudaje.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
                 

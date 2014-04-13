@@ -8,7 +8,7 @@
 <%@page import="java.util.logging.Level"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="enums.SQLTables"%>
-<%@page import="enums.StavPrihlasky"%>
+<%@page import="enums.ApplicationState"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="enums.Rights"%>
@@ -44,13 +44,13 @@ try{
                         ArrayList<HashMap<Label, String>> uchazec=(ArrayList<HashMap<Label, String>>) session.getAttribute("allApplicants");
                         boolean spam=(Boolean) session.getAttribute("spam");
                         LinkedHashMap<Label, String> checked = new LinkedHashMap<Label, String>();      //kvůli zachování pořadí při vkládání hodnot
-                        ArrayList<HashMap<StavPrihlasky, String>> stavPrihlaskySelected=new ArrayList<HashMap<StavPrihlasky, String>>();              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
+                        ArrayList<HashMap<ApplicationState, String>> stavPrihlaskySelected=new ArrayList<HashMap<ApplicationState, String>>();              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
                         String selected="selected=\"selected\"";
-                        if(uchazec.size()>0&&uchazec.get(0).containsKey(Label.stavprihlasky)){
+                        if(uchazec.size()>0&&uchazec.get(0).containsKey(Label.applicationstate)){
                             for (int i = 0; i < uchazec.size(); i++) {
-                                stavPrihlaskySelected.add(new HashMap<StavPrihlasky, String>());
-                                for (StavPrihlasky stav : StavPrihlasky.values()) {
-                                    if (uchazec.get(i).get(Label.stavprihlasky).equals(stav.getNazevRaw())) {
+                                stavPrihlaskySelected.add(new HashMap<ApplicationState, String>());
+                                for (ApplicationState stav : ApplicationState.values()) {
+                                    if (uchazec.get(i).get(Label.applicationstate).equals(stav.getNameRaw())) {
                                         stavPrihlaskySelected.get(i).put(stav, selected);
                                     } else {
                                         stavPrihlaskySelected.get(i).put(stav, "");
@@ -59,7 +59,7 @@ try{
                             }
                         }
                         for (Label label : Label.values()) {
-                            if((label.isVypisProAdministrativu()&&label.isInTables(SQLTables.login, tabulka))||label.equals(Label.vsechnySloupce)){
+                            if((label.isShowToAdministrativa()&&label.isInTables(SQLTables.login, tabulka))||label.equals(Label.allColumns)){
                                 checked.put(label, "");
                             }
                         }
@@ -69,8 +69,8 @@ try{
                         for (Label label : checked.keySet()) {
                             %>
                             <span style="checkBoxForm">
-                                <label for="<%= label.getNazevRaw() %>"><%= label.getNazevProUzivatele() %></label>
-                                <input type="checkbox" id="<%= label.getNazevRaw() %>" name="<%= label.getNazevRaw() %>" value="checked" <%= checked.get(label) %>>
+                                <label for="<%= label.getNameRaw() %>"><%= label.getNameForUsers() %></label>
+                                <input type="checkbox" id="<%= label.getNameRaw() %>" name="<%= label.getNameRaw() %>" value="checked" <%= checked.get(label) %>>
                             <br/>
                             </span>
                             <%
@@ -83,11 +83,11 @@ try{
                     <div>
                     <%  
                         for (Label label : checked.keySet()) {
-                            if(label.isMenitelneAdministrativou()){
+                            if(label.isChangableByAdministrativa()){
                                 if(checked.get(label).equals("checked")){
                     %>
                                 <span id="listOfApplicantsLabel">
-                                    <%= label.getNazevProUzivatele() %>
+                                    <%= label.getNameForUsers() %>
                                 </span>
                         <%
                                 }
@@ -99,7 +99,7 @@ try{
                             přesunout ze spamu mezi běžné uchazeče
                         </span>
                     <%
-                        } else if(tabulka.equals(SQLTables.uchazeci)){
+                        } else if(tabulka.equals(SQLTables.applicants)){
                     %>
                         <span id="listOfApplicantsLabel">
                             vytvořit studenta
@@ -118,16 +118,16 @@ try{
                             <div>
                         <%  
                             for (Label label : Label.values()) {
-                                if(label.isVypisProAdministrativu()&&label.isInTables(SQLTables.login, tabulka)){
+                                if(label.isShowToAdministrativa()&&label.isInTables(SQLTables.login, tabulka)){
                                     if(checked.get(label)!=null&&checked.get(label).equals("checked")){
-                                        if(label.equals(Label.stavprihlasky)) {                                 //stav přihlášky se vypisuje jako select
+                                        if(label.equals(Label.applicationstate)) {                                 //stav přihlášky se vypisuje jako select
                         %>
                                     <span id="listOfApplicants">
-                                        <select name="<%= label.getNazevRaw()+"+"+i %>">
+                                        <select name="<%= label.getNameRaw()+"+"+i %>">
                                         <%
-                                            for (StavPrihlasky stav : StavPrihlasky.values()) {
+                                            for (ApplicationState stav : ApplicationState.values()) {
                                         %>
-                                        <option value="<%= stav.getNazevRaw() %>" <%= stavPrihlaskySelected.get(i).get(stav) %>><%= stav.getNazev() %></option>
+                                        <option value="<%= stav.getNameRaw() %>" <%= stavPrihlaskySelected.get(i).get(stav) %>><%= stav.getName() %></option>
                                         <%
                                             } 
                                         %>
@@ -138,7 +138,7 @@ try{
                                         else {
                         %>
                                     <span id="listOfApplicants">
-                                        <input type="text" name="<%= label.getNazevRaw()+"+"+i %>" value="<%= uchazec.get(i).get(label) %>">
+                                        <input type="text" name="<%= label.getNameRaw()+"+"+i %>" value="<%= uchazec.get(i).get(label) %>">
                                     </span>
                         <%
                                         }
@@ -151,7 +151,7 @@ try{
                                     <input type="checkbox" name="<%= "transfer"+"+"+i %>" value="checked">
                                 </span>
                             <%
-                            } else if(tabulka.equals(SQLTables.uchazeci)){
+                            } else if(tabulka.equals(SQLTables.applicants)){
                             %>
                                 <span id="listOfApplicantsLabel">
                                     <input type="checkbox" name="<%= "createstudent"+"+"+i %>" value="checked">

@@ -117,7 +117,7 @@ public class FormValidation {
     
     public static HashMap<Label, String> stripPredvolba(HashMap<Label, String> input){
         for (Label label : input.keySet()) {
-            if (label.isTelefonniCislo()) {
+            if (label.isPhonenumber()) {
                 input.put(label, stripPredvolba(input.get(label)));
             }
         }
@@ -150,7 +150,7 @@ public class FormValidation {
     public static FormValidation validateForm(HashMap<Label, String> input, SQLTables table, String notFilledStyle){
         HashMap<Label, String> notFilled = new HashMap<>();
         for (Label label : Label.values()) {
-            if (label.isInTable(table)&&!label.isAutomatickeVyplneni()) {
+            if (label.isInTable(table)&&!label.isAutoFill()) {
                 notFilled.put(label, "");
             }
         }
@@ -159,7 +159,7 @@ public class FormValidation {
             if (LabelCategory.contains(label)) {
                 boolean empty=false;
                 LabelCategory temp=LabelCategory.containing(label);
-                Label[] tempArray=temp.getSeznam();
+                Label[] tempArray=temp.getList();
                 for (Label label2 : tempArray) {                                //projde všechna políčka, z nichž je jedno povinné
                     if (!input.get(label2).equals("")) {
                         empty=true;
@@ -167,41 +167,41 @@ public class FormValidation {
                     }
                 }
             }
-            if (LabelCategory.contains(label)||label.isPovinne()||!input.get(label).equals("")) {          //kontrola povinných a nepovinných, vyplněných položek
-                if (label.isCiselne()) {
+            if (LabelCategory.contains(label)||label.isObligatory()||!input.get(label).equals("")) {          //kontrola povinných a nepovinných, vyplněných položek
+                if (label.isNumber()) {
                     if (notNumeric(input.get(label))) {                         //kontrola číslených položek
                         notFilled.put(label, notFilledStyle);                   
                         error=true;
                     }
                 }
-                if(label.isEmailovaadresa()){
+                if(label.isEmailAddress()){
                     if (notValidEmail(input.get(label))) {
                         notFilled.put(label, notFilledStyle);
                         error=true;
                     }
                 }
-                if (label.isTelefonniCislo()) {
-                    if (!(!label.isPovinne()&&stripPredvolba(input.get(label)).equals(""))) {   //ošetření bugu s přidáváním předvolby u nepovinných políček
+                if (label.isPhonenumber()) {
+                    if (!(!label.isObligatory()&&stripPredvolba(input.get(label)).equals(""))) {   //ošetření bugu s přidáváním předvolby u nepovinných políček
                         if (notValidPhoneNumber(input.get(label))) {
                             notFilled.put(label, notFilledStyle);
                             error=true;
                         }
                     }
                 }
-                if (label.isRodneCislo()) {
+                if (label.isbirthNumber()) {
                     if (notValidBirthNumber(input.get(label))) {
                         notFilled.put(label, notFilledStyle);
                         error=true;
                     }
                 }
-                if (label.isPovinne()&&input.get(label).equals("")) {           //test povinných políček
+                if (label.isObligatory()&&input.get(label).equals("")) {           //test povinných políček
                     notFilled.put(label, notFilledStyle);
                     error=true;
                 }
             }
-            if (label.getKopirovanoZ()!=null) {                                 //pro kontaktní údaje, které se kopírují z údajů o trvalém bydlišti
+            if (label.getCopiedFrom()!=null) {                                 //pro kontaktní údaje, které se kopírují z údajů o trvalém bydlišti
                 if (input.get(label).equals("")) {
-                    input.put(label, input.get(label.getKopirovanoZ()));
+                    input.put(label, input.get(label.getCopiedFrom()));
                 }
             }
         }

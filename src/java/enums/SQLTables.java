@@ -11,14 +11,14 @@ package enums;
  * @author Azathoth
  */
 public enum SQLTables {//název tabulky      číslo používané v jsp   primární klíč
-    nullTable(          "",                 "",                     Label.uzivatelskejmeno         ),//kvůli nepřihlášenému uživateli
-    uchazeci(           "uchazeci",         "0",                    Label.uzivatelskejmeno         ),
-    uchazeci_spam(      "uchazeci_spam",    "1",                    Label.uzivatelskejmeno         ),
-    uchazeci_ipspam(    "uchazeci_ipspam",  "2",                    Label.uzivatelskejmeno         ),
-    studenti(           "studenti",         "3",                    Label.uzivatelskejmeno         ),
-    login(              "login",            "4",                    Label.uzivatelskejmeno         ),
-    pedagogove(         "pedagogove",       "5",                    Label.uzivatelskejmeno         ),
-    administrativa(     "administrativa",   "6",                    Label.uzivatelskejmeno         ),
+    nullTable(          "",                 "",                     Label.userName         ),//kvůli nepřihlášenému uživateli
+    applicants(         "uchazeci",         "0",                    Label.userName         ),
+    applicants_spam(    "uchazeci_spam",    "1",                    Label.userName         ),
+    applicants_ipspam(  "uchazeci_ipspam",  "2",                    Label.userName         ),
+    students(           "studenti",         "3",                    Label.userName         ),
+    login(              "login",            "4",                    Label.userName         ),
+    teachers(           "pedagogove",       "5",                    Label.userName         ),
+    administrativa(     "administrativa",   "6",                    Label.userName         ),
     ;
     
     private String table;

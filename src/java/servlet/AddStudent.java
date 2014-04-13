@@ -60,13 +60,13 @@ public class AddStudent extends HttpServlet {
                 listOfStudents=(ArrayList<HashMap<Label,String>>) session.getAttribute("newstudent");
             }
             for (int i = 0; i < seznamStudentu.size(); i++) {
-                input.put(Label.uzivatelskejmeno, listOfStudents.get(i).get(Label.uzivatelskejmeno));
+                input.put(Label.userName, listOfStudents.get(i).get(Label.userName));
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTables.studenti)&&!label.isAutomatickeVyplneni()) {
-                        if (label.isTelefonniCislo()){
-                            input.put(label, request.getParameter("predvolba"+label.getNazevRaw()+"+"+i)+request.getParameter(label.getNazevRaw()+"+"+i));
+                    if (label.isInTable(SQLTables.students)&&!label.isAutoFill()) {
+                        if (label.isPhonenumber()){
+                            input.put(label, request.getParameter("predvolba"+label.getNameRaw()+"+"+i)+request.getParameter(label.getNameRaw()+"+"+i));
                         } else {
-                            input.put(label, request.getParameter(label.getNazevRaw()+"+"+i));
+                            input.put(label, request.getParameter(label.getNameRaw()+"+"+i));
                         }
                     }
                 }

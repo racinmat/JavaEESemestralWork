@@ -11,22 +11,22 @@ package enums;
  * @author Azathoth
  */
 public enum LabelCategory {
-    cisloId(new Label[]{Label.cisloOP, Label.cislopasu}),
+    iDnumber(new Label[]{Label.ID, Label.passport}),
     ;
     
-    private Label[] seznam;                                                     //seznam musí být synchronizovaný se sloupcem v enumu Label
+    private Label[] list;                                                     //list musí být synchronizovaný se sloupcem v enumu Label
 
-    private LabelCategory(Label[] seznam)  {
-        this.seznam = seznam;
+    private LabelCategory(Label[] list)  {
+        this.list = list;
     }
 
-    public Label[] getSeznam() {
-        return seznam;
+    public Label[] getList() {
+        return list;
     }
     
     public static boolean contains(Label label){
         for (LabelCategory labelCategory : LabelCategory.values()) {
-            for (Label label1 : labelCategory.seznam) {
+            for (Label label1 : labelCategory.list) {
                 if (label1.equals(label)) {
                     return true;
                 }
@@ -37,12 +37,12 @@ public enum LabelCategory {
     
     public static LabelCategory containing(Label label){
         for (LabelCategory labelCategory : LabelCategory.values()) {
-            for (Label label1 : labelCategory.seznam) {
+            for (Label label1 : labelCategory.list) {
                 if (label1.equals(label)) {
                     return labelCategory;
                 }
             }
         }
-        throw new IllegalArgumentException("No LabelCategory found for "+label.getNazevRaw());
+        throw new IllegalArgumentException("No LabelCategory found for "+label.getNameRaw());
     }
 }

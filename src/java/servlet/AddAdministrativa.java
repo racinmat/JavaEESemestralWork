@@ -47,20 +47,20 @@ public class AddAdministrativa extends HttpServlet {
             Mysql sql=new Mysql();
             String username=generator.getValidatedId();
             String password=generator.getId();
-            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.jmeno.getNazevRaw()), request.getParameter(Label.prijmeni.getNazevRaw()), request.getParameter(Label.email.getNazevRaw()));
+            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.name.getNameRaw()), request.getParameter(Label.lastname.getNameRaw()), request.getParameter(Label.email.getNameRaw()));
             mail.sendGmailToRegisteredUser();
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
             
             HashMap<Label, String> input=new HashMap<>();
-            input.put(Label.uzivatelskejmeno, username);
-            input.put(Label.hashhesla, password);
+            input.put(Label.userName, username);
+            input.put(Label.password, password);
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutomatickeVyplneni()) {
-                    if (label.isTelefonniCislo()){
-                        input.put(label, request.getParameter("predvolba"+label.getNazevRaw())+request.getParameter(label.getNazevRaw()));
+                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutoFill()) {
+                    if (label.isPhonenumber()){
+                        input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
-                        input.put(label, request.getParameter(label.getNazevRaw()));
+                        input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
             }

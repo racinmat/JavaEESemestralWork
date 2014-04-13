@@ -52,7 +52,7 @@ public class ChangeDataCheck extends HttpServlet {
             String notFilledStyle=" class=\"notFilled\"";
             SQLTables table=user.getRights().getTable();
             for (Label label : Label.values()) {
-                if (label.isMenitelneUzivatelem()) {
+                if (label.isChangableByUser()) {
                     notFilled.put(label, "");
                 }
             }
@@ -60,34 +60,34 @@ public class ChangeDataCheck extends HttpServlet {
             if (request.getParameter("zmenitheslo")!=null) {                    //pro změnu hesla
                 HashMap<Label, String> heslo = new HashMap<>();
                 for (Label label : Label.values()) {
-                    if (label.isZmenaHesla()) {
-                        heslo.put(label, request.getParameter(label.getNazevRaw()));
+                    if (label.isPasswordChange()) {
+                        heslo.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                heslo.put(Label.hashhesla, crypt.encrypt(heslo.get(Label.hashhesla), username));
-                LoggedUser passwordcheck=sql.login(username, heslo.get(Label.hashhesla));
+                heslo.put(Label.password, crypt.encrypt(heslo.get(Label.password), username));
+                LoggedUser passwordcheck=sql.login(username, heslo.get(Label.password));
                 
                 if (!passwordcheck.getLogged().equals("success")) {
-                    notFilled.put(Label.hashhesla, notFilledStyle);
+                    notFilled.put(Label.password, notFilledStyle);
                     error=true;
                 }
-                if (heslo.get(Label.noveheslo).equals("")) {
-                    notFilled.put(Label.noveheslo, notFilledStyle);
+                if (heslo.get(Label.newpassword).equals("")) {
+                    notFilled.put(Label.newpassword, notFilledStyle);
                     error=true;
                 }
-                if (!heslo.get(Label.noveheslo).equals(heslo.get(Label.noveheslokonrola))||heslo.get(Label.noveheslokonrola).equals("")) {
-                    notFilled.put(Label.noveheslokonrola, notFilledStyle);
+                if (!heslo.get(Label.newpassword).equals(heslo.get(Label.newpasswordcheck))||heslo.get(Label.newpasswordcheck).equals("")) {
+                    notFilled.put(Label.newpasswordcheck, notFilledStyle);
                     error=true;
                 }
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
                 HashMap<Label, String> input=new HashMap<Label, String>();
                 for (Label label : Label.values()) {
-                    if (label.isInTable(table)&&label.isMenitelneUzivatelem()) {
-                        input.put(label, request.getParameter(label.getNazevRaw()));
+                    if (label.isInTable(table)&&label.isChangableByUser()) {
+                        input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                FormValidation form=validateForm(input, SQLTables.uchazeci, notFilledStyle);
+                FormValidation form=validateForm(input, SQLTables.applicants, notFilledStyle);
                 notFilled=form.getNotFilled();
                 error=form.isError();
             }

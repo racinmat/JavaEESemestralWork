@@ -6,194 +6,194 @@
 
 package enums;
 
-import static enums.LabelCategory.cisloId;
+import static enums.LabelCategory.iDnumber;
 
-/**                                                                                                                                                                                                                                                 u nepoviných,
- *                                                                                                                                                                                                                                      povinné při z jakého        co si může                                          povinné
- * @author Azathoth                                           //používá se také pro změnu hesla ve                                             //uzivatel to         sloupec se                                                                              vyplňování  labelu se       uživatel sám                                        
- */                                                           //formuláři na stránce proprihlasene                                             //nemusi vyplnovat  //nachazi v tabulce:                                                                      formuláře   kopírují hodnoty sobě změnit                    emailová    rodné                                //liší se v políčku všechny sloupce
-public enum Label {           //nazevProUzivatele               nazevProUchazece                             nazevRaw                    ciselne automatickeVyplneni uchazeci    studenti    login   primaryKey  pedagogove  administrativa  telefonniCislo  povinne     kopirovanoZ     menitelneUzivatelem zmenaHesla  adresa      číslo   chazeciSpam    uchazeciIPSpam  vypisProAdministrativu  menitelneAdministrativou
-    uzivatelskejmeno(           "uživatelské jméno",            "uživatelské jméno",                         "uzivatelskejmeno",         false,  true,               true,       true,       true,   true,       true,       true,           false,          false,      null,           false,              false,      false,      false,  true,           true,          false,                  false        ),
-    jmeno(                      "jméno",                        "jméno",                                     "jmeno",                    false,  false,              false,      false,      true,   false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  false,          false,         true,                   true         ),
-    prijmeni(                   "příjmení",                     "příjmení",                                  "prijmeni",                 false,  false,              false,      false,      true,   false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  false,          false,         true,                   true         ),
-    hashhesla(                  "hash hesla",                   "Zadejte své heslo:",                        "hashhesla",                false,  true,               false,      false,      true,   false,      false,      false,          false,          false,      null,           false,              true,       false,      false,  false,          false,         false,                  false        ),
-    studijniprogram(            "studijní program",             "studijní program",                          "studijniprogram",          false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    studijniobor(               "studijní obor",                "studijní obor",                             "studijniobor",             false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    pohlavi(                    "pohlaví",                      "pohlaví",                                   "pohlavi",                  false,  true,               true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    statniprislusnost(          "státní příslušnost",           "státní příslušnost",                        "statniprislusnost",        false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    rodinnystav(                "rodinný stav",                 "rodinný stav",                              "rodinnystav",              false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    email(                      "email",                        "email",                                     "email",                    false,  false,              true,       false,      false,  false,      true,       true,           false,          true,       null,           true,               false,      true,       false,  true,           true,          true,                   true         ),
-    mobilnitelefon(             "mobilní telefon",              "mobilní telefon",                           "mobilnitelefon",           false,  false,              true,       false,      false,  false,      true,       true,           true,           true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),  
-    dennarozeni(                "den narození",                 "den narození",                              "dennarozeni",              true,   true,               true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    mesicnarozeni(              "měsíc narození",               "měsíc narození",                            "mesicnarozeni",            true,   true,               true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    roknarozeni(                "rok narození",                 "rok narození",                              "roknarozeni",              true,   true,               true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    cisloOP(                    "číslo OP",                     "číslo OP",                                  "cisloOP",                  true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    rodnecislo(                 "rodné číslo",                  "rodné číslo",                               "rodnecislo",               false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      true,   true,           true,          true,                   true         ),
-    cislopasu(                  "číslo pasu",                   "číslo pasu",                                "cislopasu",                true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    mistonarozeni(              "místo narození",               "místo narození",                            "mistonarozeni",            false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    okresnarozeni(              "okres narození",               "okres narození",                            "okresnarozeni",            false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    ulice(                      "ulice",                        "ulice",                                     "ulice",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    cislodomu(                  "číslo domu",                   "číslo domu",                                "cislodomu",                true,   false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    castobce(                   "část obce",                    "část obce",                                 "castobce",                 false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    obec(                       "obec",                         "obec",                                      "obec",                     false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    okres(                      "okres",                        "okres",                                     "okres",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    psc(                        "psč",                          "psč",                                       "psc",                      true,   false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    stat(                       "stát",                         "stát",                                      "stat",                     false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    telefon(                    "telefon",                      "telefon",                                   "telefon",                  false,  false,              true,       false,      false,  false,      true,       true,           true,           true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    posta(                      "pošta",                        "pošta",                                     "posta",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresaulice(       "kontaktní adresa: ulice",      "ulice",                                     "kontaktniadresaulice",     false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      ulice,          true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresacislodomu(   "kontaktní adresa: číslo domu", "číslo domu",                                "kontaktniadresacislodomu", true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      cislodomu,      true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresacastobce(    "kontaktní adresa: část obce",  "část obce",                                 "kontaktniadresacastobce",  false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      castobce,       true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresaobec(        "kontaktní adresa: obec",       "obec",                                      "kontaktniadresaobec",      false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      obec,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresaokres(       "kontaktní adresa: okres",      "okres",                                     "kontaktniadresaokres",     false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      okres,          true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresapsc(         "kontaktní adresa: psč",        "psč",                                       "kontaktniadresapsc",       true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      psc,            true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresastat(        "kontaktní adresa: stát",       "stát",                                      "kontaktniadresastat",      false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      stat,           true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresatelefon(     "kontaktní adresa: telefon",    "telefon",                                   "kontaktniadresatelefon",   false,  false,              true,       false,      false,  false,      false,      false,          true,           false,      telefon,        true,               false,      false,      false,  true,           true,          true,                   true         ),
-    kontaktniadresaposta(       "kontaktní adresa: pošta",      "pošta",                                     "kontaktniadresaposta",     false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      posta,          true,               false,      false,      false,  true,           true,          true,                   true         ),
-    nazevstredniskoly(          "název střední školy",          "název střední školy",                       "nazevstredniskoly",        false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    adresastredniskoly(         "adresa střední školy",         "adresa střední školy",                      "adresastredniskoly",       false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    oborstredniskoly(           "obor střední školy",           "obor střední školy",                        "oborstredniskoly",         false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    jkov(                       "jkov",                         "jkov",                                      "jkov",                     false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    kkov(                       "kkov",                         "kkov",                                      "kkov",                     false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    izo(                        "izo",                          "izo",                                       "izo",                      false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    rokmaturity(                "rok maturity",                 "rok maturity",                              "rokmaturity",              true,   false,              true,       false,      false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    stavprihlasky(              "stav přihlášky",               "stav přihlášky",                            "stavprihlasky",            false,  true,               true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    skolne(                     "školné",                       "školné",                                    "skolne",                   false,  true,               true,       false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  true,           true,          true,                   true         ),
-    semestr(                    "semestr",                      "semestr",                                   "semestr",                  true,   false,              false,      true,       false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  false,          false,         true,                   true         ),
-    stavstudia(                 "stav studia",                  "stav studia",                               "stavstudia",               false,  false,              false,      true,       false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  false,          false,         true,                   true         ),
-    skupina(                    "skupina",                      "skupina",                                   "skupina",                  true,   false,              false,      true,       false,  false,      false,      false,          false,          true,       null,           false,              false,      false,      false,  false,          false,         true,                   true         ),
-    rights(                     "práva",                        "práva",                                     "rights",                   false,  true,               false,      false,      true,   false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  false,          false,         false,                  false        ),
-    vsechnySloupce(             "všechny sloupce",              "všechny sloupce",                           "vsechnysloupce",           false,  false,              false,      false,      false,  false,      false,      false,          false,          false,      null,           false,              false,      false,      false,  false,          false,         true,                   false        ),
-    noveheslo(                  "nové heslo",                   "Zadejte své nové heslo:",                   "noveheslo",                false,  false,              false,      false,      false,  false,      false,      false,          false,          true,       null,           true,               true,       false,      false,  false,          false,         false,                  false        ),
-    noveheslokonrola(           "nové heslo kontrola",          "Zadejte pro kontrolu znovu své nové heslo:","konrola",                  false,  false,              false,      false,      false,  false,      false,      false,          false,          true,       null,           true,               true,       false,      false,  false,          false,         false,                  false        ),
+/**                                                                                                                                                                                                                                                         u nepoviných,
+ *                                                                                                                                                                                                                                                          povinné při z jakého        co si může                                          povinné
+ * @author Azathoth                                           //používá se také pro změnu hesla ve                                             //uzivatel to         sloupec se                                                                              vyplňování  labelu se          uživatel sám                                        
+ */                                                           //formuláři na stránce proprihlasene                                             //nemusi vyplnovat  //nachazi v tabulce:                                                                      formuláře   kopírují hodnoty   sobě změnit                    emailová    rodné                                //liší se v políčku všechny sloupce
+public enum Label {           //nameForUsers                    nameForApplicants                            nameRaw                    number  autoFill            applicants  students    login   primaryKey  teachers    administrativa  telefonniCislo  povinne     kopirovanoZ         menitelneUzivatelem zmenaHesla  adresa      číslo   chazeciSpam    applicantsIPSpam  vypisProAdministrativu  menitelneAdministrativou
+    userName(                   "uživatelské jméno",            "uživatelské jméno",                         "uzivatelskejmeno",        false,  true,               true,       true,       true,   true,       true,       true,           false,          false,      null,               false,              false,      false,      false,  true,           true,          false,                  false        ),
+    name(                       "jméno",                        "jméno",                                     "jmeno",                   false,  false,              false,      false,      true,   false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  false,          false,         true,                   true         ),
+    lastname(                   "příjmení",                     "příjmení",                                  "prijmeni",                false,  false,              false,      false,      true,   false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  false,          false,         true,                   true         ),
+    password(                   "hash hesla",                   "Zadejte své heslo:",                        "hashhesla",               false,  true,               false,      false,      true,   false,      false,      false,          false,          false,      null,               false,              true,       false,      false,  false,          false,         false,                  false        ),
+    studyProgram(               "studijní program",             "studijní program",                          "studijniprogram",         false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    branchOfStudy(              "studijní obor",                "studijní obor",                             "studijniobor",            false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    sex(                        "pohlaví",                      "pohlaví",                                   "pohlavi",                 false,  true,               true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    citizenship(                "státní příslušnost",           "státní příslušnost",                        "statniprislusnost",       false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    maritalStatus(              "rodinný stav",                 "rodinný stav",                              "rodinnystav",             false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    email(                      "email",                        "email",                                     "email",                   false,  false,              true,       false,      false,  false,      true,       true,           false,          true,       null,               true,               false,      true,       false,  true,           true,          true,                   true         ),
+    cellphone(                  "mobilní telefon",              "mobilní telefon",                           "mobilnitelefon",          false,  false,              true,       false,      false,  false,      true,       true,           true,           true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),  
+    birthday(                   "den narození",                 "den narození",                              "dennarozeni",             true,   true,               true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    birthmonth(                 "měsíc narození",               "měsíc narození",                            "mesicnarozeni",           true,   true,               true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    birthyear(                  "rok narození",                 "rok narození",                              "roknarozeni",             true,   true,               true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    ID(                         "číslo OP",                     "číslo OP",                                  "cisloOP",                 true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    birthnumber(                "rodné číslo",                  "rodné číslo",                               "rodnecislo",              false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      true,   true,           true,          true,                   true         ),
+    passport(                   "číslo pasu",                   "číslo pasu",                                "cislopasu",               true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    birthplace(                 "místo narození",               "místo narození",                            "mistonarozeni",           false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    birthcouty(                 "okres narození",               "okres narození",                            "okresnarozeni",           false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    street(                     "ulice",                        "ulice",                                     "ulice",                   false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    houseNumber(                "číslo domu",                   "číslo domu",                                "cislodomu",               true,   false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    municipalityPart(           "část obce",                    "část obce",                                 "castobce",                false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    municipality(               "obec",                         "obec",                                      "obec",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    couty(                      "okres",                        "okres",                                     "okres",                   false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    zip(                        "psč",                          "psč",                                       "psc",                     true,   false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    country(                    "stát",                         "stát",                                      "stat",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    phone(                      "telefon",                      "telefon",                                   "telefon",                 false,  false,              true,       false,      false,  false,      true,       true,           true,           true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    post(                       "pošta",                        "pošta",                                     "posta",                   false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactstreet(              "kontaktní adresa: ulice",      "ulice",                                     "kontaktniadresaulice",    false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      street,             true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contacthouseNumber(         "kontaktní adresa: číslo domu", "číslo domu",                                "kontaktniadresacislodomu",true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      houseNumber,        true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactmunicipalityPart(    "kontaktní adresa: část obce",  "část obce",                                 "kontaktniadresacastobce", false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      municipalityPart,   true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactmunicipality(        "kontaktní adresa: obec",       "obec",                                      "kontaktniadresaobec",     false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      municipality,       true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactcouty(               "kontaktní adresa: okres",      "okres",                                     "kontaktniadresaokres",    false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      couty,              true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactzip(                 "kontaktní adresa: psč",        "psč",                                       "kontaktniadresapsc",      true,   false,              true,       false,      false,  false,      false,      false,          false,          false,      zip,                true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactcountry(             "kontaktní adresa: stát",       "stát",                                      "kontaktniadresastat",     false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      country,            true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactphone(               "kontaktní adresa: telefon",    "telefon",                                   "kontaktniadresatelefon",  false,  false,              true,       false,      false,  false,      false,      false,          true,           false,      phone,              true,               false,      false,      false,  true,           true,          true,                   true         ),
+    contactpost(                "kontaktní adresa: pošta",      "pošta",                                     "kontaktniadresaposta",    false,  false,              true,       false,      false,  false,      false,      false,          false,          false,      post,               true,               false,      false,      false,  true,           true,          true,                   true         ),
+    nameofHighSchool(           "název střední školy",          "název střední školy",                       "nazevstredniskoly",       false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    adresaofHighSchool(         "adresa střední školy",         "adresa střední školy",                      "adresastredniskoly",      false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    oborofHighSchool(           "obor střední školy",           "obor střední školy",                        "oborstredniskoly",        false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    jkov(                       "jkov",                         "jkov",                                      "jkov",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    kkov(                       "kkov",                         "kkov",                                      "kkov",                    false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    izo(                        "izo",                          "izo",                                       "izo",                     false,  false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    yearmaturity(               "rok maturity",                 "rok maturity",                              "rokmaturity",             true,   false,              true,       false,      false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    applicationstate(           "stav přihlášky",               "stav přihlášky",                            "stavprihlasky",           false,  true,               true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    tuition(                    "školné",                       "školné",                                    "skolne",                  false,  true,               true,       false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  true,           true,          true,                   true         ),
+    semester(                   "semestr",                      "semestr",                                   "semestr",                 true,   false,              false,      true,       false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  false,          false,         true,                   true         ),
+    stateofstudying(            "stav studia",                  "stav studia",                               "stavstudia",              false,  false,              false,      true,       false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  false,          false,         true,                   true         ),
+    group(                      "skupina",                      "skupina",                                   "skupina",                 true,   false,              false,      true,       false,  false,      false,      false,          false,          true,       null,               false,              false,      false,      false,  false,          false,         true,                   true         ),
+    rights(                     "práva",                        "práva",                                     "rights",                  false,  true,               false,      false,      true,   false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  false,          false,         false,                  false        ),
+    allColumns(                 "všechny sloupce",              "všechny sloupce",                           "vsechnysloupce",          false,  false,              false,      false,      false,  false,      false,      false,          false,          false,      null,               false,              false,      false,      false,  false,          false,         true,                   false        ),
+    newpassword(                "nové heslo",                   "Zadejte své nové heslo:",                   "noveheslo",               false,  false,              false,      false,      false,  false,      false,      false,          false,          true,       null,               true,               true,       false,      false,  false,          false,         false,                  false        ),
+    newpasswordcheck(           "nové heslo kontrola",          "Zadejte pro kontrolu znovu své nové heslo:","kontrola",                false,  false,              false,      false,      false,  false,      false,      false,          false,          true,       null,               true,               true,       false,      false,  false,          false,         false,                  false        ),
     ;
-    private String nazevProUzivatele;
-    private String nazevProUchazece;
-    private String nazevRaw;
-    private boolean ciselne;
-    private boolean automatickeVyplneni;
-    private boolean uchazeci;
-    private boolean studenti;
+    private String nameForUsers;
+    private String nameForApplicants;
+    private String nameRaw;
+    private boolean number;
+    private boolean autoFill;
+    private boolean applicants;
+    private boolean students;
     private boolean login;
     private boolean primaryKey;
-    private boolean pedagogove;
+    private boolean teachers;
     private boolean administrativa;
-    private boolean telefonniCislo;
-    private boolean povinne;
-    private Label kopirovanoZ;  //null, pokud není z ničeho kopírováno
-    private boolean menitelneUzivatelem;
-    private boolean zmenaHesla; //zda je ve formuláři změna hesla, nemá nic společného s databází
-    private boolean emailovaadresa;
-    private boolean rodneCislo;
-    private boolean uchazeciSpam;
-    private boolean uchazeciIPSpam;
-    private boolean vypisProAdministrativu;
-    private boolean menitelneAdministrativou;
+    private boolean phonenumber;
+    private boolean obligatory;
+    private Label copiedFrom;  //null, pokud není z ničeho kopírováno
+    private boolean changableByUser;
+    private boolean passwordChange; //zda je ve formuláři změna hesla, nemá nic společného s databází
+    private boolean emailaddress;
+    private boolean birthNumber;
+    private boolean applicantsSpam;
+    private boolean applicantsIPSpam;
+    private boolean showToAdministrativa;
+    private boolean changableByAdministrativa;
     
-    private Label(String nazevProUzivatele, String nazevProUchazece, String nazevRaw, boolean ciselne, boolean automatickeVyplneni, boolean uchazeci, boolean studenti, boolean login, boolean primaryKey, boolean pedagogove, boolean administrativa, boolean telefonniCislo, boolean povinne, Label kopirovanoZ, boolean menitelneUzivatelem, boolean zmenaHesla, boolean emailovaadresa, boolean rodneCislo, boolean uchazeciSpam, boolean uchazeciIPSpam, boolean vypisProAdministrativu, boolean menitelneAdministrativou) {
-        this.nazevProUzivatele = nazevProUzivatele;
-        this.nazevProUchazece = nazevProUchazece;
-        this.nazevRaw = nazevRaw;
-        this.ciselne = ciselne;
-        this.automatickeVyplneni = automatickeVyplneni;
-        this.uchazeci = uchazeci;
-        this.studenti = studenti;
+    private Label(String nameForUsers, String nameForApplicants, String nameRaw, boolean number, boolean autoFill, boolean applicants, boolean students, boolean login, boolean primaryKey, boolean teachers, boolean administrativa, boolean phonenumber, boolean obligatory, Label copiedFrom, boolean changableByUser, boolean passwordChange, boolean emailaddress, boolean birthNumber, boolean applicantsSpam, boolean applicantsIPSpam, boolean showToAdministrativa, boolean changableByAdministrativa) {
+        this.nameForUsers = nameForUsers;
+        this.nameForApplicants = nameForApplicants;
+        this.nameRaw = nameRaw;
+        this.number = number;
+        this.autoFill = autoFill;
+        this.applicants = applicants;
+        this.students = students;
         this.login = login;
         this.primaryKey = primaryKey;
-        this.pedagogove = pedagogove;
+        this.teachers = teachers;
         this.administrativa = administrativa;
-        this.telefonniCislo = telefonniCislo;
-        this.povinne = povinne;
-        this.kopirovanoZ = kopirovanoZ;
-        this.menitelneUzivatelem = menitelneUzivatelem;
-        this.zmenaHesla = zmenaHesla;
-        this.emailovaadresa = emailovaadresa;
-        this.rodneCislo = rodneCislo;
-        this.uchazeciSpam = uchazeciSpam;
-        this.uchazeciIPSpam = uchazeciIPSpam;
-        this.vypisProAdministrativu = vypisProAdministrativu;
-        this.menitelneAdministrativou = menitelneAdministrativou;
+        this.phonenumber = phonenumber;
+        this.obligatory = obligatory;
+        this.copiedFrom = copiedFrom;
+        this.changableByUser = changableByUser;
+        this.passwordChange = passwordChange;
+        this.emailaddress = emailaddress;
+        this.birthNumber = birthNumber;
+        this.applicantsSpam = applicantsSpam;
+        this.applicantsIPSpam = applicantsIPSpam;
+        this.showToAdministrativa = showToAdministrativa;
+        this.changableByAdministrativa = changableByAdministrativa;
         
     }
     
-    public boolean isMenitelneUzivatelem() {
-        return menitelneUzivatelem;
+    public boolean isChangableByUser() {
+        return changableByUser;
     }
     
-    public boolean isUchazeciSpam() {
-        return uchazeciSpam;
+    public boolean isApplicantsSpam() {
+        return applicantsSpam;
     }
 
-    public boolean isUchazeciIPSpam() {
-        return uchazeciIPSpam;
+    public boolean isApplicantsIPSpam() {
+        return applicantsIPSpam;
     }
 
-    public boolean isRodneCislo() {
-        return rodneCislo;
+    public boolean isbirthNumber() {
+        return birthNumber;
     }
 
-    public boolean isEmailovaadresa() {
-        return emailovaadresa;
+    public boolean isEmailAddress() {
+        return emailaddress;
     }
 
-    public boolean isZmenaHesla() {
-        return zmenaHesla;
+    public boolean isPasswordChange() {
+        return passwordChange;
     }
 
-    public boolean isPovinne() {
-        return povinne;
+    public boolean isObligatory() {
+        return obligatory;
     }
 
-    public Label getKopirovanoZ() {
-        return kopirovanoZ;
+    public Label getCopiedFrom() {
+        return copiedFrom;
     }
 
-    public boolean isPedagogove() {
-        return pedagogove;
+    public boolean isTeachers() {
+        return teachers;
     }
 
     public boolean isAdministrativa() {
         return administrativa;
     }
 
-    public boolean isTelefonniCislo() {
-        return telefonniCislo;
+    public boolean isPhonenumber() {
+        return phonenumber;
     }
 
-    public String getNazevProUzivatele() {
-        return nazevProUzivatele;
+    public String getNameForUsers() {
+        return nameForUsers;
     }
 
-    public boolean isVypisProAdministrativu() {
-        return vypisProAdministrativu;
+    public boolean isShowToAdministrativa() {
+        return showToAdministrativa;
     }
 
-    public boolean isMenitelneAdministrativou() {
-        return menitelneAdministrativou;
+    public boolean isChangableByAdministrativa() {
+        return changableByAdministrativa;
     }
 
-    public String getNazevProUchazece() {
-        return nazevProUchazece;
+    public String getNameForApplicants() {
+        return nameForApplicants;
     }
 
-    public String getNazevRaw() {
-        return nazevRaw;
+    public String getNameRaw() {
+        return nameRaw;
     }
 
-    public boolean isCiselne() {
-        return ciselne;
+    public boolean isNumber() {
+        return number;
     }
 
-    public boolean isAutomatickeVyplneni() {
-        return automatickeVyplneni;
+    public boolean isAutoFill() {
+        return autoFill;
     }
 
-    public boolean isUchazeci() {
-        return uchazeci;
+    public boolean isApplicants() {
+        return applicants;
     }
 
-    public boolean isStudenti() {
-        return studenti;
+    public boolean isStudents() {
+        return students;
     }
 
     public boolean isLogin() {
@@ -206,7 +206,7 @@ public enum Label {           //nazevProUzivatele               nazevProUchazece
     
     /**
      * Counts number of booleans true in all labels in column depending on provided table.
-     * Only tables login, uchazeci and studenti are supported, because in uchazeci_spam and uchazeci_ipspam have same columns.
+     * Only tables login, uchazeci and students are supported, because in uchazeci_spam and uchazeci_ipspam have same columns.
      * @param tabulka
      * @return Return count of labels which are contained in provided table.
      */
@@ -246,18 +246,18 @@ public enum Label {           //nazevProUzivatele               nazevProUchazece
     public boolean isInTable(SQLTables tabulka){
         boolean output = false;
         String temp=tabulka.getTable();
-        if (temp.equals(SQLTables.studenti.getTable())) {
-            output=isStudenti();
-        } else if (temp.equals(SQLTables.uchazeci.getTable())){
-            output=isUchazeci();
+        if (temp.equals(SQLTables.students.getTable())) {
+            output=isStudents();
+        } else if (temp.equals(SQLTables.applicants.getTable())){
+            output=isApplicants();
         } else if (temp.equals(SQLTables.login.getTable())){
             output=isLogin();
-        } else if (temp.equals(SQLTables.uchazeci_spam.getTable())){
-            output=isUchazeciSpam();
-        } else if (temp.equals(SQLTables.uchazeci_ipspam.getTable())){
-            output=isUchazeciIPSpam();
-        } else if (temp.equals(SQLTables.pedagogove.getTable())){
-            output=isPedagogove();
+        } else if (temp.equals(SQLTables.applicants_spam.getTable())){
+            output=isApplicantsSpam();
+        } else if (temp.equals(SQLTables.applicants_ipspam.getTable())){
+            output=isApplicantsIPSpam();
+        } else if (temp.equals(SQLTables.teachers.getTable())){
+            output=isTeachers();
         } else if (temp.equals(SQLTables.administrativa.getTable())){
             output=isAdministrativa();
         }
@@ -273,28 +273,28 @@ public enum Label {           //nazevProUzivatele               nazevProUchazece
     public boolean isInTables(SQLTables... tabulka){
         for (SQLTables table : tabulka) {
             String temp=table.getTable();
-            if (temp.equals(SQLTables.studenti.getTable())) {
-                if (isStudenti()) {
+            if (temp.equals(SQLTables.students.getTable())) {
+                if (isStudents()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.uchazeci.getTable())){
-                if (isUchazeci()) {
+            } else if (temp.equals(SQLTables.applicants.getTable())){
+                if (isApplicants()) {
                     return true;
                 }
             } else if (temp.equals(SQLTables.login.getTable())){
                 if (isLogin()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.uchazeci_ipspam.getTable())){
-                if (isUchazeciIPSpam()) {
+            } else if (temp.equals(SQLTables.applicants_ipspam.getTable())){
+                if (isApplicantsIPSpam()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.uchazeci_spam.getTable())){
-                if (isUchazeciSpam()) {
+            } else if (temp.equals(SQLTables.applicants_spam.getTable())){
+                if (isApplicantsSpam()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.pedagogove.getTable())){
-                if (isPedagogove()) {
+            } else if (temp.equals(SQLTables.teachers.getTable())){
+                if (isTeachers()) {
                     return true;
                 }
             } else if (temp.equals(SQLTables.administrativa.getTable())){
@@ -306,9 +306,9 @@ public enum Label {           //nazevProUzivatele               nazevProUchazece
         return false;
     }
     
-    public static Label getLabelFromStringInNazevRaw(String i) throws IllegalArgumentException{ //statická metoda, aby mohla být volána předtím, než je vytvořen objekt, který tato metoda vrátí
+    public static Label getLabelFromStringInnameRaw(String i) throws IllegalArgumentException{ //statická metoda, aby mohla být volána předtím, než je vytvořen objekt, který tato metoda vrátí
         for (Label label : Label.values()) {
-            if (label.getNazevRaw().equals(i)) {
+            if (label.getNameRaw().equals(i)) {
                 return label;
             }
         }
