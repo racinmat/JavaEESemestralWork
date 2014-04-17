@@ -6,7 +6,6 @@
 
 package enums;
 
-import static enums.LabelCategory.iDnumber;
 
 /**                                                                                                                                                                                                                                                         u nepoviných,
  *                                                                                                                                                                                                                                                          povinné při z jakého        co si může                                          povinné

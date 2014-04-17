@@ -68,7 +68,7 @@ public class AddAdministrativaCheck extends HttpServlet{
                 dispatcher.forward(request, response);
             }
         } catch (ServletException | IOException ex) {
-            Logger.getLogger(RegisterCheck.class.getName()).log(Level.SEVERE, null, ex);
+            source.MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativaCheck.class.getName(), "doPost method", "Error in mysql. "+ex.getMessage(), ex);
         }
         
     }

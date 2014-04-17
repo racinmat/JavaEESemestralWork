@@ -8,8 +8,6 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +17,13 @@ import source.Encrypt;
 import enums.Label;
 import enums.SQLTables;
 import java.util.HashMap;
+import java.util.logging.Level;
+import source.LoggedUser;
+import source.MyLogger;
 import source.Mysql;
 import source.SendEmail;
 import source.UsernameGen;
+import sun.security.x509.AlgorithmId;
 
 /**
  *
@@ -74,13 +76,13 @@ public class AddAdministrativa extends HttpServlet {
             }
             response.sendRedirect("pridaniAdministrativy.jsp");
         } catch (IOException ex) {
-            Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
+            MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "During adding new administrativa. "+ex.getMessage(), ex);
         } catch (SQLException|ClassNotFoundException ex) {
             try {
-                Logger.getLogger(AddAdministrativa.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "Error in mysql. "+ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                Logger.getLogger(AddAdministrativa.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
         }
     }

@@ -11,6 +11,7 @@ import enums.Rights;
 import enums.SQLTables;
 import static enums.SQLTables.*;
 import enums.ApplicationState;
+import java.io.IOException;
 import servlet.Login;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,34 +66,30 @@ public class Mysql {
      * rights, což je integer od 0 výše
      * rightsString, což je název přiřazený každé hodnotě rights
      */
-    public LoggedUser login(String username, String password){
+    public LoggedUser login(String username, String password) throws SQLException{
         LoggedUser user=null;
-        try {
-            String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+Label.userName.getNameRaw()+"=? and "+Label.password.getNameRaw()+"=?";
-            ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,username);
-            ps.setString(2,password);
-            ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
-            int size=0;
-            int rights=Integer.MAX_VALUE;                                       //číselná práva jsou od nuly výš, max value tedy nepřidělí platná práva
-            String name="";
-            String lastname="";
-            while(rs.next()){
-                username=rs.getString(Label.userName.getNameRaw());
-                name=rs.getString(Label.name.getNameRaw());
-                lastname=rs.getString(Label.lastname.getNameRaw());
-                rights=rs.getInt("rights");
-                size++;
-            }
-            if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
-                Rights rightsObject=Rights.getRightsFromInt(rights);
-                user=new LoggedUser(name, lastname, rightsObject, username, "success");
-            }
-            else{
-                user=new LoggedUser(null, null, null, null, "fail");            //je zapotřebí pro výpis chybové hlášky ve footeru
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+Label.userName.getNameRaw()+"=? and "+Label.password.getNameRaw()+"=?";
+        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        ps.setString(1,username);
+        ps.setString(2,password);
+        ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
+        int size=0;
+        int rights=Integer.MAX_VALUE;                                       //číselná práva jsou od nuly výš, max value tedy nepřidělí platná práva
+        String name="";
+        String lastname="";
+        while(rs.next()){
+            username=rs.getString(Label.userName.getNameRaw());
+            name=rs.getString(Label.name.getNameRaw());
+            lastname=rs.getString(Label.lastname.getNameRaw());
+            rights=rs.getInt("rights");
+            size++;
+        }
+        if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
+            Rights rightsObject=Rights.getRightsFromInt(rights);
+            user=new LoggedUser(name, lastname, rightsObject, username, "success");
+        }
+        else{
+            user=new LoggedUser("", "", Rights.notLogged, "", "");
         }
         return user;
     }
