@@ -8,7 +8,6 @@ package servlet;
 
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +20,7 @@ import java.util.HashMap;
 import source.FormValidation;
 import static source.FormValidation.stripPredvolba;
 import static source.FormValidation.validateForm;
+import source.MyLogger;
 
 /**
  *
@@ -68,7 +68,7 @@ public class AddAdministrativaCheck extends HttpServlet{
                 dispatcher.forward(request, response);
             }
         } catch (ServletException | IOException ex) {
-            source.MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativaCheck.class.getName(), "doPost method", "Error in mysql. "+ex.getMessage(), ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in dispatching to /AddAdministrativa. "+ex.getMessage(), ex);
         }
         
     }

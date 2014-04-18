@@ -18,12 +18,10 @@ import enums.Label;
 import enums.SQLTables;
 import java.util.HashMap;
 import java.util.logging.Level;
-import source.LoggedUser;
 import source.MyLogger;
 import source.Mysql;
 import source.SendEmail;
 import source.UsernameGen;
-import sun.security.x509.AlgorithmId;
 
 /**
  *
@@ -75,14 +73,12 @@ public class AddAdministrativa extends HttpServlet {
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("pridaniAdministrativy.jsp");
-        } catch (IOException ex) {
-            MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "During adding new administrativa. "+ex.getMessage(), ex);
-        } catch (SQLException|ClassNotFoundException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException ex) {
             try {
-                MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "Error in mysql. "+ex.getMessage(), ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
         }
     }

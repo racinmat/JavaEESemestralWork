@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import enums.Label;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import source.MyLogger;
 import source.Mysql;
 
 /**
@@ -65,7 +66,7 @@ public class Applicants extends HttpServlet {
             getApplicants(request, response);
             response.sendRedirect("seznamUchazecu.jsp");
         } catch (IOException ex) {
-            Logger.getLogger(Applicants.class.getName()).log(Level.SEVERE, null, ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doGet method", "Error in redirecting to seznamUchazecu.jsp. "+ex.getMessage(), ex);
         }
     }
     
@@ -150,15 +151,13 @@ public class Applicants extends HttpServlet {
             }
             
             response.sendRedirect("seznamUchazecu.jsp");
-        } catch (ClassNotFoundException|SQLException ex) {
+        } catch (ClassNotFoundException|SQLException|ServletException|IOException ex) {
             try {
-                Logger.getLogger(Applicants.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                Logger.getLogger(Applicants.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
-        } catch (ServletException|IOException ex) {
-            Logger.getLogger(Applicants.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -176,10 +175,10 @@ public class Applicants extends HttpServlet {
             session.setAttribute("allApplicants", udajeouzivatelich);
         } catch (SQLException|ClassNotFoundException ex) {
             try {
-                Logger.getLogger(Applicants.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "getApplicants method", "Error in mysql. "+ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");                                 //dodělat stránku error tak, aby vypisovala, co předám v proměnné přes url a dodělat stránku aby tam byl header, footer atd..-
             } catch (IOException ex1) {
-                Logger.getLogger(Applicants.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "getApplicants method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
         }
     }

@@ -24,6 +24,7 @@ import source.LoggedUser;
 import source.Mysql;
 import source.FormValidation;
 import static source.FormValidation.validateForm;
+import source.MyLogger;
 
 /**
  *
@@ -81,7 +82,7 @@ public class ChangeDataCheck extends HttpServlet {
                 }
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                HashMap<Label, String> input=new HashMap<Label, String>();
+                HashMap<Label, String> input=new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isInTable(table)&&label.isChangableByUser()) {
                         input.put(label, request.getParameter(label.getNameRaw()));
@@ -102,14 +103,12 @@ public class ChangeDataCheck extends HttpServlet {
                 dispatcher.forward(request, response);
             }
             
-        } catch (ServletException | IOException ex) {
-            Logger.getLogger(RegisterCheck.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException|ClassNotFoundException ex) {
+        } catch (SQLException|ClassNotFoundException|ServletException|IOException ex) {
             try {
-                Logger.getLogger(ChangeDataCheck.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp");
             } catch (IOException ex1) {
-                Logger.getLogger(ChangeDataCheck.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
         }
     }

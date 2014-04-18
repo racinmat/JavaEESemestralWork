@@ -19,6 +19,7 @@ import source.Encrypt;
 import enums.Label;
 import enums.SQLTables;
 import java.util.HashMap;
+import source.MyLogger;
 import source.Mysql;
 import source.SendEmail;
 import source.UsernameGen;
@@ -74,14 +75,12 @@ public class AddPedagog extends HttpServlet {
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("pridaniPedagoga.jsp");
-        } catch (IOException ex) {
-            Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException|ClassNotFoundException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException ex) {
             try {
-                Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in mysql. "+ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                Logger.getLogger(AddPedagog.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
         }
     }

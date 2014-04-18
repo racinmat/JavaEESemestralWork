@@ -8,11 +8,9 @@ import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import source.LoggedUser;
 import source.Mysql;
-import enums.Rights;
 import java.sql.SQLException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import source.MyLogger;
 
 
 /*
@@ -44,15 +42,13 @@ public class Login extends HttpServlet{
                 session.setAttribute("user", user);
                 response.sendRedirect(user.getRights().getInitialRedirect());
             }
-        } catch (SQLException|ClassNotFoundException|NullPointerException ex) {
+        } catch (SQLException|ClassNotFoundException|NullPointerException|IOException ex) {
             try {
-                source.MyLogger.getLogger().logp(Level.SEVERE, Login.class.getName(), "doPost method", "Error in mysql or loging in. "+ex.getMessage(), ex);
+                MyLogger.getLogger().logp(Level.SEVERE, Login.class.getName(), "doPost method", "Error in mysql or loging in. "+ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, AddAdministrativa.class.getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -3,11 +3,11 @@ package servlet;
 
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import source.MyLogger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,14 +22,15 @@ import javax.servlet.http.HttpSession;
 public class Logout extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
+        String URL = "";
         try {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", null);
-            String URL=(String) session.getAttribute("loggingURL");
+            URL=(String) session.getAttribute("loggingURL");
             session.setAttribute("loggingURL", null);
             response.sendRedirect(URL);
         } catch (IOException ex) {
-            Logger.getLogger(Logout.class.getName()).log(Level.SEVERE, null, ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to "+URL+ex.getMessage(), ex);
         }
     }    
 }

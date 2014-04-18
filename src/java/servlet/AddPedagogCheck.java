@@ -8,7 +8,6 @@ package servlet;
 
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +19,7 @@ import enums.SQLTables;
 import java.util.HashMap;
 import source.FormValidation;
 import static source.FormValidation.*;
+import source.MyLogger;
 
 /**
  *
@@ -67,7 +67,7 @@ public class AddPedagogCheck extends HttpServlet {
                 dispatcher.forward(request, response);
             }
         } catch (ServletException | IOException ex) {
-            Logger.getLogger(RegisterCheck.class.getName()).log(Level.SEVERE, null, ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in dispatching to /AddPedagog. "+ex.getMessage(), ex);
         }
         
     }

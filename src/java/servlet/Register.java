@@ -6,7 +6,6 @@ import enums.SQLTables;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +17,7 @@ import source.Mysql;
 import source.SendEmail;
 import source.UsernameGen;
 import static source.FormValidation.*;
+import source.MyLogger;
 
 
 /*
@@ -121,15 +121,13 @@ public class Register extends HttpServlet{
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("proUchazece_Prihlaska.jsp");
-        } catch (SQLException|ClassNotFoundException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException ex) {
             try {
-                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp");
             } catch (IOException ex1) {
-                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

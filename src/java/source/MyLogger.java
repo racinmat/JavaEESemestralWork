@@ -23,11 +23,11 @@ public class MyLogger {
     
     private static void init(){
         try {
-            MyLogger.handler = new FileHandler("serverlogger.log");
+            MyLogger.handler = new FileHandler("X:\\Disk Google\\moje věci_encrypted\\škola\\2. semestr\\programování 2\\Semestralka2_decrypted\\racinmat\\logger.txt");    //změnit cestu, pokud budou stránky na serveru
             MyLogger.logger.addHandler(handler);
             init=true;
         } catch (IOException | SecurityException ex) {
-            java.util.logging.Logger.getLogger(MyLogger.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, "Failed inicialization of FileHandler a thus logs cannot be written to file.", ex);
         }
     }
     

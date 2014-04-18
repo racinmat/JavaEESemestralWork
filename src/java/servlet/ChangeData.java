@@ -8,20 +8,17 @@ package servlet;
 
 import enums.SQLTables;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
-import enums.Rights;
 import java.util.HashMap;
 import source.LoggedUser;
+import source.MyLogger;
 import source.Mysql;
 
 /**
@@ -78,19 +75,14 @@ public class ChangeData extends HttpServlet {
                     session.setAttribute("registered", "fail");
                 }
             }
-            
-            
-            
             response.sendRedirect("proPrihlasene.jsp");
             
-        } catch (IOException ex) {
-            Logger.getLogger(ChangeData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException|ClassNotFoundException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException ex) {
             try {
-                Logger.getLogger(ChangeData.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                Logger.getLogger(ChangeData.class.getName()).log(Level.SEVERE, null, ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
             }
         }
     }
