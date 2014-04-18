@@ -23,7 +23,7 @@ public class MyLogger {
     
     private static void init(){
         try {
-            MyLogger.handler = new FileHandler("X:\\Disk Google\\moje věci_encrypted\\škola\\2. semestr\\programování 2\\Semestralka2_decrypted\\racinmat\\logger.txt");    //změnit cestu, pokud budou stránky na serveru
+            MyLogger.handler = new FileHandler("X:\\Disk Google\\moje věci_encrypted\\škola\\2. semestr\\programování 2\\Semestralka2_decrypted\\racinmat\\logger.txt", true);    //změnit cestu, pokud budou stránky na serveru, true říká, že se nemá vytvořit další soubor, ale pokračovat ve starém
             MyLogger.logger.addHandler(handler);
             init=true;
         } catch (IOException | SecurityException ex) {
