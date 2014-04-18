@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import source.MyLogger;
 import source.Mysql;
+import source.SecurityCheck;
 
 /**
  *
@@ -48,25 +48,29 @@ public class Applicants extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
-        try {
-            String temp= request.getParameter("table");
-            this.table=SQLTables.getTableFromNumberInString(temp);                        //tabulka, která bude vypisována
-            session.setAttribute("tabulka", table.getNumberAsString());
-            if (table.equals(SQLTables.applicants_spam)||table.equals(SQLTables.applicants_ipspam)) {
-                session.setAttribute("spam", true);                             //určuje, zda je spam true či false kvůli přesunu do tabulky uchazeci ve výpisu uchazečů
-            } else {
-                session.setAttribute("spam", false);
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+        if (session.getAttribute("redirect")==null) {                           //kvůli předchozímu přeměrování z důvodů zákazu přímého přístupu
+            try {
+                String temp= request.getParameter("table");
+                this.table=SQLTables.getTableFromNumberInString(temp);          //tabulka, která bude vypisována
+                session.setAttribute("tabulka", table.getNumberAsString());
+                if (table.equals(SQLTables.applicants_spam)||table.equals(SQLTables.applicants_ipspam)) {
+                    session.setAttribute("spam", true);                         //určuje, zda je spam true či false kvůli přesunu do tabulky uchazeci ve výpisu uchazečů
+                } else {
+                    session.setAttribute("spam", false);
+                }
+                if (request.getParameter("criterium")!=null&&request.getParameter("criteriumColumn")!=null) {
+                    this.criterium=request.getParameter("criterium");           //obsah, který má být ve sloupci criteriumColumn, aby byl řádek vypsán
+                    temp=request.getParameter("criteriumColumn");               //stejná proměnná, ale s tempem výš nemá nic společného, pouze dočasná proměnná, je zbytečné jich tvořit víc sériově za sebou
+                    this.criteriumColumn=Label.getLabelFromStringInnameRaw(temp);//sloupec, podle kterého se bude řídit výpis
+                    this.negate=request.getParameter("negate");                 //pokud je yes, potom je to negace kritéria
+                }
+                getApplicants(request, response);
+                response.sendRedirect("seznamUchazecu.jsp");
+            } catch (IOException ex) {
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doGet method", "Error in redirecting to seznamUchazecu.jsp. "+ex.getMessage(), ex);
             }
-            if (request.getParameter("criterium")!=null&&request.getParameter("criteriumColumn")!=null) {
-                this.criterium=request.getParameter("criterium");                   //obsah, který má být ve sloupci criteriumColumn, aby byl řádek vypsán
-                temp=request.getParameter("criteriumColumn");                       //stejná proměnná, ale s tempem výš nemá nic společného, pouze dočasná proměnná, je zbytečné jich tvořit víc sériově za sebou
-                this.criteriumColumn=Label.getLabelFromStringInnameRaw(temp);      //sloupec, podle kterého se bude řídit výpis
-                this.negate=request.getParameter("negate");                         //pokud je yes, potom je to negace kritéria
-            }
-            getApplicants(request, response);
-            response.sendRedirect("seznamUchazecu.jsp");
-        } catch (IOException ex) {
-            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doGet method", "Error in redirecting to seznamUchazecu.jsp. "+ex.getMessage(), ex);
         }
     }
     

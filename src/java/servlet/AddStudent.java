@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import source.MyLogger;
 import source.Mysql;
+import source.SecurityCheck;
 
 /**
  *
@@ -36,6 +36,12 @@ public class AddStudent extends HttpServlet {
             }
         }
         return output;
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
     }
     
     /**

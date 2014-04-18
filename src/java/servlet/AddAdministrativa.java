@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import source.MyLogger;
 import source.Mysql;
+import source.SecurityCheck;
 import source.SendEmail;
 import source.UsernameGen;
 
@@ -28,7 +29,13 @@ import source.UsernameGen;
  * @author Azathoth
  */
 public class AddAdministrativa extends HttpServlet {
-
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.

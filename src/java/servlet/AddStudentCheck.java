@@ -9,7 +9,6 @@ package servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +22,7 @@ import java.util.LinkedHashMap;
 import source.FormValidation;
 import static source.FormValidation.validateForm;
 import source.MyLogger;
+import source.SecurityCheck;
 
 /**
  *
@@ -30,7 +30,13 @@ import source.MyLogger;
  */
 public class AddStudentCheck extends HttpServlet {
 
-/**
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *

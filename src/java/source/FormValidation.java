@@ -9,10 +9,7 @@ package source;
 import enums.Label;
 import enums.LabelCategory;
 import enums.SQLTables;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

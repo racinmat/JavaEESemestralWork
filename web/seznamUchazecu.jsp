@@ -4,6 +4,7 @@
     Author     : Azathoth
 --%>
 
+<%@page import="source.MyLogger"%>
 <%@page import="java.util.logging.Logger"%>
 <%@page import="java.util.logging.Level"%>
 <%@page import="java.util.LinkedHashMap"%>
@@ -22,7 +23,6 @@
 
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
-try{
     SecurityCheck security=new SecurityCheck(request);
     security.accesedTo(Rights.administrativa, response);
     String temp=(String)session.getAttribute("tabulka");
@@ -37,13 +37,14 @@ try{
 
             <div id="post-1" class="post-1 post type-post status-publish format-standard hentry category-nezarazene clearfix">--%>
             <div class="wideList">
+                <a href="proAdministrativu.jsp"><input type="button" name="zpet" value="Zpět"></a>
             <h2>Seznam uchazečů z tabulky <%= tabulka.getTable() %>:</h2>
                 
                 <form id="showPeopleForm" action="applicants" method="POST">
                     <%  
                         ArrayList<HashMap<Label, String>> uchazec=(ArrayList<HashMap<Label, String>>) session.getAttribute("allApplicants");
                         boolean spam=(Boolean) session.getAttribute("spam");
-                        LinkedHashMap<Label, String> checked = new LinkedHashMap<Label, String>();      //kvůli zachování pořadí při vkládání hodnot
+                        LinkedHashMap<Label, String> checked = new LinkedHashMap<Label, String>();      //kvůli zachování pořadí při vkládání hodnotse používá linked
                         ArrayList<HashMap<ApplicationState, String>> stavPrihlaskySelected=new ArrayList<HashMap<ApplicationState, String>>();              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
                         String selected="selected=\"selected\"";
                         if(uchazec.size()>0&&uchazec.get(0).containsKey(Label.applicationstate)){
@@ -167,12 +168,7 @@ try{
                     <input type="submit" name="zmenitudaje" value="změnit údaje">
                     </form>
             </div>
-<%
-} catch (Exception e){
-    System.out.print("nastala chyba: localized message: "+e.getLocalizedMessage()+", toString: "+e.toString()+", getMessage: "+e.getMessage());
-    Logger.getLogger("seznamUchazecu.jsp").log(Level.SEVERE, null, e);
-}
-%>
+
 
     </body>
 </html>

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import source.MyLogger;
+import source.SecurityCheck;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,6 +21,13 @@ import source.MyLogger;
  * @author Azathoth
  */
 public class Logout extends HttpServlet{
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         String URL = "";

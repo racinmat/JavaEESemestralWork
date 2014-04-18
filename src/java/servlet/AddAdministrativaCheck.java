@@ -21,13 +21,20 @@ import source.FormValidation;
 import static source.FormValidation.stripPredvolba;
 import static source.FormValidation.validateForm;
 import source.MyLogger;
+import source.SecurityCheck;
 
 /**
  *
  * @author Azathoth
  */
 public class AddAdministrativaCheck extends HttpServlet{
-
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.

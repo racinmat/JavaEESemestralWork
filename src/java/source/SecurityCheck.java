@@ -8,6 +8,8 @@ package source;
 
 import enums.Rights;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -94,35 +96,56 @@ public class SecurityCheck {
     }
     
     public void accesedTo(Rights rights, HttpServletResponse response){
-        if (user==null) {
+        HttpSession session = request.getSession(true);
+        if (user==null&&session.getAttribute("redirect")==null) {   //kvůli tomu, že stránka padá při pokusu o několik přesměrování najednou, je zde ošetření, při přesměrování se do proměnné redirect dá hodnota
             try {
                 response.sendRedirect("notLogged.jsp");
             } catch (IOException ex) {
-                Logger.getLogger(SecurityCheck.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to notLogged.jsp. "+ex.getMessage(), ex);
             }
-        } else if (user.getRights().getRightsValue()>rights.getRightsValue()) {
+        } else if (user.getRights().getRightsValue()>rights.getRightsValue()&&session.getAttribute("redirect")==null) {
             try {
                 response.sendRedirect("chyba.jsp?error=2");
             } catch (IOException ex) {
-                Logger.getLogger(SecurityCheck.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to chyba.jsp?error=2. "+ex.getMessage(), ex);
             }
         }
     }
     
     public void accesedOnlyTo(Rights rights, HttpServletResponse response){
-        if (user==null) {
+        HttpSession session = request.getSession(true);
+        if (user==null&&session.getAttribute("redirect")==null) {
             try {
                 response.sendRedirect("notLogged.jsp");
             } catch (IOException ex) {
-                Logger.getLogger(SecurityCheck.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to notLogged.jsp. "+ex.getMessage(), ex);
             }
-        } else if (user.getRights().getRightsValue()!=rights.getRightsValue()) {
+        } else if (user.getRights().getRightsValue()!=rights.getRightsValue()&&session.getAttribute("redirect")==null) {
             try {
                 response.sendRedirect("chyba.jsp?error=2");
             } catch (IOException ex) {
-                Logger.getLogger(SecurityCheck.class.getName()).log(Level.SEVERE, null, ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to chyba.jsp?error=2. "+ex.getMessage(), ex);
             }
         }
     }
     
+    public void noDirectAccess(HttpServletResponse response){
+        HttpSession session = request.getSession(true);
+        try {
+            String refererURI=null;
+            URI uri= new URI(request.getHeader("referer"));
+            refererURI = uri.getPath();
+            if (refererURI==null) {
+                session.setAttribute("redirect", "true");
+                response.sendRedirect("chyba.jsp?error=3");
+            }
+        } catch (URISyntaxException|IOException|NullPointerException ex) {
+            try {
+                session.setAttribute("redirect", "true");
+                response.sendRedirect("chyba.jsp?error=3");
+            } catch (IOException ex1) {
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "noDirectAccess method", "Error in redirecting to chyba.jsp?error=3. "+ex1.getMessage(), ex1);
+            }
+        }
+    }
 }

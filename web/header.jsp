@@ -16,6 +16,7 @@
     session = request.getSession(true);                                         //zpřístupní se session
     String loggingURL=menu.getPageName();                                       //získá se název současné stránky
     session.setAttribute("loggingURL", loggingURL);                             //nastaví se session proměnná loggingURL, abych věděl, odkud se uživatel přihlašovat a tedy, kam jej po přihlášení "vrátit"
+    session.setAttribute("redirect", null);
     SecurityCheck security=new SecurityCheck(request);
     LoggedUser user=(LoggedUser) session.getAttribute("user");    
                             

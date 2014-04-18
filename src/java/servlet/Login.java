@@ -11,6 +11,7 @@ import source.Mysql;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import source.MyLogger;
+import source.SecurityCheck;
 
 
 /*
@@ -24,6 +25,13 @@ import source.MyLogger;
  * @author Azathoth
  */
 public class Login extends HttpServlet{
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import source.LoggedUser;
 import source.MyLogger;
 import source.Mysql;
+import source.SecurityCheck;
 
 /**
  *
@@ -27,6 +28,12 @@ import source.Mysql;
  */
 public class ChangeData extends HttpServlet {
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.

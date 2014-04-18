@@ -57,7 +57,7 @@
     session.setAttribute("registered", null);
     session.setAttribute("formCheck", null);
     session.setAttribute("formContent", null);
-    
+    security.noDirectAccess(response);
     security.accesedTo(Rights.administrativa, response);
 %>
     <h1 class="title-header">Pro administrativu</h1>

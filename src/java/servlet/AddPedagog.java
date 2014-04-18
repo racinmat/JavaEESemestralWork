@@ -9,7 +9,6 @@ package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +20,7 @@ import enums.SQLTables;
 import java.util.HashMap;
 import source.MyLogger;
 import source.Mysql;
+import source.SecurityCheck;
 import source.SendEmail;
 import source.UsernameGen;
 
@@ -30,14 +30,18 @@ import source.UsernameGen;
  */
 public class AddPedagog extends HttpServlet {
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){

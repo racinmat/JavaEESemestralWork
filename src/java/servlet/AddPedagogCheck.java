@@ -20,6 +20,7 @@ import java.util.HashMap;
 import source.FormValidation;
 import static source.FormValidation.*;
 import source.MyLogger;
+import source.SecurityCheck;
 
 /**
  *
@@ -27,6 +28,12 @@ import source.MyLogger;
  */
 public class AddPedagogCheck extends HttpServlet {
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        SecurityCheck security=new SecurityCheck(request);
+        security.noDirectAccess(response);
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
