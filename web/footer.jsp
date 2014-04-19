@@ -103,8 +103,18 @@
     </div><!-- end #footer -->
 </div><!-- end #wrap -->
 
-<script type='text/javascript' src='http://skola.bluefile.cz/wp-includes/js/admin-bar.min.js?ver=3.8.1'></script>
-<script type='text/javascript' src='http://skola.bluefile.cz/wp-content/themes/academica/js/menu.js?ver=20120921'></script>
+<script type='text/javascript' >
+    ( function( $ ) {
+	$( document ).ready( function() {
+            $( "#menuhead ul" ).css( { display : "none" } ); // Opera Fix
+            $( "#menuhead li" ).hover( function() {
+                $( this ).find( 'ul:first' ).css( { visibility : "visible", display : "none" } ).show( 268 );
+            }, function() {
+                $( this ).find( 'ul:first' ).css( { visibility : "hidden" } );
+            } );
+	} );
+    } )( jQuery );
+</script>
 <script type="text/javascript">
     (function() {
         var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
