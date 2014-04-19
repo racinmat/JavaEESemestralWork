@@ -26,6 +26,7 @@
         1.4.0: výpis údajů v mém profilu a administrativě umožněno přesouvat uchazeče podezřelé ze spamu mezi běžné uchazeče a přidáno telefonní číslo na mobil<br/>
         1.5.0: přidáno přidávání pedagogů, administrativy a studentů<br/>
         1.6.0: změněna vnitřní struktura webu, drobné úpravy, přidána chybová hlášení a ošetřeno selhání při připojení k databázi<br/>
+        1.7.0: zvýšena bezpečnost webu, přidáno ukládání chyb do souboru a zablokován přímý přístup na stránky, které by tak špatně fungovaly<br/>
     </div>
 </div>
 

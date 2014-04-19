@@ -18,7 +18,7 @@
         form="<form action=\"logout\" method=\"POST\"><input type=\"submit\" name=\"odhlásit se\" value=\"odhlásit se\"></form>";
         userInfo="<div class=\"clearfix\">Jste přihlášen jako "+name+" "+lastname+", váš status je "+pravaString+"</div>";
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
-    if(user==null){                                                           //výpis formuláře je podmíněný
+    if(user==null||user.getLogged().equals("fail")){                                                           //výpis formuláře je podmíněný
         form="<form action=\"login\" method=\"POST\">"
             + "<fieldset class=\"loginForm\">"
                 + "<div>"
@@ -42,7 +42,7 @@
             + "</form>";
     }                                                                           
     
-    if(user!=null&&(user.getLogged().equals("fail"))){                          //ošetřena inicializace proměnné
+    if(user!=null&&user.getLogged()==null){                          //ošetřena inicializace proměnné
         form="<form action=\"login\" method=\"POST\">"
             + "<fieldset class=\"loginForm\">"
                 + "<div>"
@@ -98,7 +98,7 @@
         <p class="copy">
             <span class="sep">Inspired by <a href="http://wordpress.org/">WordPress</a> template <a href="http://www.wpzoom.com/">Academica by WPZOOM</a></span>
             © 2014 Všechna práva vyhrazena. autor: Matěj Račinský.
-            <a href="changelog.jsp">Verze: 1.6.0</a>
+            <a href="changelog.jsp">Verze: 1.7.0</a>
         </p>
     </div><!-- end #footer -->
 </div><!-- end #wrap -->

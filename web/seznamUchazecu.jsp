@@ -31,6 +31,7 @@
         temp=(String)session.getAttribute("tabulka");
     }
     SQLTables tabulka=SQLTables.getTableFromNumberInString(temp);
+    if((ArrayList<HashMap<Label, String>>) session.getAttribute("allApplicants")!=null&&(Boolean) session.getAttribute("spam")!=null){//podmínka, která je false při direct accessu
 %>
     <h1 class="title-header">Pro Administrativu</h1>
         <!--</div>-->
@@ -49,7 +50,7 @@
                         ArrayList<HashMap<Label, String>> uchazec=(ArrayList<HashMap<Label, String>>) session.getAttribute("allApplicants");
                         boolean spam=(Boolean) session.getAttribute("spam");
                         LinkedHashMap<Label, String> checked = new LinkedHashMap<Label, String>();      //kvůli zachování pořadí při vkládání hodnotse používá linked
-                        ArrayList<HashMap<ApplicationState, String>> stavPrihlaskySelected=new ArrayList<HashMap<ApplicationState, String>>();              //pole polí: pro každého uživatele pole se všemi možnostmi ze kterých jedna bude vypsána a zbytek bude prázdný string
+                        ArrayList<HashMap<ApplicationState, String>> stavPrihlaskySelected=new ArrayList<HashMap<ApplicationState, String>>();
                         String selected="selected=\"selected\"";
                         if(uchazec.size()>0&&uchazec.get(0).containsKey(Label.applicationstate)){
                             for (int i = 0; i < uchazec.size(); i++) {
@@ -173,7 +174,9 @@
                     </form>
             </div>
 
-
+<%
+    }
+%>
     </body>
 </html>
             

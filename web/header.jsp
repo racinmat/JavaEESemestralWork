@@ -19,7 +19,7 @@
     session.setAttribute("redirect", null);
     SecurityCheck security=new SecurityCheck(request);
     LoggedUser user=(LoggedUser) session.getAttribute("user");    
-                            
+    
 %>
 <!DOCTYPE html>
 <html lang="cs-CZ">

@@ -11,7 +11,7 @@ package enums;
  * @author Azathoth
  */
 public enum SQLTables {//název tabulky      číslo používané v jsp   primární klíč
-    nullTable(          "",                 "",                     Label.userName         ),//kvůli nepřihlášenému uživateli
+    nullTable(          "",                 "",                     Label.userName         ),//kvůli nepřihlášenému uživateli a úspěšnému buildu stránky při zákazu direct accessu
     applicants(         "uchazeci",         "0",                    Label.userName         ),
     applicants_spam(    "uchazeci_spam",    "1",                    Label.userName         ),
     applicants_ipspam(  "uchazeci_ipspam",  "2",                    Label.userName         ),

@@ -86,7 +86,7 @@ public class Mysql {
             user=new LoggedUser(name, lastname, rightsObject, username, "success");
         }
         else{
-            user=new LoggedUser("", "", Rights.notLogged, "", "");
+            user=new LoggedUser("", "", Rights.notLogged, "", null);
         }
         return user;
     }
