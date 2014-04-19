@@ -4,6 +4,7 @@
     Author     : Azathoth
 --%>
 
+<%@page import="java.util.LinkedHashMap"%>
 <%@page import="enums.Rights"%>
 <%@page import="enums.FormGroup"%>
 <%@page import="java.util.HashMap"%>
@@ -35,8 +36,7 @@
         
         session.setAttribute("formCheck", null);
         session.setAttribute("registered", null);                               //session proměnná registered určuje, zda se podařil zápis do mysql databáze
-        
-        security.accesedTo(Rights.applicant, response);
+        security.noDirectAccess(response);
     %>
 <h1 class="title-header"></h1>
         </div><!-- end .column-title -->
@@ -52,32 +52,26 @@
                 <div class="entry-summary"><p></p>
                     
                     <%
-                        String username=security.getUser().getUsername();
-                        HashMap<Label, String> info;
-                        if(security.isUchazec()||security.isStudent()){
-                            SQLTables table=sql.findTableWithApplicant(username);
-                            info=sql.showApplicant(username, table);
-                        } else {
-                            info=sql.showLoginInfoOfUser(username);
-                        }
+                        LinkedHashMap<Label, String> info=(LinkedHashMap<Label, String>) session.getAttribute("info");
                         for(Label label : info.keySet()) {
-                            if(FormGroup.contact.getFirst(info)!=null&&FormGroup.contact.getFirst(info).equals(label)){   //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                        //    if(FormGroup.contact.getFirst(info)!=null&&FormGroup.contact.getFirst(info).equals(label)){   //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                    
                     %>
-                    <fieldset>
-                        <legend><%= FormGroup.contact.getName() %></legend>
+                    <!--<fieldset>
+                        <legend><%= FormGroup.contact.getName() %></legend>-->
                     <%
-                            }
+                            //} 
                     %>
                     <div>
                         <span id="listOfApplicantsLabel"><%= label.getNameForUsers() %></span>
                         <span id="listOfApplicants"><%= info.get(label) %></span>
                     </div>
                     <%
-                            if(FormGroup.contact.getLast(info)!=null&&FormGroup.contact.getLast(info).equals(label)){     //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
+                            //if(FormGroup.contact.getLast(info)!=null&&FormGroup.contact.getLast(info).equals(label)){     //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
                     %>
-                    </fieldset>
+                    <!-- </fieldset> -->
                     <%
-                            }
+                            //}
                         }
                     %>
                     <%= message %>

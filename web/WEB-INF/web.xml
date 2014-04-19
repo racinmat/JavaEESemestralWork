@@ -15,6 +15,14 @@
         <url-pattern>/AddAdministrativa</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>ForLoggedIn</servlet-name>
+        <servlet-class>servlet.ForLoggedIn</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForLoggedIn</servlet-name>
+        <url-pattern>/ForLoggedIn</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>AddAdministrativaCheck</servlet-name>
         <servlet-class>servlet.AddAdministrativaCheck</servlet-class>
     </servlet>

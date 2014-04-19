@@ -99,12 +99,14 @@ public class SecurityCheck {
         HttpSession session = request.getSession(true);
         if (user==null&&session.getAttribute("redirect")==null) {   //kvůli tomu, že stránka padá při pokusu o několik přesměrování najednou, je zde ošetření, při přesměrování se do proměnné redirect dá hodnota
             try {
+                session.setAttribute("redirect", "true");
                 response.sendRedirect("notLogged.jsp");
             } catch (IOException ex) {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to notLogged.jsp. "+ex.getMessage(), ex);
             }
         } else if (user.getRights().getRightsValue()>rights.getRightsValue()&&session.getAttribute("redirect")==null) {
             try {
+                session.setAttribute("redirect", "true");
                 response.sendRedirect("chyba.jsp?error=2");
             } catch (IOException ex) {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to chyba.jsp?error=2. "+ex.getMessage(), ex);
@@ -116,12 +118,14 @@ public class SecurityCheck {
         HttpSession session = request.getSession(true);
         if (user==null&&session.getAttribute("redirect")==null) {
             try {
+                session.setAttribute("redirect", "true");
                 response.sendRedirect("notLogged.jsp");
             } catch (IOException ex) {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to notLogged.jsp. "+ex.getMessage(), ex);
             }
         } else if (user.getRights().getRightsValue()!=rights.getRightsValue()&&session.getAttribute("redirect")==null) {
             try {
+                session.setAttribute("redirect", "true");
                 response.sendRedirect("chyba.jsp?error=2");
             } catch (IOException ex) {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "accesedTo method", "Error in redirecting to chyba.jsp?error=2. "+ex.getMessage(), ex);

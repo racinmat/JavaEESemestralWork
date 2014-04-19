@@ -86,7 +86,7 @@ public class SendEmail
                 + "vaše elektronická přihláška byla úspěšně podána,\r\n"
                 + "vaše přihlašovací jméno je "+username
                 + " a vaše heslo je "+password
-                + " .\r\n"
+                + ".\r\n"
                 + "Pomocí techto přihlašovacích údajů můžete na stránkách školy pozorovat stav vyřízení své přihlášky.\r\n"
                 + "Po přihlášení si můžete změnit své heslo.\r\n"
                 + "S pozdravem, automatizovaný systém."

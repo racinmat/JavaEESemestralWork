@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -343,8 +344,8 @@ public class Mysql {
      * @return returns all data in chosen table, table is indexed by label, 
      * @throws java.sql.SQLException 
      */
-    public HashMap<Label, String> showApplicant(String username, SQLTables tabulka) throws SQLException{
-        HashMap<Label,String> output=new HashMap<>();                         
+    public LinkedHashMap<Label, String> showApplicant(String username, SQLTables tabulka) throws SQLException{
+        LinkedHashMap<Label,String> output=new LinkedHashMap<>();                         
         String sql = "SELECT * FROM "+tabulka.getTable()+" where "+tabulka.getPrimaryKey().getNameRaw()+" = ?";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,username);
@@ -359,8 +360,8 @@ public class Mysql {
         sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+" = ?";
         ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,output.get(SQLTables.login.getPrimaryKey()));
-        ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
-        while(rsLogin.next()){
+        rs = ps.executeQuery();                          //pro parametrizovaný dotaz
+        while(rs.next()){
             for (Label label : Label.values()) {
                 if (label.isInTable(SQLTables.login)) {
                     output.put(label, rs.getString(label.getNameRaw()));
@@ -413,8 +414,8 @@ public class Mysql {
         throw new IllegalArgumentException("User "+username+" was not found.");
     }
     
-    public HashMap<Label,String> showLoginInfoOfUser(String username) throws SQLException{
-        HashMap<Label,String> output = new HashMap<>();
+    public LinkedHashMap<Label,String> showLoginInfoOfUser(String username) throws SQLException{
+        LinkedHashMap<Label,String> output = new LinkedHashMap<>();
         String sql = "SELECT * FROM "+SQLTables.login.getTable()+" where "+SQLTables.login.getPrimaryKey().getNameRaw()+" = ?";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,username);

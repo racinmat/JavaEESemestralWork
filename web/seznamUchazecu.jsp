@@ -24,8 +24,12 @@
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
     SecurityCheck security=new SecurityCheck(request);
+    security.noDirectAccess(response);
     security.accesedTo(Rights.administrativa, response);
-    String temp=(String)session.getAttribute("tabulka");
+    String temp="";                    //implicitní hodnota, která je vždy přepsána, je zde pouze proto, že při pokusu o přímý přístup session proměnná "tabulka" nemá žádnou hodnotu a stránka spadne ještě před přesměrováním
+    if ((String)session.getAttribute("tabulka")!=null) {
+        temp=(String)session.getAttribute("tabulka");
+    }
     SQLTables tabulka=SQLTables.getTableFromNumberInString(temp);
 %>
     <h1 class="title-header">Pro Administrativu</h1>

@@ -137,7 +137,7 @@
                 %>
                 <li id="menu-item" class="menu-item  
                     <%= menu.getProPrihlasene()%>
-                    "><a href="proPrihlasene.jsp">Můj profil</a></li>
+                    "><a href="ForLoggedIn">Můj profil</a></li>
                 <%
                     }
                 %>
