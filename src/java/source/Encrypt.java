@@ -33,7 +33,7 @@ public class Encrypt {
                 username=getMD5(username, password);
                 password=getSHA256(password, username);
             } catch (NoSuchAlgorithmException ex) {
-                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "encrypt method", ex.getMessage(), ex);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "encrypt", ex.getMessage(), ex);
             }
         }
         return password;
@@ -47,7 +47,7 @@ public class Encrypt {
         try {
             return byteToString(digest.digest(password.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException ex) {
-            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "getSHA256 method", ex.getMessage(), ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "getSHA256", ex.getMessage(), ex);
         }
         return null;
     }
@@ -60,7 +60,7 @@ public class Encrypt {
         try {
             return byteToString(digest.digest(password.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException ex) {
-            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "getMD5 method", ex.getMessage(), ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "getMD5", ex.getMessage(), ex);
         }
         return null;
     }

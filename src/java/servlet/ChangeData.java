@@ -66,7 +66,7 @@ public class ChangeData extends HttpServlet {
                 }
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                SQLTables tabulka=sql.findTableWithApplicant(username);         //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
+                table=sql.findTableWithApplicant(username);         //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
                 HashMap<Label, String> noveudaje=new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isInTable(table)&&label.isChangableByUser()) {
@@ -74,7 +74,7 @@ public class ChangeData extends HttpServlet {
                     }
                 }
                 
-                update=sql.updateApplicant(noveudaje, tabulka);
+                update=sql.updateApplicant(noveudaje, table);
                 
                 if (update) {
                     session.setAttribute("registered", "success");

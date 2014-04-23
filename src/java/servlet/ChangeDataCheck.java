@@ -71,19 +71,19 @@ public class ChangeDataCheck extends HttpServlet {
                         heslo.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                heslo.put(Label.password, crypt.encrypt(heslo.get(Label.password), username));
-                LoggedUser passwordcheck=sql.login(username, heslo.get(Label.password));
+                heslo.put(Label.PASSWORD, crypt.encrypt(heslo.get(Label.PASSWORD), username));
+                LoggedUser passwordcheck=sql.login(username, heslo.get(Label.PASSWORD));
                 
                 if (!passwordcheck.getLogged().equals("success")) {
-                    notFilled.put(Label.password, notFilledStyle);
+                    notFilled.put(Label.PASSWORD, notFilledStyle);
                     error=true;
                 }
-                if (heslo.get(Label.newpassword).equals("")) {
-                    notFilled.put(Label.newpassword, notFilledStyle);
+                if (heslo.get(Label.NEW_PASSWORD).equals("")) {
+                    notFilled.put(Label.NEW_PASSWORD, notFilledStyle);
                     error=true;
                 }
-                if (!heslo.get(Label.newpassword).equals(heslo.get(Label.newpasswordcheck))||heslo.get(Label.newpasswordcheck).equals("")) {
-                    notFilled.put(Label.newpasswordcheck, notFilledStyle);
+                if (!heslo.get(Label.NEW_PASSWORD).equals(heslo.get(Label.NEW_PASSWORD_CHECK))||heslo.get(Label.NEW_PASSWORD_CHECK).equals("")) {
+                    notFilled.put(Label.NEW_PASSWORD_CHECK, notFilledStyle);
                     error=true;
                 }
             }
@@ -94,7 +94,7 @@ public class ChangeDataCheck extends HttpServlet {
                         input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                FormValidation form=validateForm(input, SQLTables.applicants, notFilledStyle);
+                FormValidation form=validateForm(input, SQLTables.APPLICANTS, notFilledStyle);
                 notFilled=form.getNotFilled();
                 error=form.isError();
             }

@@ -42,8 +42,6 @@ public class AddAdministrativa extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -54,16 +52,16 @@ public class AddAdministrativa extends HttpServlet {
             Mysql sql=new Mysql();
             String username=generator.getValidatedId();
             String password=generator.getId();
-            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.name.getNameRaw()), request.getParameter(Label.lastname.getNameRaw()), request.getParameter(Label.email.getNameRaw()));
+            SendEmail mail=new SendEmail(username, password, request.getParameter(Label.NAME.getNameRaw()), request.getParameter(Label.LASTNAME.getNameRaw()), request.getParameter(Label.EMAIL.getNameRaw()));
             mail.sendGmailToRegisteredUser();
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
             
             HashMap<Label, String> input=new HashMap<>();
-            input.put(Label.userName, username);
-            input.put(Label.password, password);
+            input.put(Label.USERNAME, username);
+            input.put(Label.PASSWORD, password);
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTables.ADMINISTRATIVA, SQLTables.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {

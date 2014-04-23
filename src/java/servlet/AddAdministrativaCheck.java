@@ -51,7 +51,7 @@ public class AddAdministrativaCheck extends HttpServlet{
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.administrativa, SQLTables.login)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTables.ADMINISTRATIVA, SQLTables.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -59,7 +59,7 @@ public class AddAdministrativaCheck extends HttpServlet{
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.administrativa, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTables.ADMINISTRATIVA, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
             input=stripPredvolba(input);

@@ -45,12 +45,12 @@ public class RegisterCheck extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
-            int length=Label.getNumberOfColumnsInTable(SQLTables.applicants);
+            int length=Label.getNumberOfColumnsInTable(SQLTables.APPLICANTS);
             String notFilledStyle=" class=\"notFilled\"";
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.applicants, SQLTables.login)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTables.APPLICANTS, SQLTables.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -58,7 +58,7 @@ public class RegisterCheck extends HttpServlet {
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.applicants, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTables.APPLICANTS, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
             input=stripPredvolba(input);

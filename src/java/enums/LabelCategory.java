@@ -11,10 +11,10 @@ package enums;
  * @author Azathoth
  */
 public enum LabelCategory {
-    iDnumber(new Label[]{Label.ID, Label.passport}),
+    ID_NUMBER(new Label[]{Label.ID, Label.PASSPORT}),
     ;
     
-    private Label[] list;                                                     //list musí být synchronizovaný se sloupcem v enumu Label
+    private final Label[] list;                                                     //list musí být synchronizovaný se sloupcem v enumu Label
 
     private LabelCategory(Label[] list)  {
         this.list = list;

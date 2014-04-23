@@ -55,7 +55,7 @@ public class Applicants extends HttpServlet {
                 String temp= request.getParameter("table");
                 this.table=SQLTables.getTableFromNumberInString(temp);          //tabulka, která bude vypisována
                 session.setAttribute("tabulka", table.getNumberAsString());
-                if (table.equals(SQLTables.applicants_spam)||table.equals(SQLTables.applicants_ipspam)) {
+                if (table.equals(SQLTables.APPLICANTS_SPAM)||table.equals(SQLTables.APPLICANTS_IPSPAM)) {
                     session.setAttribute("spam", true);                         //určuje, zda je spam true či false kvůli přesunu do tabulky uchazeci ve výpisu uchazečů
                 } else {
                     session.setAttribute("spam", false);
@@ -85,7 +85,7 @@ public class Applicants extends HttpServlet {
                 getApplicants(request, response);
                 LinkedHashMap<Label, String> checked=new LinkedHashMap<>();
                 for (Label label : Label.values()) {
-                    if ((label.isShowToAdministrativa()&&label.isInTables(SQLTables.login, table))||label.equals(Label.allColumns)) {
+                    if ((label.isShowToAdministrativa()&&label.isInTables(SQLTables.LOGIN, table))||label.equals(Label.ALL_COLUMNS)) {
                         temp=request.getParameter(label.getNameRaw());
                         if (temp!=null&&temp.equals("checked")) {
                             checked.put(label, "checked");
@@ -95,15 +95,15 @@ public class Applicants extends HttpServlet {
                         }
                     }
                 }
-                temp=request.getParameter(Label.allColumns.getNameRaw());                    //změnit také u seznamu uchazečů
+                temp=request.getParameter(Label.ALL_COLUMNS.getNameRaw());                    //změnit také u seznamu uchazečů
                 if (temp!=null&&temp.equals("checked")) {
-                    checked.put(Label.allColumns, "checked");
+                    checked.put(Label.ALL_COLUMNS, "checked");
                     for (Label label : checked.keySet()) {
                         checked.put(label, "checked");
                     }
                 }
                 else {
-                    checked.put(Label.allColumns, temp);
+                    checked.put(Label.ALL_COLUMNS, temp);
                 }
                 session.setAttribute("checked", checked);
             }
@@ -116,20 +116,20 @@ public class Applicants extends HttpServlet {
                     
                 for (int i = 0; i < udajeouzivatelich.size(); i++) {
                     for (Label label : Label.values()) {
-                        if (label.isInTables(table, SQLTables.login)&&request.getParameter(label.getNameRaw()+"+"+i)!=null) {
+                        if (label.isInTables(table, SQLTables.LOGIN)&&request.getParameter(label.getNameRaw()+"+"+i)!=null) {
                             udajeouzivatelich.get(i).put(label, request.getParameter(label.getNameRaw()+"+"+i));
                         }
                     }
                     temp=request.getParameter("transfer"+"+"+i);
                     if (temp!=null&&temp.equals("checked")) {
-                        transfer.add(udajeouzivatelich.get(i).get(Label.userName));
+                        transfer.add(udajeouzivatelich.get(i).get(Label.USERNAME));
                     }
                     temp=request.getParameter("createstudent"+"+"+i);
                     if (temp!=null&&temp.equals("checked")) {
                         createstudent.add(new LinkedHashMap<Label, String>());  //kvůli tomu, aby se neměnilo pořadí při iteraci
-                        createstudent.get(i+oprava).put(Label.userName, udajeouzivatelich.get(i).get(Label.userName));
-                        createstudent.get(i+oprava).put(Label.name, udajeouzivatelich.get(i).get(Label.name));
-                        createstudent.get(i+oprava).put(Label.lastname, udajeouzivatelich.get(i).get(Label.lastname));
+                        createstudent.get(i+oprava).put(Label.USERNAME, udajeouzivatelich.get(i).get(Label.USERNAME));
+                        createstudent.get(i+oprava).put(Label.NAME, udajeouzivatelich.get(i).get(Label.NAME));
+                        createstudent.get(i+oprava).put(Label.LASTNAME, udajeouzivatelich.get(i).get(Label.LASTNAME));
                     } else {
                         oprava--;
                     }
@@ -139,7 +139,7 @@ public class Applicants extends HttpServlet {
                 boolean success=true;                                           //používá se jako vyhodnocovací proměnná pro přenos mezi tabulkami
                 int i=0;
                 while (!(i==transfer.size())&&success) {                          //while cyklus se zastaví pokud je arraylist prázdný nebo pokud se nezdaří přenos
-                    success=sql.transferApplicant(table, transfer.get(i), SQLTables.applicants);
+                    success=sql.transferApplicant(table, transfer.get(i), SQLTables.APPLICANTS);
                     i++;
                     if (!success) {
                         System.out.println("Transfer failed at number: "+i);

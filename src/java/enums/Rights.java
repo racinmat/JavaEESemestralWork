@@ -11,17 +11,17 @@ package enums;
  * @author Azathoth
  */
 public enum Rights {//rightsValue   rightsString    initialRedirect         table
-    notLogged(          5,  "nepřihlášený",         "index.jsp",            SQLTables.nullTable         ),
-    applicant(          4,  "uchazeč",              "ForLoggedIn",         SQLTables.applicants          ),
-    student(            3,  "student",              "ForLoggedIn",         SQLTables.students          ),
-    pedagog(            2,  "pedagog",              "proPedagogy.jsp",      SQLTables.teachers        ),
-    administrativa(     1,  "administrativa",       "proAdministrativu.jsp",SQLTables.administrativa    ),
-    mainAdmin(          0,  "hlavní administrátor", "index.jsp",            SQLTables.login             ),
+    NOT_LOGGED(         5,  "nepřihlášený",         "index.jsp",            SQLTables.NULL_TABLE         ),
+    APPLICANT(          4,  "uchazeč",              "ForLoggedIn",          SQLTables.APPLICANTS        ),
+    STUDENT(            3,  "student",              "ForLoggedIn",          SQLTables.STUDENTS          ),
+    PEDAGOG(            2,  "pedagog",              "proPedagogy.jsp",      SQLTables.PEDAGOGOVE          ),
+    ADMINISTRATIVA(     1,  "administrativa",       "proAdministrativu.jsp",SQLTables.ADMINISTRATIVA    ),
+    MAIN_ADMIN(         0,  "hlavní administrátor", "index.jsp",            SQLTables.LOGIN             ),
     ;
-    private int rightsValue;
-    private String rightsString;
-    private String initialRedirect;                                             //na kterou stránku je dotyčný přesměrován po přihlášení
-    private SQLTables table;                                                    //tabulka, ve které jsou informace o tomto uživateli()napočítám login
+    private final int rightsValue;
+    private final String rightsString;
+    private final String initialRedirect;                                             //na kterou stránku je dotyčný přesměrován po přihlášení
+    private final SQLTables table;                                                    //tabulka, ve které jsou informace o tomto uživateli()napočítám LOGIN
     
     private Rights(int rightsValue, String rightsString, String initialRedirect, SQLTables table) {
         this.rightsValue = rightsValue;

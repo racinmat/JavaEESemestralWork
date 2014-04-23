@@ -11,7 +11,6 @@ import enums.Rights;
 import enums.SQLTables;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import javax.servlet.ServletException;
@@ -38,11 +37,12 @@ public class ForLoggedIn extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         SecurityCheck security=new SecurityCheck(request);
         security.noDirectAccess(response);
-        security.accesedTo(Rights.applicant, response);
+        security.accesedTo(Rights.APPLICANT, response);
         if (session.getAttribute("redirect")==null) {                           //kvůli předchozímu přeměrování z důvodů zákazu přímého přístupu
             try {
                 String username=security.getUser().getUsername();

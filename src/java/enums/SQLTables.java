@@ -11,19 +11,19 @@ package enums;
  * @author Azathoth
  */
 public enum SQLTables {//název tabulky      číslo používané v jsp   primární klíč
-    nullTable(          "",                 "",                     Label.userName         ),//kvůli nepřihlášenému uživateli a úspěšnému buildu stránky při zákazu direct accessu
-    applicants(         "uchazeci",         "0",                    Label.userName         ),
-    applicants_spam(    "uchazeci_spam",    "1",                    Label.userName         ),
-    applicants_ipspam(  "uchazeci_ipspam",  "2",                    Label.userName         ),
-    students(           "studenti",         "3",                    Label.userName         ),
-    login(              "login",            "4",                    Label.userName         ),
-    teachers(           "pedagogove",       "5",                    Label.userName         ),
-    administrativa(     "administrativa",   "6",                    Label.userName         ),
+    NULL_TABLE(         "",                 "",                     Label.USERNAME         ),//kvůli nepřihlášenému uživateli a úspěšnému buildu stránky při zákazu direct accessu
+    APPLICANTS(         "uchazeci",         "0",                    Label.USERNAME         ),
+    APPLICANTS_SPAM(    "uchazeci_spam",    "1",                    Label.USERNAME         ),
+    APPLICANTS_IPSPAM(  "uchazeci_ipspam",  "2",                    Label.USERNAME         ),
+    STUDENTS(           "studenti",         "3",                    Label.USERNAME         ),
+    LOGIN(              "login",            "4",                    Label.USERNAME         ),
+    PEDAGOGOVE(         "pedagogove",       "5",                    Label.USERNAME         ),
+    ADMINISTRATIVA(     "administrativa",   "6",                    Label.USERNAME         ),
     ;
     
-    private String table;
-    private String numberAsString;                                              //url proměnné mají pouze typ string
-    private Label primaryKey;
+    private final String table;
+    private final String numberAsString;                                              //url proměnné mají pouze typ string
+    private final Label primaryKey;
     
     private SQLTables(String table, String numberAsString, Label primaryKey) {
         this.table = table;

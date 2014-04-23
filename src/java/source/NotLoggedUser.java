@@ -15,7 +15,7 @@ import enums.Rights;
 public class NotLoggedUser extends LoggedUser{
 
     public NotLoggedUser() {
-        super("", "", Rights.notLogged, "", "fail");
+        super("", "", Rights.NOT_LOGGED, "", "fail");
     }
     
 }
