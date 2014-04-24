@@ -8,6 +8,8 @@ package enums;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -34,7 +36,7 @@ public enum FormGroup {
 
     /**
      * 
-     * @return 
+     * @return name for users in String, is used as legend for fieldset.
      */
     public String getName() {
         return name;
@@ -42,56 +44,56 @@ public enum FormGroup {
 
     /**
      * 
-     * @return 
+     * @return array of Labels containing all Labels from this group.
      */
     public Label[] getContent() {
         return content;
     }
     
     /**
-     * 
-     * @param input
-     * @return 
+     * Returns first label from provided Map contained in this enum.
+     * @param input Map where is searched first occurence of any Label from this FormGroup
+     * @return first Label from the beginning of Map contained in this FormGroup
      */
-    public Label getFirst(HashMap<Label, String> input){
+    public Label getFirst(Map<Label, String> input){
         Label output = getFirst(input.keySet().toArray(new Label[input.keySet().size()]));
         return output;
     }
     
     /**
-     * 
-     * @param input
-     * @return 
+     * Returns last label from provided Map contained in this enum.
+     * @param input Map where is searched last occurence of any Label from this FormGroup
+     * @return last Label from the beginning of Map contained in this FormGroup
      */
-    public Label getLast(HashMap<Label, String> input){
+    public Label getLast(Map<Label, String> input){
         Label output=getLast(input.keySet().toArray(new Label[input.keySet().size()]));
         return output;
     }
     
     /**
-     * 
-     * @param input
-     * @return 
+     * Returns first label from provided List contained in this enum.
+     * @param input List where is searched first occurence of any Label from this FormGroup
+     * @return first Label from the beginning of List contained in this FormGroup
      */
-    public Label getFirst(ArrayList<Label> input){
+    public Label getFirst(List<Label> input){
         Label output = getFirst(input.toArray(new Label[input.size()]));
         return output;
     }
     
     /**
-     * 
-     * @param input
-     * @return 
+     * Returns last label from provided List contained in this enum.
+     * @param input List where is searched last occurence of any Label from this FormGroup
+     * @return last Label from the beginning of List contained in this FormGroup
      */
-    public Label getLast(ArrayList<Label> input){
+    public Label getLast(List<Label> input){
         Label output=getLast(input.toArray(new Label[input.size()]));
         return output;
     }
     
     /**
-     * 
-     * @param input
-     * @return 
+     * Returns last label from provided array contained in this enum.
+     * @param input array where is searched last occurence of any Label from this FormGroup
+     * @return last Label from the beginning of array contained in this FormGroup
      */
     public Label getLast(Label[] input){
         Stack <Label> stack = new Stack<>();
@@ -107,38 +109,33 @@ public enum FormGroup {
     }
     
     /**
-     * 
-     * @param input
-     * @return 
+     * Returns first label from provided array contained in this enum.
+     * @param input array where is searched first occurence of any Label from this FormGroup
+     * @return first Label from the beginning of array contained in this FormGroup, return null is provided label is not in this enum
      */
-    public Label getFirst(Label[] input){
-        Label output = null;
-        int count=0;
-        boolean found=false;
+    public Label getFirst(Label[] input) throws IllegalArgumentException{
         for (Label label : input) {
-            if (this.contains(label)&&!found) {
-                output=label;
-                found=true;
+            if (this.contains(label)) {
+                return label;
             }
         }
-        return output;
+        throw new IllegalArgumentException(this.getName()+" does not contain any of provided labels");
     }
     
     /**
      * Determines whether contains label or not.
      * @param label tested if is contained in this object or not.
-     * @return true when provided label is contained
+     * @return true when provided label is contained, otherwise return false
      */
-    public boolean contains(Label label){
+    public boolean contains(Label label) throws IllegalArgumentException{
         if (label==null) {
             throw new IllegalArgumentException("You cannot use null as argument.");
         }
-        boolean output=false;
-        for (int i = 0; i < this.content.length; i++) {
-            if (label.equals(this.content[i])) {
-                output=true;
+        for (Label content : this.content) {
+            if (label.equals(content)) {
+                return true;
             }
         }
-        return output;
+        return false;
     }
 }

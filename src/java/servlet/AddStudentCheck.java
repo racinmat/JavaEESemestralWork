@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import source.FormValidation;
@@ -61,7 +61,7 @@ public class AddStudentCheck extends HttpServlet {
             }
             for (int i = 0; i < input.size(); i++) {
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTables.STUDENTS)&&!label.isAutoFill()) {
+                    if (label.isInTable(SQLTable.STUDENTS)&&!label.isAutoFill()) {
                         if (label.isPhonenumber()){
                             input.get(i).put(label, request.getParameter("predvolba"+label.getNameRaw()+"+"+i)+request.getParameter(label.getNameRaw()+"+"+i));
                         } else {
@@ -69,7 +69,7 @@ public class AddStudentCheck extends HttpServlet {
                         }
                     }
                 }
-                FormValidation form=validateForm(input.get(i), SQLTables.STUDENTS, notFilledStyle);
+                FormValidation form=validateForm(input.get(i), SQLTable.STUDENTS, notFilledStyle);
                 notFilled.add(form.getNotFilled());
                 if (form.isError()) {       //aby nenastalo přemátání true falsem v případě, kdy např. předposlední bude špatně a poslední správně
                     error=form.isError();

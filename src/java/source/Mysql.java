@@ -8,8 +8,8 @@ package source;
 
 import enums.Label;
 import enums.Rights;
-import enums.SQLTables;
-import static enums.SQLTables.*;
+import enums.SQLTable;
+import static enums.SQLTable.*;
 import enums.ApplicationState;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -33,17 +35,13 @@ public class Mysql {
     private final String pwd;
 
     /**
-     * Zadefinuje proměnné a pokusí se vytvořit spojení s databází.
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.sql.SQLException
+     * Defines variables and tries to establish connection with SQL database.
+     * @throws java.lang.ClassNotFoundException when establishing a connection fails
+     * @throws java.sql.SQLException when jdbs driver is not found
      */
-    public Mysql() throws ClassNotFoundException, SQLException {                                                            //vyhazuje výjimky, které mohou být chyceny servletem, který uživatele přesměruje na statickou stránku a oznámí mu problém
+    public Mysql() throws ClassNotFoundException, SQLException {                //vyhazuje výjimky, které mohou být chyceny servletem, který uživatele přesměruje na statickou stránku a oznámí mu problém
         url = "jdbc:mysql://localhost:3306/";                                   //pro localhost
-        //url = "jdbc:mysql://localhost/azathoth?autoReconnect=true";             //pro eatj
-        
         dbName ="mysql";                                                        //pro localhost
-        //dbName ="azathoth";                                                     //pro eatj
-        
         uname = "root";
         pwd = "";
         Class.forName("com.mysql.jdbc.Driver");
@@ -51,21 +49,14 @@ public class Mysql {
     }
           
     /**
-     * Přihlásí uživatele
- NAME, tedy jméno
- lastNAME, tedy příjmení
- logged, String, který nabývá hodnot buď success nebo fail
-     * 
-     * @param username uživateloho přihlašovací jméno
-     * @param password uživatelův hash hesla
-     * @return vrátí pole Stringů, kde budou uložené infomrace o uživateli, a to popořadě:
- RIGHTS, což je integer od 0 výše
- RIGHTSString, což je název přiřazený každé hodnotě RIGHTS
-     * @throws java.sql.SQLException
+     * Tries to login user and returns instance of LoggedUser with data from SQL table.
+     * @param username username user put to login form
+     * @param password hash of password user put to login form
+     * @return Object LoggedUser containing all important data about user, returns UserFailingInLogin, when login is not successful
+     * @throws java.sql.SQLException when something goes wrong with database
      */
     public LoggedUser login(String username, String password) throws SQLException{
-        LoggedUser user=null;
-        String sql = "SELECT * FROM "+SQLTables.LOGIN.getTable()+" where "+Label.USERNAME.getNameRaw()+"=? and "+Label.PASSWORD.getNameRaw()+"=?";
+        String sql = "SELECT * FROM "+SQLTable.LOGIN.getTable()+" where "+Label.USERNAME.getNameRaw()+"=? and "+Label.PASSWORD.getNameRaw()+"=?";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,username);
         ps.setString(2,password);
@@ -83,117 +74,101 @@ public class Mysql {
         }
         if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
             Rights rightsObject=Rights.getRightsFromInt(rights);
-            user=new LoggedUser(name, lastname, rightsObject, username, "success");
+            return new LoggedUser(name, lastname, rightsObject, username, "success");
         }
-        else{
-            user=new LoggedUser("", "", Rights.NOT_LOGGED, "", null);
-        }
-        return user;
+        return new UserFailingInLogin();
     }
     
     /**
-     * Vloží do tabulky ip adres novou ip adresu s počtem registrací 1
-     * @param IP IP adresa, která má být vložena
-     * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
-     * @throws java.sql.SQLException
+     * Adds new ip address with number of registrations set to 1 to table of ip addresses.
+     * @param IP IP address to be added
+     * @return returns true when adding is successful and returns false, when something goes wrong
+     * @throws java.sql.SQLException when something goes wrong with database
      */
     public boolean insertNewIP(String IP) throws SQLException{
-        boolean output=false;
         String sql = "INSERT INTO ip_adresa(ip, count) VALUES(?,?)";
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,IP);
         ps.setInt(2,1);
         int rs = ps.executeUpdate();                                            //pro parametrizovaný dotaz
-        if (rs==1) {
-            output=true;
-        }
-        return output;
+        return rs==1;
     }
     
     /**
-     * Najde IP adresu a vrátí počet registrací
-     * @param IP IP adresa, která má být vyhledána v tabulce IP adres
-     * @return počet registrací z dané IP adresy
-     * @throws java.sql.SQLException
+     * Finds IP address and returns number of registrations from this address.
+     * @param IP IP address to be find
+     * @return number of registrations from provided IP address, returns 0 when address is not found in database
+     * @throws java.sql.SQLException when something goes wrong with database
      */
     public int findIP(String IP) throws SQLException{
-        int count=0;
         String sql = "SELECT * FROM ip_adresa where ip=?";
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,IP);
-        ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
+        ResultSet rs = ps.executeQuery();                                       //pro parametrizovaný dotaz
         while(rs.next()){
-            count=rs.getInt("count");                                       
+            return rs.getInt("count");                                       
         }
-        return count;
+        return 0;
     }
     
     /**
-     * Zvýší počet registrací z dané IP adresy o 1
-     * @param IP IP adresa, u které má být zvýšen počet registrací
-     * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
-     * @throws java.sql.SQLException
+     * Increases number of registrations from provided IP address by one.
+     * @param IP IP address whose number of registrations shall be incremented
+     * @return true when modyfiing row was succesful, otherwise return false;
+     * @throws java.sql.SQLException when something goes wrong with database
      */
     public boolean increaseIPcount(String IP) throws SQLException{
-        boolean output=false;
         String sql = "UPDATE ip_adresa SET count = count+1 WHERE ip = ?";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,IP);
         int rs = ps.executeUpdate();                                        //pro parametrizovaný dotaz
-        if (rs==1) {
-            output=true;
-        }
-        return output;
+        return rs==1;
     }
     
     /**
-     * Vloží do tabulky LOGINu i do tabulky uchazečů záznam o novém uchazeči o studium
-     * @param tabulka tabulka, do které se mají informace vložit, možné hodnoty: uchazeci, uchazeci_spam a uchazeci_ipspam
-     * @param input pole, kde jsou všechny údaje o STUDENTovi
-     * @return vrátí true, pokud bylo vložení úspěšné, jinak vrátí false
-     * @throws java.sql.SQLException
+     * Adds new applicant to login table and to applicants table.
+     * @param table table, where new applicant should be stored: uchazeci, uchazeci_spam or uchazeci_ipspam
+     * @param input array with all info about new applicant
+     * @return returns true when adding is successful and returns false, when something goes wrong
+     * @throws java.sql.SQLException when something goes wrong with database
      */
-    public boolean insertNewApplicant(SQLTables tabulka, HashMap<Label, String> input) throws SQLException{
-        boolean output;
+    public boolean insertNewApplicant(SQLTable table, Map<Label, String> input) throws SQLException{
         input.put(Label.APPLICATION_STATE, ApplicationState.getDefaultBoolean().getName());
         input.put(Label.TUITION, "nezaplaceno");
-        boolean output1=insertNewUserToLogin(input,4);
-        boolean output2=insertApplicant(tabulka, input);
-        output=output1&&output2;
-        return output;
+        boolean output1=insertNewUserToLogin(input,Rights.APPLICANT);
+        boolean output2=insertApplicant(table, input);
+        return output1&&output2;
     }
     
     /**
-     * Vrátí v poli polí všechny uchazeče o studium z dané tabulky
-     * @param tabulka tabulka, do které se mají informace vložit, možné hodnoty: uchazeci, uchazeci_spam a uchazeci_ipspam
-     * @return vrátí pole polí stringů, první udává řádek se všemi údaji, druhý udává údaj v konkrétním sloupečku, číslování pole je stejné jako u vkládání údajů o uchazeči do tabulky
-     * @throws java.sql.SQLException
+     * Returns all users from provided SQL table.
+     * @param table whose content you want to get
+     * @return List of Map<Label, String> where is stored all info from provided table
+     * @throws java.sql.SQLException when something goes wrong with database
      */
-    public ArrayList<HashMap<Label,String>> showPeople(SQLTables tabulka) throws SQLException{                        //protože název tabulky nejde parametrizovat, je to ošetřeno přes výčtový typ
-        ArrayList<HashMap<Label,String>> output = new ArrayList<>();
-        String sql = "SELECT * FROM "+tabulka.getTable()+" where 1";
+    public List<Map<Label,String>> showPeople(SQLTable table) throws SQLException{                        //protože název tabulky nejde parametrizovat, je to ošetřeno přes výčtový typ
+        List<Map<Label,String>> output = new ArrayList<>();
+        String sql = "SELECT * FROM "+table.getTable()+" where 1";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-        System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-            HashMap<Label,String> temp=new HashMap<>();                         
+            Map<Label,String> temp=new LinkedHashMap<>();                         
             for (Label label : Label.values()) {
-                if (label.isInTable(tabulka)) {
+                if (label.isInTable(table)) {
                     temp.put(label, rs.getString(label.getNameRaw()));
                 }
             }
             output.add(temp);
         }
         for (int i = 0; i < output.size(); i++) {
-            sql = "SELECT * FROM "+SQLTables.LOGIN.getTable()+" where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
+            sql = "SELECT * FROM "+SQLTable.LOGIN.getTable()+" where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
             ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,output.get(i).get(SQLTables.LOGIN.getPrimaryKey()));
-            System.out.println("Sestavené SQL pro tabulku "+SQLTables.LOGIN.getTable()+" je: "+sql);
-            ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
-            while(rsLogin.next()){
+            ps.setString(1,output.get(i).get(SQLTable.LOGIN.getPrimaryKey()));
+            rs = ps.executeQuery();                          //pro parametrizovaný dotaz
+            while(rs.next()){
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTables.LOGIN)) {
-                        String temp=rsLogin.getString(label.getNameRaw());
+                    if (label.isInTable(SQLTable.LOGIN)) {
+                        String temp=rs.getString(label.getNameRaw());
                         output.get(i).put(label, temp);
                     }
                 }
@@ -202,38 +177,46 @@ public class Mysql {
         return output;
     }
     
-    public ArrayList<HashMap<Label,String>> showPeople(SQLTables tabulka, String criterium, Label criteriumColumn, boolean negate) throws SQLException{
-        ArrayList<HashMap<Label,String>> output = new ArrayList<>();
+    /**
+     * Returns all content from provided table which has same String in provided criteriumColumn as is provided criterium 
+     * and if negate is true, returns all content from provided table which has not same String in provided criteriumColumn as is provided criterium
+     * @param table whose content you want to get
+     * @param criterium String which shall shown data has or not (depending on provided negate)
+     * @param criteriumColumn Name of column whose content shall be compared with String provided in criterium
+     * @param negate determines whether wanted data should or should not match String provided in criterium
+     * @return List of Map<Label, String> where is stored all info from provided
+     * @throws SQLException when something goes wrong with database
+     */
+    public List<Map<Label,String>> showPeople(SQLTable table, String criterium, Label criteriumColumn, boolean negate) throws SQLException{
+        List<Map<Label,String>> output = new ArrayList<>();
         String sql;
         if (negate) {
-            sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNameRaw()+"<>?";
+            sql = "SELECT * FROM "+table.getTable()+" where "+criteriumColumn.getNameRaw()+"<>?";
         } else {
-            sql = "SELECT * FROM "+tabulka.getTable()+" where "+criteriumColumn.getNameRaw()+"=?";
+            sql = "SELECT * FROM "+table.getTable()+" where "+criteriumColumn.getNameRaw()+"=?";
         }
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,criterium);
-        System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-            HashMap<Label,String> temp=new HashMap<>();                         
+            Map<Label,String> temp=new LinkedHashMap<>();                         
             for (Label label : Label.values()) {
-                if (label.isInTable(tabulka)) {
+                if (label.isInTable(table)) {
                     temp.put(label, rs.getString(label.getNameRaw()));
                 }
             }
             output.add(temp);
         }
-        for (int i = 0; i < output.size(); i++) {
-            sql = "SELECT * FROM "+SQLTables.LOGIN.getTable()+" where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
+        for (Map<Label, String> map : output) {
+            sql = "SELECT * FROM "+SQLTable.LOGIN.getTable()+" where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
             ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-            ps.setString(1,output.get(i).get(SQLTables.LOGIN.getPrimaryKey()));
-            System.out.println("Sestavené SQL pro tabulku "+SQLTables.LOGIN.getTable()+" je: "+sql);
-            ResultSet rsLogin = ps.executeQuery();                          //pro parametrizovaný dotaz
-            while(rsLogin.next()){
+            ps.setString(1,map.get(SQLTable.LOGIN.getPrimaryKey()));
+            rs = ps.executeQuery();                          //pro parametrizovaný dotaz
+            while(rs.next()){
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTables.LOGIN)) {
-                        String temp=rsLogin.getString(label.getNameRaw());
-                        output.get(i).put(label, temp);
+                    if (label.isInTable(SQLTable.LOGIN)) {
+                        String temp=rs.getString(label.getNameRaw());
+                        map.put(label, temp);
                     }
                 }
             }
@@ -242,56 +225,59 @@ public class Mysql {
     }
     
     /**
-     * Nyní vytváří updateStatement přesně podle toho, co je u usera změněno, není zapotřebí kopírovat staré hodnoty
-     * @param user
-     * @param tabulka
-     * @return 
+     * Dynamicaly creates update statement for provided Map and SQLTable
+     * @param user Map containing Labels which will be used for creating update statement
+     * @param table SQLTable where shall be update executed
+     * @return SQL prepared statement
      */
-    private String createUpdateStatement(HashMap<Label,String> user, SQLTables tabulka){
-        String sql = "UPDATE "+tabulka.getTable()+" SET ";
+    private String createUpdateStatement(Map<Label,String> user, SQLTable table){
+        String sql = "UPDATE "+table.getTable()+" SET ";
         for (Label label : user.keySet()) {
-            if (label.isInTable(tabulka)&&!label.isPrimaryKey()) {
+            if (label.isInTable(table)&&!label.isPrimaryKey()) {
                 sql+=label.getNameRaw()+" = ?, ";
             }
         }
-        sql=sql.substring(0, sql.length()-2);                            //odtrhne poslední čárku a mezeru za ní
-        sql+=" WHERE "+tabulka.getPrimaryKey().getNameRaw()+"= ?";
-        System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
+        sql=sql.substring(0, sql.length()-2);                                   //odtrhne poslední čárku a mezeru za ní
+        sql+=" WHERE "+table.getPrimaryKey().getNameRaw()+"= ?";
         return sql;
     }
     
-    public boolean updateApplicants(SQLTables tabulka, ArrayList<HashMap<Label, String>> uchazec) throws SQLException{
-        int[] rs=new int[uchazec.size()*2];
-        for (int i = 0; i < uchazec.size(); i++) {                              //update se provede pro každého uchazeče
-            String sql=createUpdateStatement(uchazec.get(i), tabulka);
+    /**
+     * Changes data in Map of all applicants provident in List of Map
+     * @param table whose data shall be updated
+     * @param applicant List of Map which contains all data which shall be updated
+     * @return true when updating is successful and returns false, when something goes wrong
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean updateApplicants(SQLTable table, List<Map<Label, String>> applicant) throws SQLException{
+        int[] rs=new int[applicant.size()*2];
+        for (int i = 0; i < applicant.size(); i++) {                            //update se provede pro každého uchazeče
+            String sql=createUpdateStatement(applicant.get(i), table);
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             int count=0;
-            for (Label label : uchazec.get(i).keySet()) {
-                if (!label.isPrimaryKey()&&label.isInTable(tabulka)) {
-                    count++;                                                        //číslování v preparedStatementu začíná od jedné
-                    ps.setString(count,uchazec.get(i).get(label));
+            for (Label label : applicant.get(i).keySet()) {
+                if (!label.isPrimaryKey()&&label.isInTable(table)) {
+                    count++;                                                    //číslování v preparedStatementu začíná od jedné
+                    ps.setString(count,applicant.get(i).get(label));
                 }
             }
             count++;
-            ps.setString(count,uchazec.get(i).get(tabulka.getPrimaryKey()));
+            ps.setString(count,applicant.get(i).get(table.getPrimaryKey()));
 
             rs[2*i] = ps.executeUpdate(); 
-            System.out.println(sql+" was successfully executed.");
-            sql=createUpdateStatement(uchazec.get(i), SQLTables.LOGIN);
+            sql=createUpdateStatement(applicant.get(i), SQLTable.LOGIN);
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             count=0;
-            for (Label label : uchazec.get(i).keySet()) {
-                if (!label.isPrimaryKey()&&label.isInTable(SQLTables.LOGIN)) {
+            for (Label label : applicant.get(i).keySet()) {
+                if (!label.isPrimaryKey()&&label.isInTable(SQLTable.LOGIN)) {
                     count++;                                                        //číslování v preparedStatementu začíná od jedné
-                    ps.setString(count,uchazec.get(i).get(label));
-                    System.out.println("ps.setString("+count+","+uchazec.get(i).get(label)+");");
+                    ps.setString(count,applicant.get(i).get(label));
+                    System.out.println("ps.setString("+count+","+applicant.get(i).get(label)+");");
                 }
             }
             count++;
-            ps.setString(count,uchazec.get(i).get(tabulka.getPrimaryKey()));
-
+            ps.setString(count,applicant.get(i).get(table.getPrimaryKey()));
             rs[2*i+1] = ps.executeUpdate(); 
-            System.out.println(sql+" was successfully executed.");
         }
         boolean output=true;
         for (int i = 0; i < rs.length; i++) {
@@ -302,127 +288,131 @@ public class Mysql {
         return output;
     }
     
+    /**
+     * Changes password of chosen user.
+     * @param username of user, whose password should be changed
+     * @param password new password to be set
+     * @return true when updating is successful and returns false, when something goes wrong
+     * @throws SQLException when something goes wrong with database
+     */
     public boolean updatePassword(String username, String password) throws SQLException{
-        int rs;
-        String sql = "UPDATE "+SQLTables.LOGIN.getTable()+" SET "+Label.PASSWORD.getNameRaw()+"=? where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+"=?";
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        String sql = "UPDATE "+SQLTable.LOGIN.getTable()+" SET "+Label.PASSWORD.getNameRaw()+"=? where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+"=?";
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,password);
         ps.setString(2,username);
-        rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
-        boolean output=true;
-        if (rs!=1) {
-            output=false;
-        }
-        return output;
+        int rs = ps.executeUpdate();                                            //pro parametrizovaný dotaz
+        return rs==1;
     }
     
     /**
-     * 
-     * @param id
-     * @return returns true in case of unique id
-     * @throws java.sql.SQLException
+     * Validates ID, checks if it is unique.
+     * @param id ID to be checked if is unique or not
+     * @return returns true in case of unique id, otherwise return false
+     * @throws java.sql.SQLException when something goes wrong with database
      */
     public boolean validateId(String id) throws SQLException{
-        String sql = "SELECT * FROM "+SQLTables.LOGIN.getTable()+" where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+"=?";
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        String sql = "SELECT * FROM "+SQLTable.LOGIN.getTable()+" where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+"=?";
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,id);
-        ResultSet rs = ps.executeQuery();                                   //pro parametrizovaný dotaz
-        int size=0;
-        while(rs.next()){
-            size++;
-        }
-        if (size>0) {
-            return false;
-        }
-        return true;
+        ResultSet rs = ps.executeQuery();                                       //pro parametrizovaný dotaz
+        return rs.next();
     }
     
     /**
-     * Returns all data about chosen APPLICANT from chosen table, except of NAME and last NAME.
-     * @param username userNAME of user whose data will be returned
-     * @param tabulka table where is chosen user
-     * @return returns all data in chosen table, table is indexed by label, 
-     * @throws java.sql.SQLException 
+     * Returns all data about chosen applicant from chosen table.
+     * @param username of user whose data will be returned
+     * @param table where is chosen user stored
+     * @return returns all data in chosen table as Map<Label, String>
+     * @throws java.sql.SQLException when something goes wrong with database
      */
-    public LinkedHashMap<Label, String> showApplicant(String username, SQLTables tabulka) throws SQLException{
-        LinkedHashMap<Label,String> output=new LinkedHashMap<>();                         
-        String sql = "SELECT * FROM "+tabulka.getTable()+" where "+tabulka.getPrimaryKey().getNameRaw()+" = ?";
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+    public Map<Label, String> showApplicant(String username, SQLTable table) throws SQLException{
+        Map<Label,String> output=new LinkedHashMap<>();                         
+        String sql = "SELECT * FROM "+table.getTable()+" where "+table.getPrimaryKey().getNameRaw()+" = ?";
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,username);
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             for (Label label : Label.values()) {
-                if (label.isInTable(tabulka)) {
+                if (label.isInTable(table)) {
                     output.put(label, rs.getString(label.getNameRaw()));
                 }
             }
         }
-        sql = "SELECT * FROM "+SQLTables.LOGIN.getTable()+" where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
-        ps = conn.prepareStatement(sql);                                //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-        ps.setString(1,output.get(SQLTables.LOGIN.getPrimaryKey()));
-        rs = ps.executeQuery();                          //pro parametrizovaný dotaz
+        sql = "SELECT * FROM "+SQLTable.LOGIN.getTable()+" where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
+        ps = conn.prepareStatement(sql);                                        //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        ps.setString(1,output.get(SQLTable.LOGIN.getPrimaryKey()));
+        rs = ps.executeQuery();                                                 //pro parametrizovaný dotaz
         while(rs.next()){
             for (Label label : Label.values()) {
-                if (label.isInTable(SQLTables.LOGIN)) {
+                if (label.isInTable(SQLTable.LOGIN)) {
                     output.put(label, rs.getString(label.getNameRaw()));
                 }
             }
-        }
-        return output;
-    }
-    
-    public boolean updateApplicant(HashMap<Label,String> uchazec, SQLTables tabulka) throws SQLException{
-        int rs;
-        String sql=createUpdateStatement(uchazec, tabulka);
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-        int count=0;
-        for (Label label : uchazec.keySet()) {
-            if (!label.isPrimaryKey()&&label.isInTable(tabulka)) {
-                count++;
-                ps.setString(count,uchazec.get(label));
-            }
-        }
-        count++;
-        ps.setString(count,uchazec.get(tabulka.getPrimaryKey()));
-        
-        rs = ps.executeUpdate(); 
-        boolean output=true;
-        if (rs!=1) {
-            output=false;
         }
         return output;
     }
     
     /**
-     * Returns NAME of table where is APPLICANT with userNAME from input
-     * @param username
-     * @return returns uchazeci, uchazeci_spam or uchazeci_ipspam, depending on where userNAME from id is stored
+     * Changes data provided in Map in provided SQL table.
+     * @param applicant Map containing data to be set to table, must contain primary key
+     * @param table SQL table where shall be data changed
+     * @return true when updating is successful and returns false, when something goes wrong
+     * @throws SQLException when something goes wrong with database
      */
-    public SQLTables findTableWithApplicant(String username) throws IllegalArgumentException, SQLException{
-        SQLTables output;
-        SQLTables[] tabulky={APPLICANTS, APPLICANTS_SPAM, APPLICANTS_IPSPAM};
-        for (SQLTables tabulky1 : tabulky) {
-            String sql = "SELECT * FROM " + tabulky1.getTable() + " where " + tabulky1.getPrimaryKey().getNameRaw() + " = ?";
+    public boolean updateApplicant(Map<Label,String> applicant, SQLTable table) throws SQLException{
+        int rs;
+        String sql=createUpdateStatement(applicant, table);
+        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        int count=0;
+        for (Label label : applicant.keySet()) {
+            if (!label.isPrimaryKey()&&label.isInTable(table)) {
+                count++;
+                ps.setString(count,applicant.get(label));
+            }
+        }
+        count++;
+        ps.setString(count,applicant.get(table.getPrimaryKey()));
+        
+        rs = ps.executeUpdate(); 
+        return rs==1;
+    }
+    
+    /**
+     * Returns SQL table where is applicant with provided username.
+     * @param username which shall be searched for in all tables
+     * @return returns one of tables: APPLICANTS, APPLICANTS_SPAM, APPLICANTS_IPSPAM
+     * @throws java.sql.SQLException when something goes wrong with database
+     * @throws java.lang.NoSuchFieldException when applicant is not in any of these three tables
+     */
+    public SQLTable findTableWithApplicant(String username) throws SQLException, NoSuchFieldException{
+        SQLTable[] tables={APPLICANTS, APPLICANTS_SPAM, APPLICANTS_IPSPAM};
+        for (SQLTable tables1 : tables) {
+            String sql = "SELECT * FROM " + tables1.getTable() + " where " + tables1.getPrimaryKey().getNameRaw() + " = ?";
             ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
             ps.setString(1,username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                output = tabulky1;
-                return output;
+                return tables1;
             }
         }
-        throw new IllegalArgumentException("User "+username+" was not found.");
+        throw new NoSuchFieldException("User "+username+" was not found.");
     }
     
-    public LinkedHashMap<Label,String> showLoginInfoOfUser(String username) throws SQLException{
-        LinkedHashMap<Label,String> output = new LinkedHashMap<>();
-        String sql = "SELECT * FROM "+SQLTables.LOGIN.getTable()+" where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
+    /**
+     * Returns Map with data from login table about user with provided username.
+     * @param username of user whose data shall be returned
+     * @return data of user with same username as provided
+     * @throws SQLException when something goes wrong with database
+     */
+    public Map<Label,String> showLoginInfoOfUser(String username) throws SQLException{
+        Map<Label,String> output = new LinkedHashMap<>();
+        String sql = "SELECT * FROM "+SQLTable.LOGIN.getTable()+" where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+" = ?";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,username);
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             for (Label label : Label.values()) {
-                if (label.isInTable(SQLTables.LOGIN)) {
+                if (label.isInTable(SQLTable.LOGIN)) {
                     output.put(label, rs.getString(label.getNameRaw()));
                 }
             }
@@ -430,111 +420,151 @@ public class Mysql {
         return output;
     }
     
-    public boolean transferApplicant(SQLTables tableFrom, String applicantUsername, SQLTables tableTo) throws SQLException{
-        boolean output;
-        HashMap<Label,String> input=showApplicant(applicantUsername, tableFrom);
+    /**
+     * Transfers applicant from one table to another.
+     * @param tableFrom table where is applicant stored
+     * @param applicantUsername username of applicant who shall be transfered
+     * @param tableTo table where shall applicant be trasferred 
+     * @return true if transfer is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean transferApplicant(SQLTable tableFrom, String applicantUsername, SQLTable tableTo) throws SQLException{
+        Map<Label,String> input=showApplicant(applicantUsername, tableFrom);
         boolean temp1=insertApplicant(tableTo, input);
         boolean temp2=deleteRow(applicantUsername, tableFrom);
-        output=temp1&&temp2;
-        return output;
-        
+        return temp1&&temp2;
     }
     
-    public boolean insertApplicant(SQLTables tabulka, HashMap<Label,String> input) throws SQLException{
-        boolean output;
-        String sql = createInsertStatement(tabulka);
-        output=executeInsertStatement(sql, input, tabulka);
-        return output;
+    /**
+     * Inserts applicant to provided SQL table.
+     * @param table where shall be applicant added
+     * @param input all data about applicant who shall be added
+     * @return true if adding is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean insertApplicant(SQLTable table, Map<Label,String> input) throws SQLException{
+        String sql = createInsertStatement(table);
+        return executeInsertStatement(sql, input, table);
     }
     
-    public boolean deleteRow(String username, SQLTables table) throws SQLException{
-        int rs;
+    /**
+     * Deletes all data about provided user.
+     * @param username of user who shall be deleted
+     * @param table where is user who shall be deleted
+     * @return true if deleting is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean deleteRow(String username, SQLTable table) throws SQLException{
         String sql = "DELETE FROM "+table.getTable()+" where "+table.getPrimaryKey().getNameRaw()+"=?";
-        ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
+        ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,username);
-        rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
-        boolean output=true;
-        if (rs!=1) {
-            output=false;
-        }
-        return output;
+        int rs = ps.executeUpdate();                                                //pro parametrizovaný dotaz
+        return rs==1;
     }
     
-    public boolean insertNewUserToLogin(HashMap<Label, String> input, int rights) throws SQLException{
-        boolean output;
-        input.put(Label.RIGHTS, Integer.toString(rights));
-        String sql = createInsertStatement(SQLTables.LOGIN);
-        output = executeInsertStatement(sql, input, SQLTables.LOGIN);
-        return output;
+    /**
+     * Inserts user to login table.
+     * @param input data about new user who shall be added to login table
+     * @param rights of user who shall be added
+     * @return true if adding is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean insertNewUserToLogin(Map<Label, String> input, Rights rights) throws SQLException{
+        input.put(Label.RIGHTS, Integer.toString(rights.getRightsValue()));
+        String sql = createInsertStatement(SQLTable.LOGIN);
+        return executeInsertStatement(sql, input, SQLTable.LOGIN);
     }
     
-    public boolean insertNewPedagog(HashMap<Label, String> input) throws SQLException{
-        boolean output;
-        boolean output1=insertNewUserToLogin(input,2);
-        boolean output2;
-        String sql = createInsertStatement(SQLTables.PEDAGOGOVE);
-        output2 = executeInsertStatement(sql, input, SQLTables.PEDAGOGOVE);
-        output=output1&&output2;
-        return output;
+    /**
+     * Inserts user to pedagog table.
+     * @param input data about new user who shall be added to pedagog table
+     * @return true if adding is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean insertNewPedagog(Map<Label, String> input) throws SQLException{
+        boolean output1=insertNewUserToLogin(input,Rights.PEDAGOG);
+        String sql = createInsertStatement(SQLTable.PEDAGOGOVE);
+        boolean output2 = executeInsertStatement(sql, input, SQLTable.PEDAGOGOVE);
+        return output1&&output2;
     }
     
-    public boolean insertNewAdministrativa(HashMap<Label, String> input) throws SQLException{
-        boolean output;
-        boolean output1=insertNewUserToLogin(input,1);
-        boolean output2;
-        String sql = createInsertStatement(SQLTables.ADMINISTRATIVA);
-        output2 = executeInsertStatement(sql, input, SQLTables.ADMINISTRATIVA);
-        output=output1&&output2;
-        return output;
+    /**
+     * Inserts user to administrativa table.
+     * @param input data about new user who shall be added to administrativa table
+     * @return true if adding is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean insertNewAdministrativa(Map<Label, String> input) throws SQLException{
+        boolean output1=insertNewUserToLogin(input,Rights.ADMINISTRATIVA);
+        String sql = createInsertStatement(SQLTable.ADMINISTRATIVA);
+        boolean output2 = executeInsertStatement(sql, input, SQLTable.ADMINISTRATIVA);
+        return output1&&output2;
     }
     
-    public boolean insertNewStudent(HashMap<Label, String> input) throws SQLException{
-        boolean output;
-        boolean output1=updateRights(input.get(SQLTables.LOGIN.getPrimaryKey()),3);
-        boolean output2;
-        String sql = createInsertStatement(SQLTables.STUDENTS);
-        output2 = executeInsertStatement(sql, input, SQLTables.STUDENTS);
-        output=output1&&output2;
-        return output;
+    /**
+     * Inserts user to student table.
+     * @param input data about new user who shall be added to student table
+     * @return true if adding is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean insertNewStudent(Map<Label, String> input) throws SQLException{
+        boolean output1=updateRights(input.get(SQLTable.LOGIN.getPrimaryKey()),Rights.STUDENT);
+        String sql = createInsertStatement(SQLTable.STUDENTS);
+        boolean output2 = executeInsertStatement(sql, input, SQLTable.STUDENTS);
+        return output1&&output2;
     }
     
-    public boolean updateRights(String username, int rights) throws SQLException{
-        int rs;
-        String sql = "UPDATE "+SQLTables.LOGIN.getTable()+" SET "+Label.RIGHTS.getNameRaw()+"=? where "+SQLTables.LOGIN.getPrimaryKey().getNameRaw()+"=?";
+    /**
+     * Changes rights of user with provided username to provided rights.
+     * @param username of user whose rights shall be changed
+     * @param rights new rights which shall be put to row where user with provided username is
+     * @return true if change is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    public boolean updateRights(String username, Rights rights) throws SQLException{
+        String sql = "UPDATE "+SQLTable.LOGIN.getTable()+" SET "+Label.RIGHTS.getNameRaw()+"=? where "+SQLTable.LOGIN.getPrimaryKey().getNameRaw()+"=?";
         ps=conn.prepareStatement(sql);                                      //parametrized statement pro dotaz s otazníky a pozdějším dosazením
-        ps.setInt(1,rights);
+        ps.setInt(1,rights.getRightsValue());
         ps.setString(2,username);
-        rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
-        boolean output=true;
-        if (rs!=1) {
-            output=false;
-        }
-        return output;
+        int rs = ps.executeUpdate();                                   //pro parametrizovaný dotaz
+        return rs==1;
     }
     
-    private String createInsertStatement(SQLTables tabulka){
-        String sql = "INSERT INTO "+tabulka.getTable()+"(";
+    /**
+     * Creates prepared statement for inserting new user to provided SQL table.
+     * @param table for which shall be prepared statement for insert created
+     * @return Sting containing SQL prepared statement
+     */
+    private String createInsertStatement(SQLTable table){
+        String sql = "INSERT INTO "+table.getTable()+"(";
         for (Label label : Label.values()) {
-            if (label.isInTable(tabulka)) {
+            if (label.isInTable(table)) {
                 sql+=label.getNameRaw();
                 sql+=", ";
             }
         }
-        sql=sql.substring(0, sql.length()-2);                               //odtrhne poslední čárku a mezeru za ní
+        sql=sql.substring(0, sql.length()-2);                                   //odtrhne poslední čárku a mezeru za ní
         sql+=") VALUES(";
         for (Label label : Label.values()) {
-            if (label.isInTable(tabulka)) {
+            if (label.isInTable(table)) {
                 sql+="?,";
             }
         }
-        sql=sql.substring(0, sql.length()-1);                               //odtrhne poslední čárku
+        sql=sql.substring(0, sql.length()-1);                                   //odtrhne poslední čárku
         sql+=")";
-        System.out.println("Sestavené SQL pro tabulku "+tabulka+" je: "+sql);
+        System.out.println("Sestavené SQL pro tabulku "+table+" je: "+sql);
         return sql;
     }
     
-    private boolean executeInsertStatement(String sql, HashMap<Label, String> input, SQLTables table) throws SQLException{
-        boolean output;
+    /**
+     * Executed prepared insert statement.
+     * @param sql String with parameterized insert statement.
+     * @param input Data which shall be inserted into table
+     * @param table where should be new data inserted
+     * @return true if adding is successful, otherwise return false
+     * @throws SQLException when something goes wrong with database
+     */
+    private boolean executeInsertStatement(String sql, Map<Label, String> input, SQLTable table) throws SQLException{
         ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         int count=0;
         for (Label label : Label.values()) {
@@ -547,12 +577,6 @@ public class Mysql {
             }
         }
         int rs = ps.executeUpdate(); 
-        if (rs==1) {
-            output=true;
-        } else {
-            output=false;
-        }
-        return output;
+        return rs==1;
     }
-    
 }

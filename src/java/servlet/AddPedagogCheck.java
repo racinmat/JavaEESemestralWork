@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
 import source.FormValidation;
 import static source.FormValidation.*;
@@ -50,7 +50,7 @@ public class AddPedagogCheck extends HttpServlet {
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.PEDAGOGOVE, SQLTables.LOGIN)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTable.PEDAGOGOVE, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -58,10 +58,10 @@ public class AddPedagogCheck extends HttpServlet {
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.PEDAGOGOVE, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTable.PEDAGOGOVE, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
-            input=stripPredvolba(input);
+            input=stripCallingCode(input);
             HttpSession session = request.getSession();
             session.setAttribute("formContent", input);
             session.setAttribute("formCheck", notFilled);

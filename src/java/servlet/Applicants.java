@@ -6,7 +6,7 @@ package servlet;
  * and open the template in the editor.
  */
 
-import enums.SQLTables;
+import enums.SQLTable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class Applicants extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private SQLTables table;
+    private SQLTable table;
     private ArrayList<HashMap<Label, String>> udajeouzivatelich;                //proměnná, která uloží všechna data o uživatelích a potom se při čtení z tablky do ní ukládají nové ne-null hodnoty   
     private String criterium;
     private Label criteriumColumn;
@@ -53,9 +53,9 @@ public class Applicants extends HttpServlet {
         if (session.getAttribute("redirect")==null) {                           //kvůli předchozímu přeměrování z důvodů zákazu přímého přístupu
             try {
                 String temp= request.getParameter("table");
-                this.table=SQLTables.getTableFromNumberInString(temp);          //tabulka, která bude vypisována
+                this.table=SQLTable.getTableFromNumberInString(temp);          //tabulka, která bude vypisována
                 session.setAttribute("tabulka", table.getNumberAsString());
-                if (table.equals(SQLTables.APPLICANTS_SPAM)||table.equals(SQLTables.APPLICANTS_IPSPAM)) {
+                if (table.equals(SQLTable.APPLICANTS_SPAM)||table.equals(SQLTable.APPLICANTS_IPSPAM)) {
                     session.setAttribute("spam", true);                         //určuje, zda je spam true či false kvůli přesunu do tabulky uchazeci ve výpisu uchazečů
                 } else {
                     session.setAttribute("spam", false);
@@ -63,7 +63,7 @@ public class Applicants extends HttpServlet {
                 if (request.getParameter("criterium")!=null&&request.getParameter("criteriumColumn")!=null) {
                     this.criterium=request.getParameter("criterium");           //obsah, který má být ve sloupci criteriumColumn, aby byl řádek vypsán
                     temp=request.getParameter("criteriumColumn");               //stejná proměnná, ale s tempem výš nemá nic společného, pouze dočasná proměnná, je zbytečné jich tvořit víc sériově za sebou
-                    this.criteriumColumn=Label.getLabelFromStringInnameRaw(temp);//sloupec, podle kterého se bude řídit výpis
+                    this.criteriumColumn=Label.getLabelFromStringInNameRaw(temp);//sloupec, podle kterého se bude řídit výpis
                     this.negate=request.getParameter("negate");                 //pokud je yes, potom je to negace kritéria
                 }
                 getApplicants(request, response);
@@ -85,7 +85,7 @@ public class Applicants extends HttpServlet {
                 getApplicants(request, response);
                 LinkedHashMap<Label, String> checked=new LinkedHashMap<>();
                 for (Label label : Label.values()) {
-                    if ((label.isShowToAdministrativa()&&label.isInTables(SQLTables.LOGIN, table))||label.equals(Label.ALL_COLUMNS)) {
+                    if ((label.isShowToAdministrativa()&&label.isInTables(SQLTable.LOGIN, table))||label.equals(Label.ALL_COLUMNS)) {
                         temp=request.getParameter(label.getNameRaw());
                         if (temp!=null&&temp.equals("checked")) {
                             checked.put(label, "checked");
@@ -116,7 +116,7 @@ public class Applicants extends HttpServlet {
                     
                 for (int i = 0; i < udajeouzivatelich.size(); i++) {
                     for (Label label : Label.values()) {
-                        if (label.isInTables(table, SQLTables.LOGIN)&&request.getParameter(label.getNameRaw()+"+"+i)!=null) {
+                        if (label.isInTables(table, SQLTable.LOGIN)&&request.getParameter(label.getNameRaw()+"+"+i)!=null) {
                             udajeouzivatelich.get(i).put(label, request.getParameter(label.getNameRaw()+"+"+i));
                         }
                     }
@@ -139,7 +139,7 @@ public class Applicants extends HttpServlet {
                 boolean success=true;                                           //používá se jako vyhodnocovací proměnná pro přenos mezi tabulkami
                 int i=0;
                 while (!(i==transfer.size())&&success) {                          //while cyklus se zastaví pokud je arraylist prázdný nebo pokud se nezdaří přenos
-                    success=sql.transferApplicant(table, transfer.get(i), SQLTables.APPLICANTS);
+                    success=sql.transferApplicant(table, transfer.get(i), SQLTable.APPLICANTS);
                     i++;
                     if (!success) {
                         System.out.println("Transfer failed at number: "+i);

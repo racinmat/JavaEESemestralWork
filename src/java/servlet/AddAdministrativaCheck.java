@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
 import source.FormValidation;
-import static source.FormValidation.stripPredvolba;
+import static source.FormValidation.stripCallingCode;
 import static source.FormValidation.validateForm;
 import source.MyLogger;
 import source.SecurityCheck;
@@ -51,7 +51,7 @@ public class AddAdministrativaCheck extends HttpServlet{
             
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.ADMINISTRATIVA, SQLTables.LOGIN)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTable.ADMINISTRATIVA, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -59,10 +59,10 @@ public class AddAdministrativaCheck extends HttpServlet{
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.ADMINISTRATIVA, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTable.ADMINISTRATIVA, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
-            input=stripPredvolba(input);
+            input=stripCallingCode(input);
             HttpSession session = request.getSession();
             session.setAttribute("formContent", input);
             session.setAttribute("formCheck", notFilled);

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
 import source.LoggedUser;
 import source.Mysql;
@@ -57,7 +57,7 @@ public class ChangeDataCheck extends HttpServlet {
             boolean error=false;
             HashMap<Label, String> notFilled = new HashMap<>();
             String notFilledStyle=" class=\"notFilled\"";
-            SQLTables table=user.getRights().getTable();
+            SQLTable table=user.getRights().getTable();
             for (Label label : Label.values()) {
                 if (label.isChangableByUser()) {
                     notFilled.put(label, "");
@@ -94,7 +94,7 @@ public class ChangeDataCheck extends HttpServlet {
                         input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                FormValidation form=validateForm(input, SQLTables.APPLICANTS, notFilledStyle);
+                FormValidation form=validateForm(input, SQLTable.APPLICANTS, notFilledStyle);
                 notFilled=form.getNotFilled();
                 error=form.isError();
             }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
 import source.FormValidation;
 import static source.FormValidation.*;
@@ -28,6 +28,11 @@ import source.SecurityCheck;
  */
 public class RegisterCheck extends HttpServlet {
     
+    /**
+     * 
+     * @param request
+     * @param response 
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -45,12 +50,10 @@ public class RegisterCheck extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
-            int length=Label.getNumberOfColumnsInTable(SQLTables.APPLICANTS);
             String notFilledStyle=" class=\"notFilled\"";
-            
             HashMap<Label, String> input = new HashMap<>();
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.APPLICANTS, SQLTables.LOGIN)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTable.APPLICANTS, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -58,10 +61,10 @@ public class RegisterCheck extends HttpServlet {
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTables.APPLICANTS, notFilledStyle);
+            FormValidation form=validateForm(input, SQLTable.APPLICANTS, notFilledStyle);
             HashMap<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
-            input=stripPredvolba(input);
+            input=stripCallingCode(input);
             HttpSession session = request.getSession();
             session.setAttribute("formContent", input);
             session.setAttribute("formCheck", notFilled);

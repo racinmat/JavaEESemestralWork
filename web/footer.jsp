@@ -18,7 +18,7 @@
         form="<form action=\"logout\" method=\"POST\"><input type=\"submit\" name=\"odhlásit se\" value=\"odhlásit se\"></form>";
         userInfo="<div class=\"clearfix\">Jste přihlášen jako "+name+" "+lastname+", váš status je "+pravaString+"</div>";
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
-    if(user==null||user.getLogged().equals("fail")){                                                           //výpis formuláře je podmíněný
+    if(user==null){                                                           //výpis formuláře je podmíněný
         form="<form action=\"login\" method=\"POST\">"
             + "<fieldset class=\"loginForm\">"
                 + "<div>"
@@ -41,8 +41,7 @@
             + "</fieldset>"
             + "</form>";
     }                                                                           
-    
-    if(user!=null&&user.getLogged()==null){                          //ošetřena inicializace proměnné
+    if(user!=null&&user.getLogged().equals("fail")){                                     //ošetřena inicializace proměnné
         form="<form action=\"login\" method=\"POST\">"
             + "<fieldset class=\"loginForm\">"
                 + "<div>"
@@ -65,10 +64,8 @@
             + "</fieldset>"
             + "</form>";
         failMessage="<div>Přihlášení se nezdařilo, bylo nesprávně zadáno uživatelské jméno nebo heslo</div>";
-        if(user.getLogged().equals("fail")){
-            user.setLogged(null);
-            session.setAttribute("user", user);
-        }
+        user=user.clear();                                                  //špatně přihlášeného uživatele změní na nepřihlášeného uživatele
+        session.setAttribute("user", user);
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
     
 %>

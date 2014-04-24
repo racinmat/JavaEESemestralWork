@@ -2,7 +2,7 @@ package servlet;
 
 
 
-import enums.SQLTables;
+import enums.SQLTable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
 import java.util.HashMap;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import source.Mysql;
 import source.SendEmail;
 import source.UsernameGen;
@@ -50,7 +52,7 @@ public class Register extends HttpServlet{
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
             String ip=request.getRemoteAddr();//určuje se, do jaké tabulky se data uloží
-            SQLTables tabulka=SQLTables.APPLICANTS;//určuje se, do jaké tabulky se data uloží
+            SQLTable tabulka=SQLTable.APPLICANTS;//určuje se, do jaké tabulky se data uloží
             
             int size=0;                                                         //vyberu z tabulky stejnou ip adresu, pokud tam není, tak vytvořím nový řádek
             boolean rsIP=false;
@@ -62,22 +64,22 @@ public class Register extends HttpServlet{
             }
             else if(count>10){
                 spam=1;                                                         //pro stejnou ip je spam=1
-                tabulka=SQLTables.APPLICANTS_IPSPAM;
+                tabulka=SQLTable.APPLICANTS_IPSPAM;
                 rsIP = sql.increaseIPcount(ip);
             }
             else{
-                tabulka=SQLTables.APPLICANTS;
+                tabulka=SQLTable.APPLICANTS;
                 rsIP = sql.increaseIPcount(ip);
             }
             if (request.getParameter("stoletimaturity") != null) {//skryté tlačítko, formulář se uloží do průběžné tabulky a vytvoří se mu uživateslé jméno a heslo, ale ve finále kandidát na vymazání
                 spam=2;//pro vyplněné skryté políčko je spam=2
-                tabulka=SQLTables.APPLICANTS_SPAM;//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
+                tabulka=SQLTable.APPLICANTS_SPAM;//je to tady na konci, aby do spamu padalo všechno správné i když by to jinak mělo jít do ipspamu
             }
             HashMap<Label, String> input=new HashMap<>();
             input.put(Label.USERNAME, username);
             input.put(Label.PASSWORD, password);
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.APPLICANTS, SQLTables.LOGIN)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTable.APPLICANTS, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -92,7 +94,7 @@ public class Register extends HttpServlet{
             input.put(Label.SEX, getSexFromBirthNumber(input.get(Label.BIRTHNUMBER)));
             
             for (Label label : Label.values()) {                                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
-                if (label.isInTable(SQLTables.APPLICANTS)&&label.getCopiedFrom()!=null) {
+                if (label.isInTable(SQLTable.APPLICANTS)&&label.getCopiedFrom()!=null) {
                     if (input.get(label).equals("")) {
                         input.put(label, input.get(label.getCopiedFrom()));
                     }
@@ -100,7 +102,7 @@ public class Register extends HttpServlet{
             }
             
             for (Label label : Label.values()) {                                //pokud je něco prázdné (například číslo pasu, pokud je vyplněno číslo OP, pak bude v sql "nevyplněno")
-                if (label.isInTable(SQLTables.APPLICANTS)&&!label.isAutoFill()) {
+                if (label.isInTable(SQLTable.APPLICANTS)&&!label.isAutoFill()) {
                     if (input.get(label).equals("")) {
                         input.put(label, "nevyplněno");
                     }
@@ -128,7 +130,7 @@ public class Register extends HttpServlet{
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("proUchazece_Prihlaska.jsp");
-        } catch (SQLException|ClassNotFoundException|IOException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException|MessagingException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp");

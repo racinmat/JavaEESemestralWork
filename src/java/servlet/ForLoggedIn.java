@@ -8,11 +8,12 @@ package servlet;
 
 import enums.Label;
 import enums.Rights;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,15 +49,15 @@ public class ForLoggedIn extends HttpServlet {
                 String username=security.getUser().getUsername();
                 Mysql sql=new Mysql();
                 LinkedHashMap<Label, String> info;
-                if(security.isUchazec()||security.isStudent()){
-                    SQLTables table=sql.findTableWithApplicant(username);
+                if(security.isApplicant()||security.isStudent()){
+                    SQLTable table=sql.findTableWithApplicant(username);
                     info=sql.showApplicant(username, table);
                 } else {
                     info=sql.showLoginInfoOfUser(username);
                 }
                 session.setAttribute("info", info);
                 response.sendRedirect("proPrihlasene.jsp");
-            } catch (IOException|ClassNotFoundException|SQLException ex) {
+            } catch (IOException|ClassNotFoundException|SQLException|NoSuchFieldException ex) {
                 try {
                     MyLogger.getLogger().logp(Level.SEVERE, Login.class.getName(), "doGet", "Error in mysql. "+ex.getMessage(), ex);
                     response.sendRedirect("chyba.jsp?error=0");

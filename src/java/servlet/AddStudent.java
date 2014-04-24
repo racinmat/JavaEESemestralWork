@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import source.MyLogger;
@@ -67,7 +67,7 @@ public class AddStudent extends HttpServlet {
             for (int i = 0; i < seznamStudentu.size(); i++) {
                 input.put(Label.USERNAME, listOfStudents.get(i).get(Label.USERNAME));
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTables.STUDENTS)&&!label.isAutoFill()) {
+                    if (label.isInTable(SQLTable.STUDENTS)&&!label.isAutoFill()) {
                         if (label.isPhonenumber()){
                             input.put(label, request.getParameter("predvolba"+label.getNameRaw()+"+"+i)+request.getParameter(label.getNameRaw()+"+"+i));
                         } else {

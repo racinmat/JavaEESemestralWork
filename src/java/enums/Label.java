@@ -112,104 +112,190 @@ public enum Label {           //nameForUsers                    nameForApplicant
         this.applicantsIPSpam = applicantsIPSpam;
         this.showToAdministrativa = showToAdministrativa;
         this.changableByAdministrativa = changableByAdministrativa;
-        
     }
     
+    /**
+     * 
+     * @return true if user can change content of this column in page used for changing personal data, otherwise return false
+     */
     public boolean isChangableByUser() {
         return changableByUser;
     }
     
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table uchazeci_spam, otherwise return false
+     */
     public boolean isApplicantsSpam() {
         return applicantsSpam;
     }
 
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table uchazeci_opspam, otherwise return false
+     */
     public boolean isApplicantsIPSpam() {
         return applicantsIPSpam;
     }
 
+    /**
+     * 
+     * @return true if is label for birth number in form in jsp pages, otherwise return false
+     */
     public boolean isbirthNumber() {
         return birthNumber;
     }
 
+    /**
+     * 
+     * @return true if is label for email address in form in jsp pages, otherwise return false
+     */
     public boolean isEmailAddress() {
         return emailaddress;
     }
 
+    /**
+     * 
+     * @return true if is part of form for change of password, otherwise return false
+     */
     public boolean isPasswordChange() {
         return passwordChange;
     }
 
+    /**
+     * 
+     * @return true if is label for any obligatory input in form in jsp pages, otherwise return false
+     */
     public boolean isObligatory() {
         return obligatory;
     }
 
+    /**
+     * 
+     * @return Label whose content is copied into this label when content of this label is not filled. Returns null for labels whose content is not copied from anywhere
+     */
     public Label getCopiedFrom() {
         return copiedFrom;
     }
 
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table pedagogove, otherwise return false
+     */
     public boolean isTeachers() {
         return teachers;
     }
 
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table administrativa, otherwise return false
+     */
     public boolean isAdministrativa() {
         return administrativa;
     }
 
+    /**
+     * 
+     * @return true if is label for phone number in form in jsp pages, otherwise return false
+     */
     public boolean isPhonenumber() {
         return phonenumber;
     }
 
+    /**
+     * 
+     * @return name shown on jsp pages 
+     */
     public String getNameForUsers() {
         return nameForUsers;
     }
 
+    /**
+     * 
+     * @return true if administrativa has rights to see content of this label, otherwise return false
+     */
     public boolean isShowToAdministrativa() {
         return showToAdministrativa;
     }
 
+    /**
+     * 
+     * @return true if administrativa has rights to change content of this label, otherwise return false
+     */
     public boolean isChangableByAdministrativa() {
         return changableByAdministrativa;
     }
 
+    /**
+     * 
+     * @return name shown on jsp pages primarily for applicants
+     */
     public String getNameForApplicants() {
         return nameForApplicants;
     }
 
+    /**
+     * 
+     * @return raw name of label which is used as name for HTML label in form and as column name in sql tables
+     */
     public String getNameRaw() {
         return nameRaw;
     }
 
+    /**
+     * 
+     * @return true if is label for number in form in jsp pages, otherwise return false
+     */
     public boolean isNumber() {
         return number;
     }
 
+    /**
+     * 
+     * @return true if is label for input in form in jsp pages which will be filled automaticaly, otherwise return false
+     */
     public boolean isAutoFill() {
         return autoFill;
     }
 
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table uchazeci, otherwise return false
+     */
     public boolean isApplicants() {
         return applicants;
     }
 
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table studenti, otherwise return false
+     */
     public boolean isStudents() {
         return students;
     }
 
+    /**
+     * 
+     * @return true if column with same name as this enum has in nameRaw field, is in SQL table login, otherwise return false
+     */
     public boolean isLogin() {
         return login;
     }
 
+    /**
+     * 
+     * @return true if is used as primary key(expected same primary key for all tables), otherwise return false
+     */
     public boolean isPrimaryKey() {
         return primaryKey;
     }
     
     /**
      * Counts number of booleans true in all labels in column depending on provided table.
-     * Only tables LOGIN, uchazeci and STUDENTS are supported, because in uchazeci_spam and uchazeci_ipspam have same columns.
-     * @param table
-     * @return Return count of labels which are contained in provided table.
+     * @param table whose number of columns you want to get
+     * @return count of labels which are contained in provided table
      */
-    public static int getNumberOfColumnsInTable(SQLTables table){
+    public static int getNumberOfColumnsInTable(SQLTable table){
         int count=0;
         for (Label label : Label.values()) {
             if (label.isInTable(table)) {
@@ -219,11 +305,16 @@ public enum Label {           //nameForUsers                    nameForApplicant
         return count;
     }
     
-    public static int getNumberOfColumnsInTables(SQLTables... table){
+    /**
+     * Counts number of labels which are in at least one of priveded tables.
+     * @param table one or more tables, whose number of columns you want to get
+     * @return count of labels which are contained at least in one of provided tables
+     */
+    public static int getNumberOfColumnsInTables(SQLTable... table){
         int count=0;
         for (Label label : Label.values()) {
             boolean temp=false;
-            for (SQLTables tableIter : table) {
+            for (SQLTable tableIter : table) {
                 if (label.isInTable(tableIter)) {
                     temp=true;
                 }
@@ -237,66 +328,64 @@ public enum Label {           //nameForUsers                    nameForApplicant
     }
     
     /**
-     * Takes label and table and tests if label is in table.
-     * @param label label which will be tested.
+     * Determines whether label is in provided table.
      * @param table table which is tested to contain provided label.
      * @return Returns true if label is in table and returns false if wrong table is put or label is not in table.
      */
-    public boolean isInTable(SQLTables table){
+    public boolean isInTable(SQLTable table){
         boolean output = false;
         String temp=table.getTable();
-        if (temp.equals(SQLTables.STUDENTS.getTable())) {
+        if (temp.equals(SQLTable.STUDENTS.getTable())) {
             output=isStudents();
-        } else if (temp.equals(SQLTables.APPLICANTS.getTable())){
+        } else if (temp.equals(SQLTable.APPLICANTS.getTable())){
             output=isApplicants();
-        } else if (temp.equals(SQLTables.LOGIN.getTable())){
+        } else if (temp.equals(SQLTable.LOGIN.getTable())){
             output=isLogin();
-        } else if (temp.equals(SQLTables.APPLICANTS_SPAM.getTable())){
+        } else if (temp.equals(SQLTable.APPLICANTS_SPAM.getTable())){
             output=isApplicantsSpam();
-        } else if (temp.equals(SQLTables.APPLICANTS_IPSPAM.getTable())){
+        } else if (temp.equals(SQLTable.APPLICANTS_IPSPAM.getTable())){
             output=isApplicantsIPSpam();
-        } else if (temp.equals(SQLTables.PEDAGOGOVE.getTable())){
+        } else if (temp.equals(SQLTable.PEDAGOGOVE.getTable())){
             output=isTeachers();
-        } else if (temp.equals(SQLTables.ADMINISTRATIVA.getTable())){
+        } else if (temp.equals(SQLTable.ADMINISTRATIVA.getTable())){
             output=isAdministrativa();
         }
         return output;
     }
     
     /**
-     * Counts number of booleans true in all labels in column depending on provided tables, counts if label is contained in one or more of provided tables.
-     * Tests disjuction of being contained in one of provided tables.
+     * Determines whether label is in at least one of provided tables.
      * @param table one or more tables
      * @return Return count of labels which are contained in one of provided tables.
      */
-    public boolean isInTables(SQLTables... table){
-        for (SQLTables tableIter : table) {
+    public boolean isInTables(SQLTable... table){
+        for (SQLTable tableIter : table) {
             String temp=tableIter.getTable();
-            if (temp.equals(SQLTables.STUDENTS.getTable())) {
+            if (temp.equals(SQLTable.STUDENTS.getTable())) {
                 if (isStudents()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.APPLICANTS.getTable())){
+            } else if (temp.equals(SQLTable.APPLICANTS.getTable())){
                 if (isApplicants()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.LOGIN.getTable())){
+            } else if (temp.equals(SQLTable.LOGIN.getTable())){
                 if (isLogin()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.APPLICANTS_IPSPAM.getTable())){
+            } else if (temp.equals(SQLTable.APPLICANTS_IPSPAM.getTable())){
                 if (isApplicantsIPSpam()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.APPLICANTS_SPAM.getTable())){
+            } else if (temp.equals(SQLTable.APPLICANTS_SPAM.getTable())){
                 if (isApplicantsSpam()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.PEDAGOGOVE.getTable())){
+            } else if (temp.equals(SQLTable.PEDAGOGOVE.getTable())){
                 if (isTeachers()) {
                     return true;
                 }
-            } else if (temp.equals(SQLTables.ADMINISTRATIVA.getTable())){
+            } else if (temp.equals(SQLTable.ADMINISTRATIVA.getTable())){
                 if (isAdministrativa()) {
                     return true;
                 }
@@ -305,7 +394,13 @@ public enum Label {           //nameForUsers                    nameForApplicant
         return false;
     }
     
-    public static Label getLabelFromStringInnameRaw(String i) throws IllegalArgumentException{ //statická metoda, aby mohla být volána předtím, než je vytvořen objekt, který tato metoda vrátí
+    /**
+     * Returns Label which has string in its field nameRaw equal to provided String.
+     * @param i String which is same as string in nameRaw field of desired Label
+     * @return label which has same String in its nameRaw field as String you provided
+     * @throws IllegalArgumentException if no suitable Label is found
+     */
+    public static Label getLabelFromStringInNameRaw(String i) throws IllegalArgumentException{ //statická metoda, aby mohla být volána předtím, než je vytvořen objekt, který tato metoda vrátí
         for (Label label : Label.values()) {
             if (label.getNameRaw().equals(i)) {
                 return label;

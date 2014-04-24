@@ -8,16 +8,19 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
+import javax.mail.MessagingException;
 import source.MyLogger;
 import source.Mysql;
 import source.SecurityCheck;
@@ -57,11 +60,11 @@ public class AddAdministrativa extends HttpServlet {
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
             
-            HashMap<Label, String> input=new HashMap<>();
+            Map<Label, String> input=new LinkedHashMap<>();
             input.put(Label.USERNAME, username);
             input.put(Label.PASSWORD, password);
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.ADMINISTRATIVA, SQLTables.LOGIN)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTable.ADMINISTRATIVA, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -78,7 +81,7 @@ public class AddAdministrativa extends HttpServlet {
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("pridaniAdministrativy.jsp");
-        } catch (SQLException|ClassNotFoundException|IOException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException|MessagingException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");

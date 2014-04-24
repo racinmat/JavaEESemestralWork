@@ -20,10 +20,19 @@ public enum LabelCategory {
         this.list = list;
     }
 
+    /**
+     * 
+     * @return array of Labels in this enum
+     */
     public Label[] getList() {
         return list;
     }
     
+    /**
+     * Determines whether any of enums from this class contains provided Label.
+     * @param label whose presence in any of enums from this class is searched for
+     * @return true if any of enums from this class contains provided Label, otherwise, return false
+     */
     public static boolean contains(Label label){
         for (LabelCategory labelCategory : LabelCategory.values()) {
             for (Label label1 : labelCategory.list) {
@@ -35,6 +44,11 @@ public enum LabelCategory {
         return false;
     }
     
+    /**
+     * Returns enum containing provided Label, for avoiding Exception, is recommended to use only when static contains method returns true for provided label.
+     * @param label whose LabelCategory will be returned
+     * @return LabelCategory containing provided Label
+     */
     public static LabelCategory containing(Label label){
         for (LabelCategory labelCategory : LabelCategory.values()) {
             for (Label label1 : labelCategory.list) {

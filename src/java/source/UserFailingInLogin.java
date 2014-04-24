@@ -12,13 +12,14 @@ import enums.Rights;
  *
  * @author Azathoth
  */
-public class NotLoggedUser extends LoggedUser{
+public class UserFailingInLogin extends LoggedUser{
 
-    /**
-     * Constructor which sets all data about user who is not logged.
-     */
-    public NotLoggedUser() {
-        super("", "", Rights.NOT_LOGGED, "", "no");
+    public UserFailingInLogin() {
+        super("", "", Rights.NOT_LOGGED, "", "fail");
     }
     
+    @Override
+    public LoggedUser clear(){
+        return new NotLoggedUser();
+    }
 }

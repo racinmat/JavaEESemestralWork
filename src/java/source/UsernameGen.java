@@ -20,16 +20,28 @@ public class UsernameGen {
     private final char[] ALPHA_NUMERIC_ARRAY = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9'};
     private int length = 1;
 
+    /**
+     * 
+     * @param length 
+     */
     public UsernameGen(int length) {
         if (length>0) {                     //ochrana proti záporným hodnotám
             this.length=length;
         }
     }
     
+    /**
+     * 
+     * @return 
+     */
     public String getId() {
         return randomAlphaNumeric();
     }
     
+    /**
+     * 
+     * @return 
+     */
     private String randomAlphaNumeric() {
         String alphaNumeric="";
         Random random=new Random();
@@ -40,6 +52,12 @@ public class UsernameGen {
         return alphaNumeric;
     }
     
+    /**
+     * 
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public String getValidatedId() throws ClassNotFoundException, SQLException{
         Mysql sql=new Mysql();
         String id=getId();

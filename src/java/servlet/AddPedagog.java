@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
-import enums.SQLTables;
+import enums.SQLTable;
 import java.util.HashMap;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import source.MyLogger;
 import source.Mysql;
 import source.SecurityCheck;
@@ -61,7 +63,7 @@ public class AddPedagog extends HttpServlet {
             input.put(Label.USERNAME, username);
             input.put(Label.PASSWORD, password);
             for (Label label : Label.values()) {
-                if (label.isInTables(SQLTables.PEDAGOGOVE, SQLTables.LOGIN)&&!label.isAutoFill()) {
+                if (label.isInTables(SQLTable.PEDAGOGOVE, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
                         input.put(label, request.getParameter("predvolba"+label.getNameRaw())+request.getParameter(label.getNameRaw()));
                     } else {
@@ -79,7 +81,7 @@ public class AddPedagog extends HttpServlet {
                 session.setAttribute("registered", "fail");
             }
             response.sendRedirect("pridaniPedagoga.jsp");
-        } catch (SQLException|ClassNotFoundException|IOException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException|MessagingException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in mysql. "+ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");

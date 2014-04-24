@@ -6,7 +6,7 @@
 
 package servlet;
 
-import enums.SQLTables;
+import enums.SQLTable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import source.LoggedUser;
 import source.MyLogger;
 import source.Mysql;
@@ -49,7 +50,7 @@ public class ChangeData extends HttpServlet {
             boolean update=false;
             LoggedUser user=(LoggedUser) session.getAttribute("user");
             String username=user.getUsername();
-            SQLTables table=user.getRights().getTable();
+            SQLTable table=user.getRights().getTable();
             
             if (request.getParameter("zmenitheslo")!=null) {
                 Encrypt crypt=new Encrypt();
@@ -84,7 +85,7 @@ public class ChangeData extends HttpServlet {
             }
             response.sendRedirect("proPrihlasene.jsp");
             
-        } catch (SQLException|ClassNotFoundException|IOException ex) {
+        } catch (SQLException|ClassNotFoundException|IOException|NoSuchFieldException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");

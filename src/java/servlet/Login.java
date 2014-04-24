@@ -43,11 +43,11 @@ public class Login extends HttpServlet{
             password=crypt.encrypt(password, username);
             Mysql sql=new Mysql();
             LoggedUser user=sql.login(username, password);
+            session.setAttribute("user", user);
             if(user.getLogged().equals("fail")){
                 response.sendRedirect(URL);
             }
             else{
-                session.setAttribute("user", user);
                 response.sendRedirect(user.getRights().getInitialRedirect());
             }
         } catch (SQLException|ClassNotFoundException|NullPointerException|IOException ex) {
