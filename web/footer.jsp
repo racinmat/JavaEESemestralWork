@@ -18,7 +18,7 @@
         form="<form action=\"logout\" method=\"POST\"><input type=\"submit\" name=\"odhlásit se\" value=\"odhlásit se\"></form>";
         userInfo="<div class=\"clearfix\">Jste přihlášen jako "+name+" "+lastname+", váš status je "+pravaString+"</div>";
     }                                                                           //pokud se uživatel úspěšně nepřihlásil, pak se to pod přihlašovacím formulářem vypíše
-    if(user==null){                                                           //výpis formuláře je podmíněný
+    if(user==null||!user.isLogged()){                                                           //výpis formuláře je podmíněný
         form="<form action=\"login\" method=\"POST\">"
             + "<fieldset class=\"loginForm\">"
                 + "<div>"

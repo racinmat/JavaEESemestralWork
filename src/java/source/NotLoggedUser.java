@@ -18,7 +18,7 @@ public class NotLoggedUser extends LoggedUser{
      * Constructor which sets all data about user who is not logged.
      */
     public NotLoggedUser() {
-        super("", "", Rights.NOT_LOGGED, "", "no");
+        super("", "", Rights.NOT_LOGGED, "", "no", false);
     }
     
 }

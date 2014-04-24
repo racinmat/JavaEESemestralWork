@@ -18,6 +18,7 @@ public class LoggedUser {
     private final Rights rights;
     private final String username;
     private final String logged;
+    private final boolean loggedBool;
 
     /**
      * Creates new instance of Logged User, used as session variable holding more variables in itself.
@@ -27,12 +28,17 @@ public class LoggedUser {
      * @param username username of logged user
      * @param logged determines whether user is logged succesfully or not
      */
-    public LoggedUser(String name, String lastName, Rights rights, String username, String logged) {
+    public LoggedUser(String name, String lastName, Rights rights, String username, String logged, boolean loggedBool) {
         this.name = name;
         this.lastName = lastName;
         this.rights = rights;
         this.username = username;
         this.logged = logged;
+        this.loggedBool = loggedBool;
+    }
+
+    public boolean isLogged() {
+        return loggedBool;
     }
 
     /**

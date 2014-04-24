@@ -73,7 +73,7 @@ public class Mysql {
         }
         if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
             Rights rightsObject=Rights.getRightsFromInt(rights);
-            return new LoggedUser(name, lastname, rightsObject, username, "success");
+            return new LoggedUser(name, lastname, rightsObject, username, "success", true);
         }
         return new UserFailingInLogin();
     }

@@ -29,6 +29,12 @@ import source.SecurityCheck;
  */
 public class ChangeData extends HttpServlet {
 
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -36,11 +42,10 @@ public class ChangeData extends HttpServlet {
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Change data about user in sql and then redirects user back to jsp page from which ke came.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
@@ -50,8 +55,6 @@ public class ChangeData extends HttpServlet {
             boolean update;
             LoggedUser user=(LoggedUser) session.getAttribute("user");
             String username=user.getUsername();
-            SQLTable table=user.getRights().getTable();
-            
             if (request.getParameter("zmenitheslo")!=null) {
                 Encrypt crypt=new Encrypt();
                 String password=request.getParameter("noveheslo");
@@ -66,7 +69,7 @@ public class ChangeData extends HttpServlet {
                 }
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                table=sql.findTableWithApplicant(username);         //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
+                SQLTable table=sql.findTableWithApplicant(username);            //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
                 Map<Label, String> newData=new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isInTable(table)&&label.isChangableByUser()) {
@@ -74,7 +77,7 @@ public class ChangeData extends HttpServlet {
                     }
                 }
                 
-                update=sql.updateApplicant(newData, table);
+                update=sql.updateApplicant(newData, table);                     //update zatím pouze pro uchazeče
                 
                 if (update) {
                     session.setAttribute("registered", "success");

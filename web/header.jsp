@@ -15,6 +15,9 @@
     MenuColoring menu=new MenuColoring(request.getRequestURI());                //vytvoří se insrtance objektu barvícího horní menu, u všech položek menu jsou jeho gettery
     session = request.getSession(true);                                         //zpřístupní se session
     String loggingURL=menu.getPageName();                                       //získá se název současné stránky
+    if (loggingURL.length()>0) {
+        loggingURL+=".jsp";
+    }
     session.setAttribute("loggingURL", loggingURL);                             //nastaví se session proměnná loggingURL, abych věděl, odkud se uživatel přihlašovat a tedy, kam jej po přihlášení "vrátit"
     session.setAttribute("redirect", null);
     SecurityCheck security=new SecurityCheck(request);
@@ -133,7 +136,7 @@
                     <a href="uredniDeska.jsp">Úřední deska</a>
                 </li>
                 <%
-                    if(security.hasUchazecRights()){ 
+                    if(security.hasApplicantRights()){ 
                 %>
                 <li id="menu-item" class="menu-item  
                     <%= menu.getProPrihlasene()%>

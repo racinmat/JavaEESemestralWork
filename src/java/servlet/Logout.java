@@ -22,12 +22,24 @@ import source.SecurityCheck;
  */
 public class Logout extends HttpServlet{
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
         security.noDirectAccess(response);
     }
     
+    /**
+     * Processes requests for HTTP <code>POST</code> method.
+     * Deletes all data in session variable user and sends user back from where he came.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         String URL = "";

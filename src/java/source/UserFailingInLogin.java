@@ -18,7 +18,7 @@ public class UserFailingInLogin extends LoggedUser{
      * Constructor defining all variables for user who failed in attempt to login.
      */
     public UserFailingInLogin() {
-        super("", "", Rights.NOT_LOGGED, "", "fail");
+        super("", "", Rights.NOT_LOGGED, "", "fail", false);
     }
     
     /**

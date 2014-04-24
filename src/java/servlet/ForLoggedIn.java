@@ -11,7 +11,7 @@ import enums.Rights;
 import enums.SQLTable;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,16 +29,13 @@ import source.SecurityCheck;
 public class ForLoggedIn extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Processes requests for HTTP <code>GET</code> method.
+     * Disables direct access and prepares data for page proPrihlasene.jsp
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response){
         HttpSession session = request.getSession(true);
         SecurityCheck security=new SecurityCheck(request);
         security.noDirectAccess(response);
@@ -47,7 +44,7 @@ public class ForLoggedIn extends HttpServlet {
             try {
                 String username=security.getUser().getUsername();
                 Mysql sql=new Mysql();
-                LinkedHashMap<Label, String> info;
+                Map<Label, String> info;
                 if(security.isApplicant()||security.isStudent()){
                     SQLTable table=sql.findTableWithApplicant(username);
                     info=sql.showApplicant(username, table);

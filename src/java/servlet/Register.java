@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
 import java.util.HashMap;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import source.Mysql;
 import source.SendEmail;
@@ -35,12 +34,24 @@ import source.SecurityCheck;
  */
 public class Register extends HttpServlet{
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
         security.noDirectAccess(response);
     }
     
+    /**
+     * Processes requests for HTTP <code>POST</code> method.
+     * Adds data about new applicant to sql and then redirects user back to jsp page from which ke came.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
@@ -54,8 +65,7 @@ public class Register extends HttpServlet{
             String ip=request.getRemoteAddr();//určuje se, do jaké tabulky se data uloží
             SQLTable tabulka=SQLTable.APPLICANTS;//určuje se, do jaké tabulky se data uloží
             
-            int size=0;                                                         //vyberu z tabulky stejnou ip adresu, pokud tam není, tak vytvořím nový řádek
-            boolean rsIP=false;
+            boolean rsIP;
             int spam=0;
             Mysql sql=new Mysql();
             int count=sql.findIP(ip);

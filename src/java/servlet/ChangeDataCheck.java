@@ -19,6 +19,7 @@ import source.Encrypt;
 import enums.Label;
 import enums.SQLTable;
 import java.util.HashMap;
+import java.util.Map;
 import source.LoggedUser;
 import source.Mysql;
 import source.FormValidation;
@@ -32,6 +33,12 @@ import source.SecurityCheck;
  */
 public class ChangeDataCheck extends HttpServlet {
 
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -39,11 +46,10 @@ public class ChangeDataCheck extends HttpServlet {
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Validates data from form and redirects user to next servlet which continues in processing data.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -55,7 +61,7 @@ public class ChangeDataCheck extends HttpServlet {
             LoggedUser user=(LoggedUser) session.getAttribute("user");
             String username=user.getUsername();
             boolean error=false;
-            HashMap<Label, String> notFilled = new HashMap<>();
+            Map<Label, String> notFilled = new HashMap<>();
             String notFilledStyle=" class=\"notFilled\"";
             SQLTable table=user.getRights().getTable();
             for (Label label : Label.values()) {
@@ -65,7 +71,7 @@ public class ChangeDataCheck extends HttpServlet {
             }
             
             if (request.getParameter("zmenitheslo")!=null) {                    //pro změnu hesla
-                HashMap<Label, String> heslo = new HashMap<>();
+                Map<Label, String> heslo = new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isPasswordChange()) {
                         heslo.put(label, request.getParameter(label.getNameRaw()));
@@ -88,19 +94,18 @@ public class ChangeDataCheck extends HttpServlet {
                 }
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                HashMap<Label, String> input=new HashMap<>();
+                Map<Label, String> input=new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isInTable(table)&&label.isChangableByUser()) {
                         input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                FormValidation form=validateForm(input, SQLTable.APPLICANTS, notFilledStyle);
+                FormValidation form=validateForm(input, notFilledStyle);
                 notFilled=form.getNotFilled();
                 error=form.isError();
             }
             
             session.setAttribute("formCheck", notFilled);
-
             if (error) {
                 response.sendRedirect("proPrihlasene.jsp");
             }

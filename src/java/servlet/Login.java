@@ -26,12 +26,24 @@ import source.SecurityCheck;
  */
 public class Login extends HttpServlet{
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
         security.noDirectAccess(response);
     }
     
+    /**
+     * Processes requests for HTTP <code>POST</code> method.
+     * Checks if user provided correct data, fills sesstion variable user with data about user in case of successful login and otherwise fills variable user with instance of UserFailingInLogin and redirects user to page which is default for his rights.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
