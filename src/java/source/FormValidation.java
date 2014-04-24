@@ -8,11 +8,8 @@ package source;
 
 import enums.Label;
 import enums.LabelCategory;
-import enums.SQLTable;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  *

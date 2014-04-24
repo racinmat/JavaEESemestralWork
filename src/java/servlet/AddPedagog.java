@@ -9,7 +9,6 @@ package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,6 @@ import source.Encrypt;
 import enums.Label;
 import enums.SQLTable;
 import java.util.HashMap;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import source.MyLogger;
 import source.Mysql;
@@ -32,6 +30,12 @@ import source.UsernameGen;
  */
 public class AddPedagog extends HttpServlet {
 
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -39,11 +43,10 @@ public class AddPedagog extends HttpServlet {
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Adds data about new pedagog to sql and then redirects user back to jsp page from which ke came.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){

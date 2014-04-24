@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
 import enums.SQLTable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import source.FormValidation;
 import static source.FormValidation.stripCallingCode;
 import static source.FormValidation.validateForm;
@@ -29,6 +30,12 @@ import source.SecurityCheck;
  */
 public class AddAdministrativaCheck extends HttpServlet{
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -36,11 +43,10 @@ public class AddAdministrativaCheck extends HttpServlet{
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Validates data from form and redirects user to next servlet which continues in processing data.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -49,7 +55,7 @@ public class AddAdministrativaCheck extends HttpServlet{
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
             String notFilledStyle=" class=\"notFilled\"";
             
-            HashMap<Label, String> input = new HashMap<>();
+            Map<Label, String> input = new LinkedHashMap<>();
             for (Label label : Label.values()) {
                 if (label.isInTables(SQLTable.ADMINISTRATIVA, SQLTable.LOGIN)&&!label.isAutoFill()) {
                     if (label.isPhonenumber()){
@@ -59,8 +65,8 @@ public class AddAdministrativaCheck extends HttpServlet{
                     }
                 }
             }
-            FormValidation form=validateForm(input, SQLTable.ADMINISTRATIVA, notFilledStyle);
-            HashMap<Label, String> notFilled=form.getNotFilled();
+            FormValidation form=validateForm(input, notFilledStyle);
+            Map<Label, String> notFilled=form.getNotFilled();
             boolean error=form.isError();
             input=stripCallingCode(input);
             HttpSession session = request.getSession();

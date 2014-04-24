@@ -18,8 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import source.MyLogger;
 import source.Mysql;
 import source.SecurityCheck;
@@ -30,21 +31,18 @@ import source.SecurityCheck;
  */
 public class Applicants extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     private SQLTable table;
-    private ArrayList<HashMap<Label, String>> udajeouzivatelich;                //proměnná, která uloží všechna data o uživatelích a potom se při čtení z tablky do ní ukládají nové ne-null hodnoty   
+    private List<Map<Label, String>> udajeouzivatelich;                         //proměnná, která uloží všechna data o uživatelích a potom se při čtení z tablky do ní ukládají nové ne-null hodnoty   
     private String criterium;
     private Label criteriumColumn;
     private String negate;
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Prepares data about users from SQL table and then redirect user to jsp page where can be data seen.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
@@ -74,16 +72,21 @@ public class Applicants extends HttpServlet {
         }
     }
     
+    /**
+     * Processes requests for HTTP <code>POST</code> method.
+     * Validates data from form, writes them to sql table and redirects user to next jsp page.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
-        String tabulka=(String)session.getAttribute("tabulka");
         String temp;
         try {
             request.setCharacterEncoding("UTF-8");
             if (request.getParameter("zobrazitvysledky")!=null) {
                 getApplicants(request, response);
-                LinkedHashMap<Label, String> checked=new LinkedHashMap<>();
+                Map<Label, String> checked=new LinkedHashMap<>();
                 for (Label label : Label.values()) {
                     if ((label.isShowToAdministrativa()&&label.isInTables(SQLTable.LOGIN, table))||label.equals(Label.ALL_COLUMNS)) {
                         temp=request.getParameter(label.getNameRaw());
@@ -108,8 +111,8 @@ public class Applicants extends HttpServlet {
                 session.setAttribute("checked", checked);
             }
             if (request.getParameter("zmenitudaje")!=null) {
-                ArrayList<String> transfer=new ArrayList<>();                   //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
-                ArrayList<LinkedHashMap<Label, String>> createstudent=new ArrayList<>();            //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
+                List<String> transfer=new ArrayList<>();                        //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
+                List<LinkedHashMap<Label, String>> createstudent=new ArrayList<>();            //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql=new Mysql();
                 getApplicants(request, response);
                 int oprava=0;                                                   //používá se kvůli přenosu uchazečů na studenty a nejsou zaškrtlá všechna políčka
@@ -138,24 +141,24 @@ public class Applicants extends HttpServlet {
                 boolean output = sql.updateApplicants(table, udajeouzivatelich);
                 boolean success=true;                                           //používá se jako vyhodnocovací proměnná pro přenos mezi tabulkami
                 int i=0;
+                if (!output&&session.getAttribute("redirect")==null) {
+                    session.setAttribute("redirect", "true");
+                    response.sendRedirect("chyba.jsp?error=0");                 //pokud se nezdaří úprava
+                }
                 while (!(i==transfer.size())&&success) {                          //while cyklus se zastaví pokud je arraylist prázdný nebo pokud se nezdaří přenos
                     success=sql.transferApplicant(table, transfer.get(i), SQLTable.APPLICANTS);
                     i++;
-                    if (!success) {
-                        System.out.println("Transfer failed at number: "+i);
-                    }
                 }
-                if (!createstudent.isEmpty()) {
+                if (!createstudent.isEmpty()&&session.getAttribute("redirect")==null) {
                     session.setAttribute("newstudent", createstudent);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("pridaniStudenta.jsp");
-                    dispatcher.forward(request, response);
                     response.sendRedirect("pridaniStudenta.jsp");
                 }
             
             }
-            
-            response.sendRedirect("seznamUchazecu.jsp");
-        } catch (ClassNotFoundException|SQLException|ServletException|IOException ex) {
+            if (session.getAttribute("redirect")==null) {
+                response.sendRedirect("seznamUchazecu.jsp");
+            }
+        } catch (ClassNotFoundException|SQLException|IOException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
@@ -165,6 +168,11 @@ public class Applicants extends HttpServlet {
         }
     }
     
+    /**
+     * Gets data from SQL table and prepares them to fiels.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     private void getApplicants(HttpServletRequest request, HttpServletResponse response){
         try {
             Mysql sql=new Mysql();

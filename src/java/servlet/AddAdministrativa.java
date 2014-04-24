@@ -33,6 +33,12 @@ import source.UsernameGen;
  */
 public class AddAdministrativa extends HttpServlet {
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -40,11 +46,10 @@ public class AddAdministrativa extends HttpServlet {
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Adds data about new administrativa to sql and then redirects user back to jsp page from which ke came.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -59,7 +64,6 @@ public class AddAdministrativa extends HttpServlet {
             mail.sendGmailToRegisteredUser();
             Encrypt crypt=new Encrypt();
             password=crypt.encrypt(password, username);
-            
             Map<Label, String> input=new LinkedHashMap<>();
             input.put(Label.USERNAME, username);
             input.put(Label.PASSWORD, password);

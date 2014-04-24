@@ -8,7 +8,7 @@
 <%@page import="java.util.logging.Logger"%>
 <%@page import="java.util.logging.Level"%>
 <%@page import="java.util.LinkedHashMap"%>
-<%@page import="enums.SQLTables"%>
+<%@page import="enums.SQLTable"%>
 <%@page import="enums.ApplicationState"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
@@ -25,12 +25,13 @@
 <%  
     SecurityCheck security=new SecurityCheck(request);
     security.noDirectAccess(response);
-    security.accesedTo(Rights.administrativa, response);
+    session.setAttribute("redirect", null);
+    security.accesedTo(Rights.ADMINISTRATIVA, response);
     String temp="";                    //implicitní hodnota, která je vždy přepsána, je zde pouze proto, že při pokusu o přímý přístup session proměnná "tabulka" nemá žádnou hodnotu a stránka spadne ještě před přesměrováním
     if ((String)session.getAttribute("tabulka")!=null) {
         temp=(String)session.getAttribute("tabulka");
     }
-    SQLTables tabulka=SQLTables.getTableFromNumberInString(temp);
+    SQLTable tabulka=SQLTable.getTableFromNumberInString(temp);
     if((ArrayList<HashMap<Label, String>>) session.getAttribute("allApplicants")!=null&&(Boolean) session.getAttribute("spam")!=null){//podmínka, která je false při direct accessu
 %>
     <h1 class="title-header">Pro Administrativu</h1>
@@ -52,11 +53,11 @@
                         LinkedHashMap<Label, String> checked = new LinkedHashMap<Label, String>();      //kvůli zachování pořadí při vkládání hodnotse používá linked
                         ArrayList<HashMap<ApplicationState, String>> stavPrihlaskySelected=new ArrayList<HashMap<ApplicationState, String>>();
                         String selected="selected=\"selected\"";
-                        if(uchazec.size()>0&&uchazec.get(0).containsKey(Label.applicationstate)){
+                        if(uchazec.size()>0&&uchazec.get(0).containsKey(Label.APPLICATION_STATE)){
                             for (int i = 0; i < uchazec.size(); i++) {
                                 stavPrihlaskySelected.add(new HashMap<ApplicationState, String>());
                                 for (ApplicationState stav : ApplicationState.values()) {
-                                    if (uchazec.get(i).get(Label.applicationstate).equals(stav.getNameRaw())) {
+                                    if (uchazec.get(i).get(Label.APPLICATION_STATE).equals(stav.getNameRaw())) {
                                         stavPrihlaskySelected.get(i).put(stav, selected);
                                     } else {
                                         stavPrihlaskySelected.get(i).put(stav, "");
@@ -65,7 +66,7 @@
                             }
                         }
                         for (Label label : Label.values()) {
-                            if((label.isShowToAdministrativa()&&label.isInTables(SQLTables.login, tabulka))||label.equals(Label.allColumns)){
+                            if((label.isShowToAdministrativa()&&label.isInTables(SQLTable.LOGIN, tabulka))||label.equals(Label.ALL_COLUMNS)){
                                 checked.put(label, "");
                             }
                         }
@@ -105,7 +106,7 @@
                             přesunout ze spamu mezi běžné uchazeče
                         </span>
                     <%
-                        } else if(tabulka.equals(SQLTables.applicants)){
+                        } else if(tabulka.equals(SQLTable.APPLICANTS)){
                     %>
                         <span id="listOfApplicantsLabel">
                             vytvořit studenta
@@ -124,9 +125,9 @@
                             <div>
                         <%  
                             for (Label label : Label.values()) {
-                                if(label.isShowToAdministrativa()&&label.isInTables(SQLTables.login, tabulka)){
+                                if(label.isShowToAdministrativa()&&label.isInTables(SQLTable.LOGIN, tabulka)){
                                     if(checked.get(label)!=null&&checked.get(label).equals("checked")){
-                                        if(label.equals(Label.applicationstate)) {                                 //stav přihlášky se vypisuje jako select
+                                        if(label.equals(Label.APPLICATION_STATE)) {                                 //stav přihlášky se vypisuje jako select
                         %>
                                     <span id="listOfApplicants">
                                         <select name="<%= label.getNameRaw()+"+"+i %>">
@@ -157,7 +158,7 @@
                                     <input type="checkbox" name="<%= "transfer"+"+"+i %>" value="checked">
                                 </span>
                             <%
-                            } else if(tabulka.equals(SQLTables.applicants)){
+                            } else if(tabulka.equals(SQLTable.applicants)){
                             %>
                                 <span id="listOfApplicantsLabel">
                                     <input type="checkbox" name="<%= "createstudent"+"+"+i %>" value="checked">

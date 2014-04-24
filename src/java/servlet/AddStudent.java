@@ -28,6 +28,11 @@ import source.SecurityCheck;
  */
 public class AddStudent extends HttpServlet {
 
+    /**
+     * 
+     * @param input boolean array you want to test
+     * @return true only when each element of boolean array is true, otherwise return false
+     */
     public boolean isAllTrue(boolean[] input){
         boolean output=true;
         for (int i = 0; i < input.length; i++) {
@@ -38,6 +43,12 @@ public class AddStudent extends HttpServlet {
         return output;
     }
     
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -45,11 +56,10 @@ public class AddStudent extends HttpServlet {
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Adds data about new students to sql and then redirects user back to jsp page from which ke came.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){

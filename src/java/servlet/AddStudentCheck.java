@@ -19,6 +19,8 @@ import enums.Label;
 import enums.SQLTable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import source.FormValidation;
 import static source.FormValidation.validateForm;
 import source.MyLogger;
@@ -30,6 +32,12 @@ import source.SecurityCheck;
  */
 public class AddStudentCheck extends HttpServlet {
 
+    /**
+     * Processes requests for HTTP <code>GET</code> method.
+     * Only disables direct access.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         SecurityCheck security=new SecurityCheck(request);
@@ -37,11 +45,10 @@ public class AddStudentCheck extends HttpServlet {
     }
     
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
+     * Processes requests for HTTP <code>POST</code> method.
+     * Validates data from form and redirects user to next servlet which continues in processing data.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -50,12 +57,12 @@ public class AddStudentCheck extends HttpServlet {
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
             String notFilledStyle=" class=\"notFilled\"";
-            ArrayList<LinkedHashMap<Label, String>> seznamStudentu=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("newstudent");
-            ArrayList<HashMap<Label, String>> notFilled = new ArrayList<>();
-            ArrayList<HashMap<Label, String>> input = new ArrayList<>();
+            List<Map<Label, String>> seznamStudentu=(List<Map<Label, String>>) session.getAttribute("newstudent");
+            List<Map<Label, String>> notFilled = new ArrayList<>();
+            List<Map<Label, String>> input = new ArrayList<>();
             boolean error = false;
-            for (LinkedHashMap<Label, String> map : seznamStudentu) {
-                HashMap<Label, String> temp=new HashMap<>();
+            for (Map<Label, String> map : seznamStudentu) {
+                HashMap<Label, String> temp=new LinkedHashMap<>();
                 temp.put(Label.USERNAME, map.get(Label.USERNAME));
                 input.add(temp);
             }
@@ -69,7 +76,7 @@ public class AddStudentCheck extends HttpServlet {
                         }
                     }
                 }
-                FormValidation form=validateForm(input.get(i), SQLTable.STUDENTS, notFilledStyle);
+                FormValidation form=validateForm(input.get(i), notFilledStyle);
                 notFilled.add(form.getNotFilled());
                 if (form.isError()) {       //aby nenastalo přemátání true falsem v případě, kdy např. předposlední bude špatně a poslední správně
                     error=form.isError();

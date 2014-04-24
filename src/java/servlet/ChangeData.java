@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import source.Encrypt;
 import enums.Label;
 import java.util.HashMap;
-import java.util.logging.Logger;
+import java.util.Map;
 import source.LoggedUser;
 import source.MyLogger;
 import source.Mysql;
@@ -47,7 +47,7 @@ public class ChangeData extends HttpServlet {
         try {
             HttpSession session = request.getSession(true);
             Mysql sql=new Mysql();
-            boolean update=false;
+            boolean update;
             LoggedUser user=(LoggedUser) session.getAttribute("user");
             String username=user.getUsername();
             SQLTable table=user.getRights().getTable();
@@ -55,7 +55,6 @@ public class ChangeData extends HttpServlet {
             if (request.getParameter("zmenitheslo")!=null) {
                 Encrypt crypt=new Encrypt();
                 String password=request.getParameter("noveheslo");
-                boolean error=false;
                 password=crypt.encrypt(password, username);
 
                 update=sql.updatePassword(username, password);
@@ -68,14 +67,14 @@ public class ChangeData extends HttpServlet {
             }
             if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
                 table=sql.findTableWithApplicant(username);         //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
-                HashMap<Label, String> noveudaje=new HashMap<>();
+                Map<Label, String> newData=new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isInTable(table)&&label.isChangableByUser()) {
-                        noveudaje.put(label, request.getParameter(label.getNameRaw()));
+                        newData.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
                 
-                update=sql.updateApplicant(noveudaje, table);
+                update=sql.updateApplicant(newData, table);
                 
                 if (update) {
                     session.setAttribute("registered", "success");
