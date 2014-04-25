@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import enums.Label;
 import enums.SQLTable;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import source.FormValidation;

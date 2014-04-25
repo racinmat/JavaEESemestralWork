@@ -4,6 +4,8 @@
     Author     : Azathoth
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.HashMap"%>
@@ -19,17 +21,17 @@
     }
     String message="";
     
-    ArrayList<LinkedHashMap<Label, String>> listOfStudents=new ArrayList<LinkedHashMap<Label, String>>();
+    List<Map<Label, String>> listOfStudents=new ArrayList<Map<Label, String>>();
     if(session.getAttribute("newstudent")!=null){
-        listOfStudents=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("newstudent");
+        listOfStudents=(List<Map<Label, String>>) session.getAttribute("newstudent");
     }
     
-    ArrayList<LinkedHashMap<Label, String>> empty=new ArrayList<LinkedHashMap<Label, String>>();
+    List<Map<Label, String>> empty=new ArrayList<Map<Label, String>>();
     if(session.getAttribute("formCheck")!=null){
-        empty=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
+        empty=(List<Map<Label, String>>) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
     
-    ArrayList<LinkedHashMap<Label, String>> content=new ArrayList<LinkedHashMap<Label, String>>();
+    List<Map<Label, String>> content=new ArrayList<Map<Label, String>>();
     for (int i = 0; i < listOfStudents.size(); i++) {
         content.add(new LinkedHashMap<Label, String>());
     }
@@ -45,7 +47,7 @@
     }
     
     if(session.getAttribute("formContent")!=null){
-        content=(ArrayList<LinkedHashMap<Label, String>>) session.getAttribute("formContent");
+        content=(List<Map<Label, String>>) session.getAttribute("formContent");
     }
     
     if(registered.equals("success")){
@@ -58,7 +60,7 @@
     session.setAttribute("formCheck", null);
     session.setAttribute("formContent", null);
     security.noDirectAccess(response);
-    security.accesedTo(Rights.administrativa, response);
+    security.accesedTo(Rights.ADMINISTRATIVA, response);
 %>
     <h1 class="title-header">Pro administrativu</h1>
         </div><!-- end .column-title -->

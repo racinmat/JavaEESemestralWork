@@ -80,7 +80,7 @@ public class ChangeDataCheck extends HttpServlet {
                 heslo.put(Label.PASSWORD, crypt.encrypt(heslo.get(Label.PASSWORD), username));
                 LoggedUser passwordcheck=sql.login(username, heslo.get(Label.PASSWORD));
                 
-                if (!passwordcheck.getLogged().equals("success")) {
+                if (!passwordcheck.isLogged()) {
                     notFilled.put(Label.PASSWORD, notFilledStyle);
                     error=true;
                 }

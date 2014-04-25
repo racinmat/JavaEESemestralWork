@@ -18,7 +18,7 @@ public class UserFailingInLogin extends LoggedUser{
      * Constructor defining all variables for user who failed in attempt to login.
      */
     public UserFailingInLogin() {
-        super("", "", Rights.NOT_LOGGED, "", "fail", false);
+        super("", "", Rights.NOT_LOGGED, "");
     }
     
     /**
@@ -29,4 +29,23 @@ public class UserFailingInLogin extends LoggedUser{
     public LoggedUser clear(){
         return new NotLoggedUser();
     }
+    
+    /**
+     * 
+     * @return true
+     */
+    @Override
+    public boolean failedInLogin(){
+        return true;
+    }
+    
+    /**
+     * 
+     * @return false
+     */
+    @Override
+    public boolean isLogged() {
+        return false;
+    }
+
 }

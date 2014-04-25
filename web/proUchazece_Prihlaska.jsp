@@ -4,7 +4,8 @@
     Author     : Azathoth
 --%>
 
-<%@page import="enums.SQLTables"%>
+<%@page import="java.util.Map"%>
+<%@page import="enums.SQLTable"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="enums.FormGroup"%>
 <%@page import="java.util.HashMap"%>
@@ -18,13 +19,13 @@
     }
     String message="";
     
-    HashMap<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
+    Map<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
     if(session.getAttribute("formCheck")!=null){
         empty=(HashMap<Label, String>) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
-    HashMap<Label, String> content=new HashMap<Label, String>();
+    Map<Label, String> content=new HashMap<Label, String>();
     for (Label label : Label.values()) {
-        if((!label.isAutoFill())&&label.isInTables(SQLTables.applicants, SQLTables.login)){
+        if((!label.isAutoFill())&&label.isInTables(SQLTable.APPLICANTS, SQLTable.LOGIN)){
             content.put(label, "");
         }
     }
@@ -63,14 +64,14 @@
                 </div>
                 <%
                     ArrayList<Label> list=new ArrayList<Label>();               //kvůli fieldsetu, aby se bral první pouze z labelů, které projdou ifem
-                    FormGroup[] skupina=new FormGroup[]{FormGroup.personalData, FormGroup.birth, FormGroup.contact, FormGroup.permanentAddress, FormGroup.contactAddress, FormGroup.highSchool};
+                    FormGroup[] skupina=new FormGroup[]{FormGroup.PERSONAL_DATA, FormGroup.BIRTH, FormGroup.CONTACT, FormGroup.PERMANENT_ADDRESS, FormGroup.CONTACT_ADDRESS, FormGroup.HIGH_SCHOOL};
                     for(Label label : Label.values()){
-                        if((!label.isAutoFill())&&label.isInTables(SQLTables.applicants, SQLTables.login)){
+                        if((!label.isAutoFill())&&label.isInTables(SQLTable.APPLICANTS, SQLTable.LOGIN)){
                             list.add(label);
                         }
                     }
                     for(Label label : Label.values()){
-                        if((!label.isAutoFill())&&label.isInTables(SQLTables.applicants, SQLTables.login)){
+                        if((!label.isAutoFill())&&label.isInTables(SQLTable.APPLICANTS, SQLTable.LOGIN)){
                             for (int i = 0; i < skupina.length; i++) {
                                 if(skupina[i].getFirst(list).equals(label)){
                 %>

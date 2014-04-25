@@ -45,6 +45,9 @@ public class SendEmail
      * @return correct salutation according to sex of user
      */
     private String salutation(){
+        if (sex==null) {
+            return " ";
+        }
         switch (sex) {
             case "muž":
                 return "pane ";

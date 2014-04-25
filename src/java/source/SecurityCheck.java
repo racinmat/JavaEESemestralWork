@@ -35,8 +35,7 @@ public class SecurityCheck {
         HttpSession session = request.getSession(true);
         if (session.getAttribute("user")!=null) {
             this.user=(LoggedUser) session.getAttribute("user");
-            this.logged = this.user.getLogged().equals("success");
-            
+            this.logged = this.user.isLogged();
         } else {
             this.user=new NotLoggedUser();
             this.logged=false;

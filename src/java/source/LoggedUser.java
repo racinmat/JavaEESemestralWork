@@ -17,41 +17,39 @@ public class LoggedUser {
     private final String lastName;
     private final Rights rights;
     private final String username;
-    private final String logged;
-    private final boolean loggedBool;
-
+    
     /**
      * Creates new instance of Logged User, used as session variable holding more variables in itself.
      * @param name Name of logged user
      * @param lastName Last name of logged user
      * @param rights Rights of logged user
      * @param username username of logged user
-     * @param logged determines whether user is logged succesfully or not
      */
-    public LoggedUser(String name, String lastName, Rights rights, String username, String logged, boolean loggedBool) {
+    public LoggedUser(String name, String lastName, Rights rights, String username) {
         this.name = name;
         this.lastName = lastName;
         this.rights = rights;
         this.username = username;
-        this.logged = logged;
-        this.loggedBool = loggedBool;
-    }
-
-    public boolean isLogged() {
-        return loggedBool;
     }
 
     /**
      * 
-     * @return 
+     * @return true if user is successfully logged, otherwise return false(used polymorphism)
      */
-    public String getLogged() {
-        return logged;
+    public boolean isLogged() {
+        return true;
     }
 
     /**
      * 
-     * @return 
+     * @return true, when user failed to login(used polymorphism)
+     */
+    public boolean failedInLogin(){
+        return false;
+    }
+    /**
+     * 
+     * @return name of logged user
      */
     public String getName() {
         return name;
@@ -59,7 +57,7 @@ public class LoggedUser {
 
     /**
      * 
-     * @return 
+     * @return last name of logged user
      */
     public String getLastName() {
         return lastName;
@@ -67,7 +65,7 @@ public class LoggedUser {
 
     /**
      * 
-     * @return 
+     * @return Rights of logged user
      */
     public Rights getRights() {
         return rights;
@@ -75,7 +73,7 @@ public class LoggedUser {
 
     /**
      * 
-     * @return 
+     * @return username of logged user
      */
     public String getUsername() {
         return username;

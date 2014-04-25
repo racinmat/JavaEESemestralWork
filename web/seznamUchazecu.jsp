@@ -23,9 +23,9 @@
 
     <link rel='stylesheet' id='academica-style-css'  href='style.css?ver=3.8.1' type='text/css' media='all' />
 <%  
+    session.setAttribute("redirect", null);
     SecurityCheck security=new SecurityCheck(request);
     security.noDirectAccess(response);
-    session.setAttribute("redirect", null);
     security.accesedTo(Rights.ADMINISTRATIVA, response);
     String temp="";                    //implicitní hodnota, která je vždy přepsána, je zde pouze proto, že při pokusu o přímý přístup session proměnná "tabulka" nemá žádnou hodnotu a stránka spadne ještě před přesměrováním
     if ((String)session.getAttribute("tabulka")!=null) {
@@ -158,7 +158,7 @@
                                     <input type="checkbox" name="<%= "transfer"+"+"+i %>" value="checked">
                                 </span>
                             <%
-                            } else if(tabulka.equals(SQLTable.applicants)){
+                            } else if(tabulka.equals(SQLTable.APPLICANTS)){
                             %>
                                 <span id="listOfApplicantsLabel">
                                     <input type="checkbox" name="<%= "createstudent"+"+"+i %>" value="checked">

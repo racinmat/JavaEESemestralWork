@@ -11,7 +11,7 @@
     String failMessage="";
     String userInfo="";
     String form="";
-    if(user!=null&&user.getLogged().equals("success")){                         //ošetřena inicializace proměnné
+    if(user!=null&&user.isLogged()){                         //ošetřena inicializace proměnné
         String name=user.getName();                                             //user načten v headeru
         String lastname=user.getLastName();
         String pravaString=user.getRights().getRightsString();
@@ -41,7 +41,7 @@
             + "</fieldset>"
             + "</form>";
     }                                                                           
-    if(user!=null&&user.getLogged().equals("fail")){                                     //ošetřena inicializace proměnné
+    if(user!=null&&user.failedInLogin()){                                     //ošetřena inicializace proměnné
         form="<form action=\"login\" method=\"POST\">"
             + "<fieldset class=\"loginForm\">"
                 + "<div>"

@@ -4,16 +4,17 @@
     Author     : Azathoth
 --%>
 
+<%@page import="java.util.Map"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="enums.Rights"%>
 <%@page import="enums.FormGroup"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="enums.SQLTables"%>
+<%@page import="enums.SQLTable"%>
 <%@page import="source.Mysql"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
     <%
-        HashMap<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
+        Map<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
         Mysql sql=new Mysql();
         if(session.getAttribute("formCheck")!=null){
             empty=(HashMap<Label, String>) session.getAttribute("formCheck");   //zjistí se, jak byl uživatel úspěšný při registraci
@@ -52,13 +53,13 @@
                 <div class="entry-summary"><p></p>
                     
                     <%
-                        LinkedHashMap<Label, String> info=(LinkedHashMap<Label, String>) session.getAttribute("info");
+                        Map<Label, String> info=(Map<Label, String>) session.getAttribute("info");
                         for(Label label : info.keySet()) {
                         //    if(FormGroup.contact.getFirst(info)!=null&&FormGroup.contact.getFirst(info).equals(label)){   //ošetření proti tomu, když nic z hashmapy info nespadá do kategorie
                     
                     %>
                     <!--<fieldset>
-                        <legend><%= FormGroup.contact.getName() %></legend>-->
+                        <legend><%= FormGroup.CONTACT.getName() %></legend>-->
                     <%
                             //} 
                     %>

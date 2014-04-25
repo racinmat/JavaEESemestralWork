@@ -73,7 +73,7 @@ public class Mysql {
         }
         if(size==1){                                                        //podmínkou pro úspěšné přihlášení se je právě jedna shoda
             Rights rightsObject=Rights.getRightsFromInt(rights);
-            return new LoggedUser(name, lastname, rightsObject, username, "success", true);
+            return new LoggedUser(name, lastname, rightsObject, username);
         }
         return new UserFailingInLogin();
     }
@@ -314,7 +314,7 @@ public class Mysql {
         ps=conn.prepareStatement(sql);                                          //parametrized statement pro dotaz s otazníky a pozdějším dosazením
         ps.setString(1,id);
         ResultSet rs = ps.executeQuery();                                       //pro parametrizovaný dotaz
-        return rs.next();
+        return !rs.next();                                                      //pokud má resultset next, pak id není jedinečné
     }
     
     /**

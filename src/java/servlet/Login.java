@@ -56,7 +56,7 @@ public class Login extends HttpServlet{
             Mysql sql=new Mysql();
             LoggedUser user=sql.login(username, password);
             session.setAttribute("user", user);
-            if(user.getLogged().equals("fail")){
+            if(user.failedInLogin()){
                 response.sendRedirect(URL);
             }
             else{

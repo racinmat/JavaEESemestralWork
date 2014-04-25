@@ -4,8 +4,9 @@
     Author     : Azathoth
 --%>
 
+<%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="enums.SQLTables"%>
+<%@page import="enums.SQLTable"%>
 <%@page import="enums.Rights"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
     <%@ include file="/header.jsp"%>
@@ -17,13 +18,13 @@
     }
     String message="";
     
-    HashMap<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
+    Map<Label, String> empty=new HashMap<Label, String>();                           //měnit v případě změny počtu položek ve formuláři
     if(session.getAttribute("formCheck")!=null){
         empty=(HashMap<Label, String>) session.getAttribute("formCheck");                     //zjistí se, jak byl uživatel úspěšný při registraci
     }
-    HashMap<Label, String> content=new HashMap<Label, String>();
+    Map<Label, String> content=new HashMap<Label, String>();
     for (Label label : Label.values()) {
-        if(label.isInTables(SQLTables.login, SQLTables.administrativa)){
+        if(label.isInTables(SQLTable.LOGIN, SQLTable.ADMINISTRATIVA)){
             content.put(label, "");
         }
     }
@@ -41,7 +42,7 @@
     session.setAttribute("formCheck", null);
     session.setAttribute("formContent", null);
     
-    security.accesedTo(Rights.administrativa, response);
+    security.accesedTo(Rights.ADMINISTRATIVA, response);
 %>
     <h1 class="title-header">Pro administrativu</h1>
         </div><!-- end .column-title -->
@@ -57,7 +58,7 @@
 
                         <%
                             for (Label label : Label.values()) {
-                                if(label.isInTables(SQLTables.login, SQLTables.administrativa)&&!label.isAutoFill()){
+                                if(label.isInTables(SQLTable.LOGIN, SQLTable.ADMINISTRATIVA)&&!label.isAutoFill()){
                         %>
                             <div>    
                                 <label for="<%= label.getNameRaw() %>"<%= empty.get(label) %>><%= label.getNameForUsers() %>:</label>
