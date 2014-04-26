@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package servlet;
 
 import enums.SQLTable;
@@ -30,20 +29,22 @@ import source.SecurityCheck;
 public class ChangeData extends HttpServlet {
 
     /**
-     * Processes requests for HTTP <code>GET</code> method.
-     * Only disables direct access.
+     * Processes requests for HTTP <code>GET</code> method. Only disables direct
+     * access.
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        SecurityCheck security=new SecurityCheck(request);
+        SecurityCheck security = new SecurityCheck(request);
         security.noDirectAccess(response);
     }
-    
+
     /**
-     * Processes requests for HTTP <code>POST</code> method.
-     * Change data about user in sql and then redirects user back to jsp page from which ke came.
+     * Processes requests for HTTP <code>POST</code> method. Change data about
+     * user in sql and then redirects user back to jsp page from which ke came.
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
@@ -51,34 +52,34 @@ public class ChangeData extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession(true);
-            Mysql sql=new Mysql();
+            Mysql sql = new Mysql();
             boolean update;
-            LoggedUser user=(LoggedUser) session.getAttribute("user");
-            String username=user.getUsername();
-            if (request.getParameter("zmenitheslo")!=null) {
-                Encrypt crypt=new Encrypt();
-                String password=request.getParameter("noveheslo");
-                password=crypt.encrypt(password, username);
+            LoggedUser user = (LoggedUser) session.getAttribute("user");
+            String username = user.getUsername();
+            if (request.getParameter("zmenitheslo") != null) {
+                Encrypt crypt = new Encrypt();
+                String password = request.getParameter("noveheslo");
+                password = crypt.encrypt(password, username);
 
-                update=sql.updatePassword(username, password);
-                
+                update = sql.updatePassword(username, password);
+
                 if (update) {
                     session.setAttribute("registered", "passwordsuccess");
                 } else {
                     session.setAttribute("registered", "passwordfail");
                 }
             }
-            if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                SQLTable table=sql.findTableWithApplicant(username);            //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
-                Map<Label, String> newData=new HashMap<>();
+            if (request.getParameter("zmenitostatniudaje") != null) {             //pro změnu ostatních údajů
+                SQLTable table = sql.findTableWithApplicant(username);            //table rozlišuje mezi uchazeči, studenty atd...kvůli sloupečkům, které mají všichni uchazeči stejné, tabulka určuje konkrétní tabulku
+                Map<Label, String> newData = new HashMap<>();
                 for (Label label : Label.values()) {
-                    if (label.isInTable(table)&&label.isChangableByUser()) {
+                    if (label.isInTable(table) && label.isChangableByUser()) {
                         newData.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                
-                update=sql.updateApplicant(newData, table);                     //update zatím pouze pro uchazeče
-                
+
+                update = sql.updateApplicant(newData, table);                     //update zatím pouze pro uchazeče
+
                 if (update) {
                     session.setAttribute("registered", "success");
                 } else {
@@ -86,13 +87,13 @@ public class ChangeData extends HttpServlet {
                 }
             }
             response.sendRedirect("proPrihlasene.jsp");
-            
-        } catch (SQLException|ClassNotFoundException|IOException|NoSuchFieldException ex) {
+
+        } catch (SQLException | ClassNotFoundException | IOException | NoSuchFieldException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp?error=0");
             } catch (IOException ex1) {
-                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. " + ex1.getMessage(), ex1);
             }
         }
     }

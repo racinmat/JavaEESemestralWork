@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package servlet;
 
 import java.io.IOException;
@@ -33,68 +32,70 @@ import source.SecurityCheck;
 public class AddStudentCheck extends HttpServlet {
 
     /**
-     * Processes requests for HTTP <code>GET</code> method.
-     * Only disables direct access.
+     * Processes requests for HTTP <code>GET</code> method. Only disables direct
+     * access.
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        SecurityCheck security=new SecurityCheck(request);
+        SecurityCheck security = new SecurityCheck(request);
         security.noDirectAccess(response);
     }
-    
+
     /**
-     * Processes requests for HTTP <code>POST</code> method.
-     * Validates data from form and redirects user to next servlet which continues in processing data.
+     * Processes requests for HTTP <code>POST</code> method. Validates data from
+     * form and redirects user to next servlet which continues in processing
+     * data.
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(true);
         try {
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
-            String notFilledStyle=" class=\"notFilled\"";
-            List<Map<Label, String>> seznamStudentu=(List<Map<Label, String>>) session.getAttribute("newstudent");
+            String notFilledStyle = " class=\"notFilled\"";
+            List<Map<Label, String>> seznamStudentu = (List<Map<Label, String>>) session.getAttribute("newstudent");
             List<Map<Label, String>> notFilled = new ArrayList<>();
             List<Map<Label, String>> input = new ArrayList<>();
             boolean error = false;
             for (Map<Label, String> map : seznamStudentu) {
-                HashMap<Label, String> temp=new LinkedHashMap<>();
+                HashMap<Label, String> temp = new LinkedHashMap<>();
                 temp.put(Label.USERNAME, map.get(Label.USERNAME));
                 input.add(temp);
             }
             for (int i = 0; i < input.size(); i++) {
                 for (Label label : Label.values()) {
-                    if (label.isInTable(SQLTable.STUDENTS)&&!label.isAutoFill()) {
-                        if (label.isPhonenumber()){
-                            input.get(i).put(label, request.getParameter("predvolba"+label.getNameRaw()+"+"+i)+request.getParameter(label.getNameRaw()+"+"+i));
+                    if (label.isInTable(SQLTable.STUDENTS) && !label.isAutoFill()) {
+                        if (label.isPhonenumber()) {
+                            input.get(i).put(label, request.getParameter("predvolba" + label.getNameRaw() + "+" + i) + request.getParameter(label.getNameRaw() + "+" + i));
                         } else {
-                            input.get(i).put(label, request.getParameter(label.getNameRaw()+"+"+i));
+                            input.get(i).put(label, request.getParameter(label.getNameRaw() + "+" + i));
                         }
                     }
                 }
-                FormValidation form=validateForm(input.get(i), notFilledStyle);
+                FormValidation form = validateForm(input.get(i), notFilledStyle);
                 notFilled.add(form.getNotFilled());
                 if (form.isError()) {       //aby nenastalo přemátání true falsem v případě, kdy např. předposlední bude špatně a poslední správně
-                    error=form.isError();
+                    error = form.isError();
                 }
             }
             session.setAttribute("formContent", input);
             session.setAttribute("formCheck", notFilled);
-                        
+
             if (error) {
                 response.sendRedirect("pridaniStudenta.jsp");
-            }
-            else{
+            } else {
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/AddStudent");
                 dispatcher.forward(request, response);
             }
         } catch (ServletException | IOException ex) {
-            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in dispatching to /AddStudent. "+ex.getMessage(), ex);
+            MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in dispatching to /AddStudent. " + ex.getMessage(), ex);
         }
-        
+
     }
 }

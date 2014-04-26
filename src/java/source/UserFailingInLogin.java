@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package source;
 
 import enums.Rights;
@@ -12,35 +11,38 @@ import enums.Rights;
  *
  * @author Azathoth
  */
-public class UserFailingInLogin extends LoggedUser{
+public class UserFailingInLogin extends LoggedUser {
 
     /**
-     * Constructor defining all variables for user who failed in attempt to login.
+     * Constructor defining all variables for user who failed in attempt to
+     * login.
      */
     public UserFailingInLogin() {
         super("", "", Rights.NOT_LOGGED, "");
     }
-    
+
     /**
-     * 
-     * @return notLoggedUser, is used because for UserFailingInLogin is in jsp pages shown text telling him his attempt to login failed, after displaying once it should disappear, which is solved by using this method
+     *
+     * @return notLoggedUser, is used because for UserFailingInLogin is in jsp
+     * pages shown text telling him his attempt to login failed, after
+     * displaying once it should disappear, which is solved by using this method
      */
     @Override
-    public LoggedUser clear(){
+    public LoggedUser clear() {
         return new NotLoggedUser();
     }
-    
+
     /**
-     * 
+     *
      * @return true
      */
     @Override
-    public boolean failedInLogin(){
+    public boolean failedInLogin() {
         return true;
     }
-    
+
     /**
-     * 
+     *
      * @return false
      */
     @Override

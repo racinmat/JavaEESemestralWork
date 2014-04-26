@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package source;
 
 import enums.Rights;
@@ -12,7 +11,7 @@ import enums.Rights;
  *
  * @author Azathoth
  */
-public class NotLoggedUser extends LoggedUser{
+public class NotLoggedUser extends LoggedUser {
 
     /**
      * Constructor which sets all data about user who is not logged.
@@ -20,9 +19,9 @@ public class NotLoggedUser extends LoggedUser{
     public NotLoggedUser() {
         super("", "", Rights.NOT_LOGGED, "");
     }
-    
+
     /**
-     * 
+     *
      * @return false
      */
     @Override

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package source;
 
 import enums.Rights;
@@ -13,13 +12,16 @@ import enums.Rights;
  * @author Azathoth
  */
 public class LoggedUser {
+
     private final String name;
     private final String lastName;
     private final Rights rights;
     private final String username;
-    
+
     /**
-     * Creates new instance of Logged User, used as session variable holding more variables in itself.
+     * Creates new instance of Logged User, used as session variable holding
+     * more variables in itself.
+     *
      * @param name Name of logged user
      * @param lastName Last name of logged user
      * @param rights Rights of logged user
@@ -33,22 +35,24 @@ public class LoggedUser {
     }
 
     /**
-     * 
-     * @return true if user is successfully logged, otherwise return false(used polymorphism)
+     *
+     * @return true if user is successfully logged, otherwise return false(used
+     * polymorphism)
      */
     public boolean isLogged() {
         return true;
     }
 
     /**
-     * 
+     *
      * @return true, when user failed to login(used polymorphism)
      */
-    public boolean failedInLogin(){
+    public boolean failedInLogin() {
         return false;
     }
+
     /**
-     * 
+     *
      * @return name of logged user
      */
     public String getName() {
@@ -56,7 +60,7 @@ public class LoggedUser {
     }
 
     /**
-     * 
+     *
      * @return last name of logged user
      */
     public String getLastName() {
@@ -64,7 +68,7 @@ public class LoggedUser {
     }
 
     /**
-     * 
+     *
      * @return Rights of logged user
      */
     public Rights getRights() {
@@ -72,7 +76,7 @@ public class LoggedUser {
     }
 
     /**
-     * 
+     *
      * @return username of logged user
      */
     public String getUsername() {
@@ -80,7 +84,7 @@ public class LoggedUser {
     }
 
     /**
-     * 
+     *
      * @return hash of this object
      */
     @Override
@@ -94,7 +98,7 @@ public class LoggedUser {
     }
 
     /**
-     * 
+     *
      * @param obj object you want to compare with this
      * @return true if objects are same, otherwise return false
      */
@@ -118,12 +122,14 @@ public class LoggedUser {
         }
         return !((this.username == null) ? (other.username != null) : !this.username.equals(other.username));
     }
-    
+
     /**
      * Used for turning UserFailedInLogin to NotLoggedUser
-     * @return this, returns new NotLoggedUser when this is instance of UserFailingInLogin
+     *
+     * @return this, returns new NotLoggedUser when this is instance of
+     * UserFailingInLogin
      */
-    public LoggedUser clear(){
+    public LoggedUser clear() {
         return this;
     }
 }

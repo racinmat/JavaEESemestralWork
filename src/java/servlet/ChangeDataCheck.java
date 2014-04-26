@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package servlet;
 
 import java.io.IOException;
@@ -34,43 +33,46 @@ import source.SecurityCheck;
 public class ChangeDataCheck extends HttpServlet {
 
     /**
-     * Processes requests for HTTP <code>GET</code> method.
-     * Only disables direct access.
+     * Processes requests for HTTP <code>GET</code> method. Only disables direct
+     * access.
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        SecurityCheck security=new SecurityCheck(request);
+        SecurityCheck security = new SecurityCheck(request);
         security.noDirectAccess(response);
     }
-    
+
     /**
-     * Processes requests for HTTP <code>POST</code> method.
-     * Validates data from form and redirects user to next servlet which continues in processing data.
+     * Processes requests for HTTP <code>POST</code> method. Validates data from
+     * form and redirects user to next servlet which continues in processing
+     * data.
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession(true);
             request.setCharacterEncoding("UTF-8");                              //nastavení na utf 8, jinak se znaky z formuláře špatně přečtou
-            Mysql sql=new Mysql();
-            Encrypt crypt=new Encrypt();
-            LoggedUser user=(LoggedUser) session.getAttribute("user");
-            String username=user.getUsername();
-            boolean error=false;
+            Mysql sql = new Mysql();
+            Encrypt crypt = new Encrypt();
+            LoggedUser user = (LoggedUser) session.getAttribute("user");
+            String username = user.getUsername();
+            boolean error = false;
             Map<Label, String> notFilled = new HashMap<>();
-            String notFilledStyle=" class=\"notFilled\"";
-            SQLTable table=user.getRights().getTable();
+            String notFilledStyle = " class=\"notFilled\"";
+            SQLTable table = user.getRights().getTable();
             for (Label label : Label.values()) {
                 if (label.isChangableByUser()) {
                     notFilled.put(label, "");
                 }
             }
-            
-            if (request.getParameter("zmenitheslo")!=null) {                    //pro změnu hesla
+
+            if (request.getParameter("zmenitheslo") != null) {                    //pro změnu hesla
                 Map<Label, String> heslo = new HashMap<>();
                 for (Label label : Label.values()) {
                     if (label.isPasswordChange()) {
@@ -78,48 +80,47 @@ public class ChangeDataCheck extends HttpServlet {
                     }
                 }
                 heslo.put(Label.PASSWORD, crypt.encrypt(heslo.get(Label.PASSWORD), username));
-                LoggedUser passwordcheck=sql.login(username, heslo.get(Label.PASSWORD));
-                
+                LoggedUser passwordcheck = sql.login(username, heslo.get(Label.PASSWORD));
+
                 if (!passwordcheck.isLogged()) {
                     notFilled.put(Label.PASSWORD, notFilledStyle);
-                    error=true;
+                    error = true;
                 }
                 if (heslo.get(Label.NEW_PASSWORD).equals("")) {
                     notFilled.put(Label.NEW_PASSWORD, notFilledStyle);
-                    error=true;
+                    error = true;
                 }
-                if (!heslo.get(Label.NEW_PASSWORD).equals(heslo.get(Label.NEW_PASSWORD_CHECK))||heslo.get(Label.NEW_PASSWORD_CHECK).equals("")) {
+                if (!heslo.get(Label.NEW_PASSWORD).equals(heslo.get(Label.NEW_PASSWORD_CHECK)) || heslo.get(Label.NEW_PASSWORD_CHECK).equals("")) {
                     notFilled.put(Label.NEW_PASSWORD_CHECK, notFilledStyle);
-                    error=true;
+                    error = true;
                 }
             }
-            if (request.getParameter("zmenitostatniudaje")!=null) {             //pro změnu ostatních údajů
-                Map<Label, String> input=new HashMap<>();
+            if (request.getParameter("zmenitostatniudaje") != null) {             //pro změnu ostatních údajů
+                Map<Label, String> input = new HashMap<>();
                 for (Label label : Label.values()) {
-                    if (label.isInTable(table)&&label.isChangableByUser()) {
+                    if (label.isInTable(table) && label.isChangableByUser()) {
                         input.put(label, request.getParameter(label.getNameRaw()));
                     }
                 }
-                FormValidation form=validateForm(input, notFilledStyle);
-                notFilled=form.getNotFilled();
-                error=form.isError();
+                FormValidation form = validateForm(input, notFilledStyle);
+                notFilled = form.getNotFilled();
+                error = form.isError();
             }
-            
+
             session.setAttribute("formCheck", notFilled);
             if (error) {
                 response.sendRedirect("proPrihlasene.jsp");
-            }
-            else{
+            } else {
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/ChangeData");
                 dispatcher.forward(request, response);
             }
-            
-        } catch (SQLException|ClassNotFoundException|ServletException|IOException ex) {
+
+        } catch (SQLException | ClassNotFoundException | ServletException | IOException ex) {
             try {
                 MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", ex.getMessage(), ex);
                 response.sendRedirect("chyba.jsp");
             } catch (IOException ex1) {
-                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. "+ex1.getMessage(), ex1);
+                MyLogger.getLogger().logp(Level.SEVERE, this.getClass().getName(), "doPost method", "Error in redirecting to chyba.jsp?error=0. " + ex1.getMessage(), ex1);
             }
         }
     }
