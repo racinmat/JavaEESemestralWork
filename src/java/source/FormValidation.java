@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 import enums.Label;
@@ -11,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * This class has almost every method except of getters andconstructor static
+ * and they are used for validating Strings or whole form. Every form on these
+ * websites uses this class to validate itself.
  *
  * @author Azathoth
  */
@@ -224,7 +222,8 @@ public class FormValidation {
      * Validates provided form according to parameters of Labels used as keys.
      *
      * @param input Map containing Labels as keys and String as values, which
-     * will be tested
+     * will be tested. Strings as values will be tested according to parameters
+     * of Labels used as keys.
      * @param notFilledStyle String containing css code which will be appended
      * to style of input labels of HTML form whose data are being validated
      * @return Object containing two fields: first is Map notFilled, with same

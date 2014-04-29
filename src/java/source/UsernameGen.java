@@ -3,13 +3,10 @@ package source;
 import java.sql.SQLException;
 import java.util.Random;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
+ * ID generator using Uppercase alphabet and 0-9 numbers to create pseudorandom
+ * String. Length of generated Strings is determined in constructor. Is also
+ * used for generating primary keys which are tested to be unique or not.
  *
  * @author Azathoth
  */

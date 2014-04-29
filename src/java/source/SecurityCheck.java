@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 import enums.Rights;
@@ -15,6 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
+ * This class is used for controlling Rights of user to access certain pages and
+ * to deny direct access to webpages which are not meant to be accessed
+ * directly. HttpServletResponse needed by some methods gives this class
+ * possibility to redirect user in case of denying access to current page.
+ * Giving access to HttpServletResponse variable allows jsp pages to have less
+ * java code inside because whole controlling of rights and redirecting executed
+ * by calling only one method. This page uses HttpServletRequest provided in
+ * constructor to load all user data from session variable and then comparing
+ * whether the user is worthy proceeding to page or not.
  *
  * @author Azathoth
  */

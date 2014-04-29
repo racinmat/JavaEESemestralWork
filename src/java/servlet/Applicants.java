@@ -1,10 +1,5 @@
 package servlet;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import enums.SQLTable;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,6 +18,9 @@ import source.Mysql;
 import source.SecurityCheck;
 
 /**
+ * Used for showing data about many applicants at once, processes change of data
+ * of applicants and in case of new student redirects to page with creating of
+ * new Student.
  *
  * @author Azathoth
  */
@@ -110,10 +108,10 @@ public class Applicants extends HttpServlet {
             }
             if (request.getParameter("zmenitudaje") != null) {
                 List<String> transfer = new ArrayList<>();                        //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
-                List<LinkedHashMap<Label, String>> createstudent = new ArrayList<>();            //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
+                List<Map<Label, String>> createstudent = new ArrayList<>();            //arraylist na id uživatelů, kteří budou přeneseni ze spamové tabulky do tabulky běžných uchazečů
                 Mysql sql = new Mysql();
                 getApplicants(request, response);
-                int oprava = 0;                                                   //používá se kvůli přenosu uchazečů na studenty a nejsou zaškrtlá všechna políčka
+                int fix = 0;                                                   //používá se kvůli přenosu uchazečů na studenty a nejsou zaškrtlá všechna políčka
 
                 for (int i = 0; i < udajeouzivatelich.size(); i++) {
                     for (Label label : Label.values()) {
@@ -128,11 +126,11 @@ public class Applicants extends HttpServlet {
                     temp = request.getParameter("createstudent" + "+" + i);
                     if (temp != null && temp.equals("checked")) {
                         createstudent.add(new LinkedHashMap<Label, String>());  //kvůli tomu, aby se neměnilo pořadí při iteraci
-                        createstudent.get(i + oprava).put(Label.USERNAME, udajeouzivatelich.get(i).get(Label.USERNAME));
-                        createstudent.get(i + oprava).put(Label.NAME, udajeouzivatelich.get(i).get(Label.NAME));
-                        createstudent.get(i + oprava).put(Label.LASTNAME, udajeouzivatelich.get(i).get(Label.LASTNAME));
+                        createstudent.get(i + fix).put(Label.USERNAME, udajeouzivatelich.get(i).get(Label.USERNAME));
+                        createstudent.get(i + fix).put(Label.NAME, udajeouzivatelich.get(i).get(Label.NAME));
+                        createstudent.get(i + fix).put(Label.LASTNAME, udajeouzivatelich.get(i).get(Label.LASTNAME));
                     } else {
-                        oprava--;
+                        fix--;
                     }
 
                 }

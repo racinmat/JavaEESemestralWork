@@ -1,13 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 import enums.Rights;
 
 /**
+ * This class is data class used for storing data about logged user from SQL
+ * database. Instance of this class is kept as a session variable from which is
+ * taken all data about logged user, the most important is Rights used to
+ * determine access to certain webpages.
  *
  * @author Azathoth
  */

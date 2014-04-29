@@ -1,11 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 /**
+ * This class can send emails from gmail account which is connected via SMTP
+ * during every email sending. Is used only to send login and password to newly
+ * registered users.
  *
  * @author Azathoth
  */

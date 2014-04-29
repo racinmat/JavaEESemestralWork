@@ -1,13 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 import enums.Rights;
 
 /**
+ * Extends LoggedUser, instance of this class is created when user fails in an
+ * attempt to login. When this class is saved in user session variable, beneath
+ * login window is text announcing the attempt to login failed and after showing
+ * this message, the clear function is called and UserFailingInLogin is replaced
+ * by an instance of NotLoggedUser.
  *
  * @author Azathoth
  */

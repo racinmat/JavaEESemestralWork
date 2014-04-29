@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 import enums.Label;
@@ -21,6 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This class provides communication with MySQL database. Constructor
+ * establishes connection used in every method called after the constructor. SQL
+ * command to create the database with proper structure and some data is
+ * included in this project. String encoding is set to UTF-8, so it should
+ * hanhle properly even localized characters. Everything regarding connection to
+ * database is in constructor. For communication with database is used JDBC
+ * framework. For communicating with database are used only parameterized
+ * statements making database immune to SQL injection.
  *
  * @author Azathoth
  */
@@ -42,7 +45,7 @@ public class Mysql {
      */
     public Mysql() throws ClassNotFoundException, SQLException {                //vyhazuje výjimky, které mohou být chyceny servletem, který uživatele přesměruje na statickou stránku a oznámí mu problém
         url = "jdbc:mysql://localhost:3306/";                                   //pro localhost
-        dbName = "mysql";                                                        //pro localhost
+        dbName = "mysql";                                                       //pro localhost
         uname = "root";
         pwd = "";
         Class.forName("com.mysql.jdbc.Driver");

@@ -7,15 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import source.MyLogger;
+import source.NotLoggedUser;
 import source.SecurityCheck;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
+ * Used for logout and replacing instane of LoggedUser with data about user with NotLoggedUser.
+ * 
  * @author Azathoth
  */
 public class Logout extends HttpServlet {
@@ -45,7 +42,7 @@ public class Logout extends HttpServlet {
         String URL = "";
         try {
             HttpSession session = request.getSession(true);
-            session.setAttribute("user", null);
+            session.setAttribute("user", new NotLoggedUser());
             URL = (String) session.getAttribute("loggingURL");
             session.setAttribute("loggingURL", null);
             response.sendRedirect(URL);

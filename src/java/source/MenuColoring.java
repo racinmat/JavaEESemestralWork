@@ -1,17 +1,14 @@
 package source;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
+ * This class is used for determining which part of header list should be
+ * colored according to page user is browsing right now. Determining is based on
+ * uri provided to constructor.
  *
  * @author Azathoth
  */
 public class MenuColoring {
 
-    private final String uri;
     private final String pageName;
     private String index = "";
     private String proUchazece = "";
@@ -30,7 +27,6 @@ public class MenuColoring {
      * is right now
      */
     public MenuColoring(String uri) {
-        this.uri = uri;
         String temp = "";
         if (!"".equals(uri)) {
             temp = uri.substring(uri.lastIndexOf("/") + 1);                     //získá poslední úroveň stránky

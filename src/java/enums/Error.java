@@ -1,19 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package enums;
 
 /**
- *
+ * Error enum, used to store every known and described kind of error and warning statements. Webpage chyba.jsp uses this enum to show error or warning message.
  * @author Azathoth
  */
 public enum Error {
+    
+    /**
+     * Shows up when something happenes with connection to SQL database.
+     */
     NO_SQL(          "0",    "Omlouváme se, ale vyskytla se chyba v připojení na databázi. Administrátor již ví o chybě a pokusí se ji v co nejkratším čase opravit."),
+    /**
+     * Shows up when unknown error appears.
+     */
     NOT_KNOWN_ERROR( "1",    "Vyskytla se nepředpokládaná chyba, administrátor o ní ví a pokouší se ji řešit."                                                       ),
+    /**
+     * Shows up when user does not have rights to access certain webpage.
+     */
     NO_RIGHTS(       "2",    "Bohužel nemáte práva k přístupu na tuto stránku, pokud máte pocit, že byste na tuto stránku měli mít přístup, přihlašte se nebo kontaktujte administrátora."),
+    /**
+     * Shows up when user tries to access webpage which is not meant to be accessed directly.
+     */
     NO_DIRECT_ACCESS("3",    "Bohužel na tuto stránku není povolen přímý přístup."),
     ;
     private final String numberAsString;

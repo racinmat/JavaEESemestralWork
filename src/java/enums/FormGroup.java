@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package enums;
 
 import java.util.List;
@@ -11,16 +5,38 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
- *
+ * This enum is used for keeping in one group all Labels which shall be in one fieldset in forms. Only visual stuff.
  * @author Azathoth
  */
 public enum FormGroup {
+    
+    /**
+     * Personal data, contains Label.NAME, Label.LASTNAME, Label.STUDY_PROGRAM, Label.BRANCH_OF_STUDY, Label.CITIZENSHIP, Label.MARITAL_STATUS.
+     */
     PERSONAL_DATA(      "nacionále",        new Label[]{Label.NAME, Label.LASTNAME, Label.STUDY_PROGRAM, Label.BRANCH_OF_STUDY, Label.CITIZENSHIP, Label.MARITAL_STATUS}),
+    /**
+     * Contact, contains Label.EMAIL, Label.CELLPHONE.
+     */
     CONTACT(            "kontakt",          new Label[]{Label.EMAIL, Label.CELLPHONE}),
+    /**
+     * Birth, contains Label.BIRTHPLACE, Label.BIRTHCOUNTY, Label.BIRTHNUMBER, Label.ID, Label.PASSPORT.
+     */
     BIRTH(              "narození",         new Label[]{Label.BIRTHPLACE, Label.BIRTHCOUNTY, Label.BIRTHNUMBER, Label.ID, Label.PASSPORT}),
+    /**
+     * Permantne address, contains Label.STREET, Label.HOUSE_NUMBER, Label.MUNICIPALITY_PART, Label.MUNICIPALITY, Label.COUNTY, Label.ZIP, Label.COUNTRY, Label.PHONE, Label.POST.
+     */
     PERMANENT_ADDRESS(  "trvalé bydliště",  new Label[]{Label.STREET, Label.HOUSE_NUMBER, Label.MUNICIPALITY_PART, Label.MUNICIPALITY, Label.COUNTY, Label.ZIP, Label.COUNTRY, Label.PHONE, Label.POST}),
+    /**
+     * Contact address, contains Label.CONTACT_MUNICIPALITY_PART, Label.CONTACT_HOUSE_NUMBER, Label.CONTACT_MUNICIPALITY, Label.CONTACT_COUTY, Label.CONTACT_POST, Label.CONTACT_ZIP, Label.CONTACT_COUNTRY, Label.CONTACT_PHONE, Label.CONTACT_STREET.
+     */
     CONTACT_ADDRESS(    "kontaktní údaje",  new Label[]{Label.CONTACT_MUNICIPALITY_PART, Label.CONTACT_HOUSE_NUMBER, Label.CONTACT_MUNICIPALITY, Label.CONTACT_COUTY, Label.CONTACT_POST, Label.CONTACT_ZIP, Label.CONTACT_COUNTRY, Label.CONTACT_PHONE, Label.CONTACT_STREET}),
-    HIGH_SCHOOL(        "střední škola",    new Label[]{Label.NAME_OF_HIGH_SCHOOL, Label.ADDRESS_OF_HIGH_SCHOOL, Label.OBOR_OF_HIGH_SCHOOL, Label.JKOV, Label.KKOV, Label.IZO, Label.YEAR_MATURITY}),
+    /**
+     * HIgh School, contains Label.NAME_OF_HIGH_SCHOOL, Label.ADDRESS_OF_HIGH_SCHOOL, Label.BRANCH_OF_HIGH_SCHOOL, Label.JKOV, Label.KKOV, Label.IZO, Label.YEAR_MATURITY.
+     */
+    HIGH_SCHOOL(        "střední škola",    new Label[]{Label.NAME_OF_HIGH_SCHOOL, Label.ADDRESS_OF_HIGH_SCHOOL, Label.BRANCH_OF_HIGH_SCHOOL, Label.JKOV, Label.KKOV, Label.IZO, Label.YEAR_MATURITY}),
+    /**
+     * Password change, contains Label.PASSWORD, Label.NEW_PASSWORD, Label.NEW_PASSWORD_CHECK.
+     */
     PASSWORD_CHANGE(    "změna hesla",      new Label[]{Label.PASSWORD, Label.NEW_PASSWORD, Label.NEW_PASSWORD_CHECK}),
     ;
     

@@ -1,21 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package enums;
 
 /**
- *
+ * This enum is used for keeping inormation about Rights to access websites. 
+ * RightsValue represents numeric value of Rights, is used for comparing. 
+ * RightsString describes Rights by words in CZ. 
+ * InitialRedirect determines ehere is user rederected after login.
  * @author Azathoth
  */
 public enum Rights {//rightsValue   rightsString    initialRedirect         table
+    
+    /**
+     * Not logged user, completely no Rights, used for users who are not logged.
+     */
     NOT_LOGGED(         5,  "nepřihlášený",         "index.jsp",            SQLTable.NULL_TABLE        ),
+    /**
+     * Applicant, the one who fills electronic application.
+     */
     APPLICANT(          4,  "uchazeč",              "ForLoggedIn",          SQLTable.APPLICANTS        ),
+    /**
+     * Student, the one who is accepted to study at this school.
+     */
     STUDENT(            3,  "student",              "ForLoggedIn",          SQLTable.STUDENTS          ),
+    /**
+     * Teacher, the one who teaches at this school.
+     */
     PEDAGOG(            2,  "pedagog",              "proPedagogy.jsp",      SQLTable.PEDAGOGOVE        ),
+    /**
+     * Administration, the one who does all paperwok and so on.
+     */
     ADMINISTRATIVA(     1,  "administrativa",       "proAdministrativu.jsp",SQLTable.ADMINISTRATIVA    ),
+    /**
+     * Main admin, the one who controlls everything. Like god in church or GM in MMORPG.
+     */
     MAIN_ADMIN(         0,  "hlavní administrátor", "index.jsp",            SQLTable.LOGIN             ),
     ;
     private final int rightsValue;

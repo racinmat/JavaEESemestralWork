@@ -1,23 +1,44 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package enums;
 
 /**
- *
+ * This enum is used for storing information about MySQL tables. 
+ * Constains name of table, number used for determining table from URL variable 
+ * and primary key.
  * @author Azathoth
  */
 public enum SQLTable {//název tabulky      číslo používané v jsp   primární klíč
+    
+    /**
+     * No real table, used to handle null pointer exception when any page requiring SQLTable is accesses directly, thus lacking proper SQLTable.
+     */
     NULL_TABLE(         "",                 "",                    Label.USERNAME         ),//kvůli nepřihlášenému uživateli a úspěšnému buildu stránky při zákazu direct accessu
+    /**
+     * SQL Table containing applicants.
+     */
     APPLICANTS(         "uchazeci",         "0",                   Label.USERNAME         ),
+    /**
+     * SQL Table containing applicants who filled input which was not meant to be filled.
+     */
     APPLICANTS_SPAM(    "uchazeci_spam",    "1",                   Label.USERNAME         ),
+    /**
+     * SQL Table containing applicants who spam from one IP address.
+     */
     APPLICANTS_IPSPAM(  "uchazeci_ipspam",  "2",                   Label.USERNAME         ),
+    /**
+     * SQL Table containing students.
+     */
     STUDENTS(           "studenti",         "3",                   Label.USERNAME         ),
+    /**
+     * SQL Table containing all users.
+     */
     LOGIN(              "login",            "4",                   Label.USERNAME         ),
+    /**
+     * SQL Table containing teachers.
+     */
     PEDAGOGOVE(         "pedagogove",       "5",                   Label.USERNAME         ),
+    /**
+     * SQL Table containing administration.
+     */
     ADMINISTRATIVA(     "administrativa",   "6",                   Label.USERNAME         ),
     ;
     

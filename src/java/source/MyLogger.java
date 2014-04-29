@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package source;
 
 import java.io.IOException;
@@ -10,6 +5,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
 /**
+ * This class uses static final logger and lazy inicialized FileHandler to write
+ * every log to file. Every class in this project uses only this logger.
  *
  * @author Azathoth
  */

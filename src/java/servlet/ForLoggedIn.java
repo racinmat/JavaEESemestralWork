@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlet;
 
 import enums.Label;
@@ -21,7 +16,7 @@ import source.Mysql;
 import source.SecurityCheck;
 
 /**
- *
+ * Servlet for preparing data about logged user.
  * @author Azathoth
  */
 public class ForLoggedIn extends HttpServlet {

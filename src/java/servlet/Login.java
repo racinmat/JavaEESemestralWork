@@ -13,13 +13,9 @@ import java.util.logging.Level;
 import source.MyLogger;
 import source.SecurityCheck;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
+ * Used for processing login. Encrypts password and checks if username and
+ * password are correct.
  *
  * @author Azathoth
  */

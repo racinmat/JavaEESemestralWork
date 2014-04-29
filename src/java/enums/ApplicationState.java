@@ -1,19 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package enums;
 
 /**
- *
+ * This enum is used for determining possible states of Application from Label enum and default state when creating new applicant. CHanging states must be done manually on webpage for changing of applicants data.
  * @author Azathoth
  */
 public enum ApplicationState {
+
+    /**
+     * Accepted, is set when applicant is accepted to school and becomes a student.
+     */
     ACCEPTED(           "přijat",                            false,  "prijat"               ),
+    /**
+     * Paid fee for school application, is set when fee is paid.
+     */
     PAID_FEE(           "zaplacen registrační poplatek",     false,  "zaplacenpoplatek"     ),
+    /**
+     * Not paid fee for school application, is set by administration after checking the content of electronic application.
+     */
     NOT_PAID_FEE(       "nezaplacen registrační poplatek",   false,  "nezaplacenpoplatek"   ),
+    /**
+     * Not checked by administration. Default state set during registration of new applicant.
+     */
     NOT_CHECKED(        "nezevidován administrativou",       true,   "nezevidovan"          ),
     ;
     private final String name;

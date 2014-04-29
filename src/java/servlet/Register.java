@@ -19,14 +19,9 @@ import static source.FormValidation.*;
 import source.MyLogger;
 import source.SecurityCheck;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
+ * Servlet for processing data from form for adding new Applicant.
+ * Sends email and puts data to SQL table.
  * @author Azathoth
  */
 public class Register extends HttpServlet {
